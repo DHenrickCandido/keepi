@@ -9,7 +9,7 @@ struct Tag: Identifiable, Hashable {
 struct Tags {
 
     static func getTags() -> [Tag] {
-        var allTags: [Tag] = [
+        let allTags: [Tag] = [
             Tag(name: "Estava com vontade"),
             Tag(name: "Saí com os amigos"),
             Tag(name: "Comprei por impulso")
