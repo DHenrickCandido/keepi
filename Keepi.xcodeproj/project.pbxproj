@@ -15,6 +15,9 @@
 		8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */; };
 		8B4E8EEA2A98D9F200D3A6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */; };
 		8B4E8EED2A98D9F200D3A6F1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B4E8EEC2A98D9F200D3A6F1 /* Preview Assets.xcassets */; };
+		8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC12A9F7AD500FDA36D /* HomeView.swift */; };
+		8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */; };
+		8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */; };
 		A745E5522A9E32CC00240832 /* Feeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5512A9E32CC00240832 /* Feeling.swift */; };
 		A745E5542A9E354300240832 /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5532A9E354300240832 /* Tags.swift */; };
 /* End PBXBuildFile section */
@@ -29,6 +32,9 @@
 		8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8B4E8EEC2A98D9F200D3A6F1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8B598DC12A9F7AD500FDA36D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeCardView.swift; sourceTree = "<group>"; };
+		8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEnvelopeButtonView.swift; sourceTree = "<group>"; };
 		A745E5512A9E32CC00240832 /* Feeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feeling.swift; sourceTree = "<group>"; };
 		A745E5532A9E354300240832 /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,6 +70,9 @@
 			isa = PBXGroup;
 			children = (
 				5A5BAF8C2A98EEB800CBF7E3 /* Trade.swift */,
+				8B598DC12A9F7AD500FDA36D /* HomeView.swift */,
+				8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */,
+				8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -195,11 +204,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
+				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
 				A745E5542A9E354300240832 /* Tags.swift in Sources */,
 				A745E5522A9E32CC00240832 /* Feeling.swift in Sources */,
 				8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */,
 				5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */,
 				5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */,
+				8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */,
 				5A5BAF8D2A98EEB800CBF7E3 /* Trade.swift in Sources */,
 				8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */,
 				5A5BAF8F2A98EFAD00CBF7E3 /* TradeModel.swift in Sources */,
