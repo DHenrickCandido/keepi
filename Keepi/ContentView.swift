@@ -9,13 +9,14 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, Keepi!")
-        }
-        .padding()
+        Trade(tradeModel: TradeModel(name: "teste"), tradeListModel: TradeListManager())
+//        VStack {
+//            Image(systemName: "globe")
+//                .imageScale(.large)
+//                .foregroundColor(.accentColor)
+//            Text("Hello, Keepi!")
+//        }
+//        .padding()
     }
 }
 

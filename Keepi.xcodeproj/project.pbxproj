@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A5BAF8D2A98EEB800CBF7E3 /* Trade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8C2A98EEB800CBF7E3 /* Trade.swift */; };
+		5A5BAF8F2A98EFAD00CBF7E3 /* TradeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */; };
+		5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */; };
+		5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */; };
 		8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */; };
 		8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */; };
 		8B4E8EEA2A98D9F200D3A6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */; };
@@ -16,6 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A5BAF8C2A98EEB800CBF7E3 /* Trade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trade.swift; sourceTree = "<group>"; };
+		5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeModel.swift; sourceTree = "<group>"; };
+		5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaCompra.swift; sourceTree = "<group>"; };
+		5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeListManager.swift; sourceTree = "<group>"; };
 		8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Keepi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepiApp.swift; sourceTree = "<group>"; };
 		8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -36,6 +44,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A92C73D2A9CE2B500F9C29A /* Componentes */ = {
+			isa = PBXGroup;
+			children = (
+				5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */,
+			);
+			path = Componentes;
+			sourceTree = "<group>";
+		};
+		5A92C73E2A9CE2C200F9C29A /* Modelos */ = {
+			isa = PBXGroup;
+			children = (
+				5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */,
+			);
+			path = Modelos;
+			sourceTree = "<group>";
+		};
+		5A92C73F2A9CE2D600F9C29A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5A5BAF8C2A98EEB800CBF7E3 /* Trade.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5AB3E7D32A9F5C2400935335 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		8B4E8ED92A98D9F100D3A6F1 = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +96,10 @@
 			isa = PBXGroup;
 			children = (
 				A745E5502A9E328500240832 /* Classes */,
+				5AB3E7D32A9F5C2400935335 /* Managers */,
+				5A92C73D2A9CE2B500F9C29A /* Componentes */,
+				5A92C73E2A9CE2C200F9C29A /* Modelos */,
+				5A92C73F2A9CE2D600F9C29A /* Views */,
 				8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */,
 				8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */,
 				8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */,
@@ -154,7 +198,11 @@
 				A745E5542A9E354300240832 /* Tags.swift in Sources */,
 				A745E5522A9E32CC00240832 /* Feeling.swift in Sources */,
 				8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */,
+				5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */,
+				5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */,
+				5A5BAF8D2A98EEB800CBF7E3 /* Trade.swift in Sources */,
 				8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */,
+				5A5BAF8F2A98EFAD00CBF7E3 /* TradeModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
