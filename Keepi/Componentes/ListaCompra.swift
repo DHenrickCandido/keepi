@@ -8,25 +8,33 @@
 import SwiftUI
 
 struct ListaCompra: View {
-    var compraModel: CompraModel
+    @ObservedObject var tradeListManager: TradeListManager
     
     var body: some View {
-        
-        //lista as compras (essa parte do codigo vai depois na view de lista)
         VStack {
-            ForEach(compraModel.lista) { i in
-                Text(i.titulo)
+            List{
+                ForEach(Array(tradeListManager.lista.enumerated()), id: \.element.id) { index, item in
+                    Button(action: {
+                        tradeListManager.removeTrade(indexItem: index)
+                    }) {
+                        Text(item.name)
+                    }
+                }
+//                ForEach(tradeListManager.lista){i in
+//                    Button{
+//
+//                    }label:{
+//                        Text(i.name)
+//                    }
+//
+//                }
             }
         }
-        
-//        for i in compraModel.lista{
-//            print(i.titulo)
-//        }
     }
 }
 
 struct ListaCompra_Previews: PreviewProvider {
     static var previews: some View {
-        ListaCompra(compraModel: CompraModel(titulo: "teste"))
+        ListaCompra(tradeListManager: TradeListManager())
     }
 }

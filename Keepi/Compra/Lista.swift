@@ -9,7 +9,13 @@ import SwiftUI
 
 struct Lista: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List{
+            Text("compra 1")
+            Text("compra 2")
+            Text("compra 3")
+            Text("compra 4")
+            Text("compra 5")
+        }
     }
 }
 

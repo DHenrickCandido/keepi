@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct Compra: View {
+struct Trade: View {
     @StateObject var tradeModel: TradeModel
+    @StateObject var tradeListModel: TradeListManager
     
     //str do campo que vai ir para o titulo
     @State var compraTitulo: String = ""
@@ -23,14 +24,14 @@ struct Compra: View {
             //add as instancias das compras em uma lista
             Button("adicionar compra", action: {
                 let compra = TradeModel(name: compraTitulo)
-                tradeModel.addCompra(item: compra)
+                tradeListModel.addTrade(item: compra)
                 })
-            ListaCompra(tradeModel: tradeModel)
+                ListaCompra(tradeListManager: tradeListModel)
             }
     }
 }
 struct Compra_Previews: PreviewProvider {
     static var previews: some View {
-        Compra(tradeModel: TradeModel(name: "teste"))
+        Trade(tradeModel: TradeModel(name: "teste"), tradeListModel: TradeListManager())
     }
 }

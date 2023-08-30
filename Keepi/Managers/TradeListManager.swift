@@ -16,8 +16,8 @@ class TradeListManager: ObservableObject {
         print(lista)
     }
     
-    func removeTrade(){
-        
+    func removeTrade(indexItem: Int){
+        lista.remove(at: indexItem)
     }
     
     
