@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */; };
+		5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A48892AA004CF0094F751 /* TagComponent.swift */; };
 		5A5BAF8D2A98EEB800CBF7E3 /* Trade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8C2A98EEB800CBF7E3 /* Trade.swift */; };
 		5A5BAF8F2A98EFAD00CBF7E3 /* TradeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */; };
 		5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */; };
@@ -20,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeCardComponent.swift; sourceTree = "<group>"; };
+		5A3A48892AA004CF0094F751 /* TagComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagComponent.swift; sourceTree = "<group>"; };
 		5A5BAF8C2A98EEB800CBF7E3 /* Trade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trade.swift; sourceTree = "<group>"; };
 		5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeModel.swift; sourceTree = "<group>"; };
 		5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaCompra.swift; sourceTree = "<group>"; };
@@ -48,6 +52,8 @@
 			isa = PBXGroup;
 			children = (
 				5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */,
+				5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */,
+				5A3A48892AA004CF0094F751 /* TagComponent.swift */,
 			);
 			path = Componentes;
 			sourceTree = "<group>";
@@ -195,10 +201,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
+				5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */,
+=======
+				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
+				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
+>>>>>>> 02b1d5194deb5249887bd220455b89130b2743c1
 				A745E5542A9E354300240832 /* Tags.swift in Sources */,
 				A745E5522A9E32CC00240832 /* Feeling.swift in Sources */,
 				8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */,
 				5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */,
+				5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */,
 				5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */,
 				5A5BAF8D2A98EEB800CBF7E3 /* Trade.swift in Sources */,
 				8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */,
