@@ -1,10 +1,3 @@
-//
-//  NewTradeView.swift
-//  Keepi
-//
-//  Created by Andrea Oquendo on 30/08/23.
-//
-
 import SwiftUI
 
 struct Example: View {
@@ -54,24 +47,24 @@ struct NewTradeView: View {
                 ZStack(){
                     
                     VStack(alignment: .center, spacing: 0) {
-                        Text("Nova Troca")
+                        Text("New Trade")
                             .font(.title2)
                             .bold()
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 16)
+                    .padding(.top, 8)
                     .padding(.bottom, 15)
                     .frame(maxWidth: .infinity, alignment: .center)
                     
-                    VStack(alignment: .leading, spacing: 0) {
+                    VStack(alignment: .trailing, spacing: 0) {
                         Image(systemName: "xmark")
                             .font(.title2)
                             .bold()
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 16)
+                    .padding(.top, 8)
                     .padding(.bottom, 15)
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .frame(maxWidth: .infinity, alignment: .topTrailing)
                     .onTapGesture {
                         showNewTrade.toggle()
                     }
@@ -85,22 +78,12 @@ struct NewTradeView: View {
                     
                     // Qual sua Troca + TextField
                     VStack (alignment: .leading) {
-                        Text("Qual sua troca?")
+                        Text("What's your new trade?")
                             .font(.headline)
                             .bold()
                         
-                        HStack(alignment: .top, spacing: 10) {
-                            TextField("Ex. Comidas, Roupas, Transporte", text: $compraTitulo)
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
-                        .frame(maxWidth: .infinity)
-                        .cornerRadius(54)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 54)
-                                .inset(by: 0.5)
-                                .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
-                        )
+                        TradeField(textPlacer: "Ex. Comidas, Roupas, Transporte", item: $tradeTitle, keyboardType: .default)
+                        
                     }
                     
                     // Envelope + Qual valor
@@ -136,43 +119,22 @@ struct NewTradeView: View {
                         
                         Spacer()
                         VStack(alignment: .leading, spacing:16){
-                            Text("Qual valor?")
-                                .font(.headline)
-                                .bold()
+                            QuestionText(text: "What's the value?")
                             
-                            HStack(alignment: .top, spacing: 10) {
-                                TextField("Ex. 25,00", text: $value)
-                                    .keyboardType(.decimalPad)
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 12)
-                            .frame(width: 150, alignment: .topLeading)
-                            .cornerRadius(54)
-                            .overlay(
-                              RoundedRectangle(cornerRadius: 54)
-                                .inset(by: 0.5)
-                                .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
-                            )
+                            TradeField(textPlacer: "Ex. 25,00", item: $value, keyboardType: .decimalPad)
+                            
                         }
                     }
                     
                     // Divider
-                    VStack(){}
-                    .frame(maxWidth: .infinity, minHeight: 1, maxHeight: 1)
-                    .background(Color(red: 0.56, green: 0.56, blue: 0.58))
+                    Divider()
                     
                     // Feelings section
                     VStack(alignment: .leading, spacing:24){
-                        Text("Como se sentiu com essa troca?")
-                            .font(.headline)
-                            .bold()
-                        HStack(){
+                        QuestionText(text: "How you felt with the trade?")
+                        HStack{
                             ForEach(0..<5, id: \.self) { index in
-                                Rectangle()
-                                    .foregroundColor(.clear)
-                                    .frame(width: 40, height: 40)
-                                    .background(Color(red: 0.85, green: 0.85, blue: 0.85))
-                                    .cornerRadius(100)
+                                EmotionOption()
                                 if index != 4 {
                                     Spacer()
                                 }
@@ -181,47 +143,140 @@ struct NewTradeView: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 24){
-                        Text("Qual sua principal motivação?")
-                            .font(.headline)
-                            .bold()
-                        
-                        ScrollView(.horizontal){
-                            HStack(alignment: .top, spacing: 9) {
-                                
-                                ForEach(tags, id: \.self) { tag in
-                                    Text(tag)
-                                        .padding(.horizontal, 16)
-                                        .padding(.vertical, 8)
-                                        .cornerRadius(32)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 32)
-                                                .inset(by: 0.5)
-                                                .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
-                                        )
-                                }
-                                
-                            }
-                            .padding(0)
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                            
-                        }
+                        QuestionText(text: "What was your main motivation?")
+                        TagCloudView()
+            
                     }
                 }
                 .padding(10)
                 
-                HStack(alignment: .top, spacing: 10) {
-                    Text("Adicionar troca")
-                        .font(.headline)
-                        .bold()
-                }
-                .padding(.horizontal, 32)
-                .padding(.vertical, 16)
-                .frame(maxWidth: .infinity, alignment: .top)
-                .background(Color(red: 0.9, green: 0.9, blue: 0.92))
-                .cornerRadius(100)
+                AddTradeButton()
+                
             }
             .padding(10)
-            .padding(.top, 16)
+        }
+    }
+    
+    func QuestionText(text: String) -> some View {
+        Text(text)
+            .font(.headline)
+            .bold()
+    }
+    
+    func AddTradeButton() -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            QuestionText(text: "Adicionar troca")
+        }
+        .padding(.horizontal, 32)
+        .padding(.vertical, 16)
+        .frame(maxWidth: .infinity, alignment: .top)
+        .background(Color(red: 0.9, green: 0.9, blue: 0.92))
+        .cornerRadius(100)
+    }
+    
+    func EmotionOption() -> some View {
+        Rectangle()
+            .foregroundColor(.clear)
+            .frame(width: 40, height: 40)
+            .background(Color(red: 0.85, green: 0.85, blue: 0.85))
+            .cornerRadius(100)
+    }
+    
+    func Divider() -> some View {
+        VStack(){}
+        .frame(maxWidth: .infinity, minHeight: 1, maxHeight: 1)
+        .background(Color(red: 0.56, green: 0.56, blue: 0.58))
+    }
+    
+    func TradeField(textPlacer: String, item: Binding<String>, keyboardType: UIKeyboardType) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            TextField(textPlacer, text: item)
+                .keyboardType(keyboardType)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity)
+        .cornerRadius(54)
+        .overlay(
+            RoundedRectangle(cornerRadius: 54)
+                .inset(by: 0.5)
+                .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
+        )
+    }
+    
+}
+
+struct TagCloudView: View {
+    let tags = Tags.getTags()
+
+    @State private var totalHeight
+          = CGFloat.zero       // << variant for ScrollView/List
+    //    = CGFloat.infinity   // << variant for VStack
+
+    var body: some View {
+        VStack {
+            GeometryReader { geometry in
+                self.generateContent(in: geometry)
+            }
+        }
+        .frame(height: totalHeight)// << variant for ScrollView/List
+        //.frame(maxHeight: totalHeight) // << variant for VStack
+    }
+
+    private func generateContent(in g: GeometryProxy) -> some View {
+        var width = CGFloat.zero
+        var height = CGFloat.zero
+
+        return ZStack(alignment: .topLeading) {
+            ForEach(tags, id: \.self) { tag in
+                TagOption(tag: tag)
+                    .padding([.trailing, .bottom], 9)
+                    .alignmentGuide(.leading, computeValue: { d in
+                        if (abs(width - d.width) > g.size.width)
+                        {
+                            width = 0
+                            height -= d.height
+                        }
+                        let result = width
+                        if tag == self.tags.last! {
+                            width = 0 //last item
+                        } else {
+                            width -= d.width
+                        }
+                        return result
+                    })
+                    .alignmentGuide(.top, computeValue: {d in
+                        let result = height
+                        if tag == self.tags.last! {
+                            height = 0 // last item
+                        }
+                        return result
+                    })
+            }
+        }.background(viewHeightReader($totalHeight))
+    }
+
+    func TagOption(tag: Tag) -> some View {
+        Text(tag.name)
+            .font(Font.custom("SF Pro Text", size: 14))
+            .foregroundColor(Color(red: 0.01, green: 0.01, blue: 0.01))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 4)
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 32)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
+            )
+    }
+
+    private func viewHeightReader(_ binding: Binding<CGFloat>) -> some View {
+        return GeometryReader { geometry -> Color in
+            let rect = geometry.frame(in: .local)
+            DispatchQueue.main.async {
+                binding.wrappedValue = rect.size.height
+            }
+            return .clear
         }
     }
 }
