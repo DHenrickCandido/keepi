@@ -13,7 +13,6 @@ struct Trade: View {
     
     //str do campo que vai ir para o titulo
     @State var compraTitulo: String = ""
-    
     var body: some View {
         VStack {
             Text("card da visualização da compra aqui:")
@@ -22,6 +21,7 @@ struct Trade: View {
             }
             
             //add as instancias das compras em uma lista
+            
             Button("adicionar compra", action: {
                 let compra = TradeModel(name: compraTitulo)
                 tradeListModel.addTrade(item: compra)

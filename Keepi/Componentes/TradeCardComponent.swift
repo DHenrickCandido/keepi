@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TradeCardComponent: View {
     @State var current_date = Date()
+    @State var name: String
     
     var body: some View {
         VStack{
@@ -28,7 +29,7 @@ struct TradeCardComponent: View {
                 //info da compra
                 VStack (spacing: 8){
                     VStack (alignment: .leading){
-                        Text("Name")
+                        Text(name)
                             .font(.body)
                             .fontWeight(.bold)
                             .foregroundColor(Color(.black))
@@ -101,6 +102,6 @@ struct TradeCardComponent: View {
 
 struct TradeCardComponent_Previews: PreviewProvider {
     static var previews: some View {
-        TradeCardComponent()
+        TradeCardComponent(name: "teste")
     }
 }

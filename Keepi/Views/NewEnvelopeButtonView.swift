@@ -29,10 +29,9 @@ struct NewEnvelopeButtonView: View {
 //            .background(Color(UIColor.systemGray6))
             .foregroundColor(.white)
             .overlay(
-                RoundedRectangle(cornerRadius: 26)
-                    .stroke(Color(UIColor.systemGray2),
-                            style: StrokeStyle(lineWidth: 3, dash: [5, 5]))
-//
+                RoundedRectangle(cornerRadius: 16)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), style: StrokeStyle(lineWidth: 1, dash: [5, 5]))
             )
             
             

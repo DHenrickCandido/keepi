@@ -12,22 +12,13 @@ struct ListaCompra: View {
     
     var body: some View {
         VStack {
-            List{
-                ForEach(Array(tradeListManager.lista.enumerated()), id: \.element.id) { index, item in
-                    Button(action: {
-                        tradeListManager.removeTrade(indexItem: index)
-                    }) {
-                        Text(item.name)
-                    }
+            ForEach(Array(tradeListManager.lista.enumerated()), id: \.element.id) { index, item in
+                Button(action: {
+                    tradeListManager.removeTrade(indexItem: index)
+                }) {
+                    TradeCardComponent(name: item.name)
+//                    Text(item.name)
                 }
-//                ForEach(tradeListManager.lista){i in
-//                    Button{
-//
-//                    }label:{
-//                        Text(i.name)
-//                    }
-//
-//                }
             }
         }
     }
