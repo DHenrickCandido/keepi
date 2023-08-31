@@ -212,12 +212,9 @@
 			files = (
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
-<<<<<<< HEAD
 				5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */,
-=======
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
->>>>>>> 02b1d5194deb5249887bd220455b89130b2743c1
 				A745E5542A9E354300240832 /* Tags.swift in Sources */,
 				A745E5522A9E32CC00240832 /* Feeling.swift in Sources */,
 				8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */,

@@ -19,8 +19,9 @@ struct TradeCardComponent: View {
                     Circle()
                         .frame(width: 48, height: 48)
                         
+                        
                 }
-                .frame(width: 90, height: 90)
+                .frame(width: 90, height: 94)
                 .background(.white)
                 .cornerRadius(10)
                 
@@ -62,25 +63,26 @@ struct TradeCardComponent: View {
                                     .font(.system(size: 12))
                             }
                             
-                            DatePicker("", selection: $current_date, displayedComponents: [.date])
-                                .labelsHidden()
+                            Text("18/08/2023")
+                            
+                        
                         }
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    // COMPONENTE DE TAG
-                    //colocar um scroll horizontal aqui
                     
                     HStack(alignment: .center, spacing: 8){
                         ScrollView (.horizontal){
                             HStack {
                                 TagComponent()
+                                
                             }
                             
                         }
                             
                     }
+                    .font(.footnote)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
