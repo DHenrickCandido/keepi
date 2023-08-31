@@ -18,7 +18,7 @@ struct Example: View {
         }
         .sheet(isPresented: $showNewTrade){
             NewTradeView(showNewTrade: $showNewTrade)
-                .presentationDetents([.fraction(0.8)])
+                .presentationDetents([.fraction(0.9)])
                 .interactiveDismissDisabled()
         }
         .onAppear{
