@@ -35,20 +35,17 @@ struct Example_Previews: PreviewProvider {
 
 struct NewTradeView: View {
     
-    @Binding var showNewTrade: Bool
+    @Binding var showNewTrade: Bool // toggle for Modal
     
-    @State var compraTitulo: String = ""
+    var tagManager: Tags = Tags()
+    
+    // Elements of the trade
+    @State var tradeTitle: String = ""
     @State var value: String = ""
+//    @State var feeling: Feeling = ""
+    @State var tags: [Tag] = []
     @State private var selectedTheme = "Dark"
-    let tags = [
-        "Estava com vontade",
-        "Estava com amigos",
-        "Eu precisava",
-        "Não pensei muito sobre",
-        "Estava em promoção",
-        "Outro"
-    ]
-    let themes = ["iFood", "Vida Social", "Outros"]
+    let themes = ["iFood", "Social Life", "Others"]
     
     var body: some View {
         ZStack{
