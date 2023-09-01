@@ -1,4 +1,9 @@
 import SwiftUI
+import Combine
+
+/*
+    TO-DO: Add envelo
+*/
 
 struct Example: View {
     
@@ -13,6 +18,7 @@ struct Example: View {
             NewTradeView(showNewTrade: $showNewTrade)
                 .presentationDetents([.fraction(0.9)])
                 .interactiveDismissDisabled()
+                
         }
         .onAppear{
             showNewTrade = true
@@ -32,16 +38,22 @@ struct NewTradeView: View {
     
     var tagManager: Tags = Tags()
     
+    
     // Elements of the trade
     @State var tradeTitle: String = ""
     @State var value: String = ""
+    @State var emotion: Int = 2
+    @State var selectedTags: [Tag] = []
+    
 //    @State var feeling: Feeling = ""
-    @State var tags: [Tag] = []
-    @State private var selectedTheme = "Dark"
-    let themes = ["iFood", "Social Life", "Others"]
+    
+    @State private var selectedEnvelope = "iFood"
+    let envelopes = ["iFood", "Social Life", "Others"]
+    
+
     
     var body: some View {
-        ZStack{
+        ScrollView{
             VStack(spacing:10){
                 
                 ZStack(){
@@ -93,8 +105,8 @@ struct NewTradeView: View {
                                 .font(.headline)
                                 .bold()
                             HStack(alignment: .center){
-                                Picker("Select", selection: $selectedTheme) {
-                                    ForEach(themes, id: \.self) {
+                                Picker("Select", selection: $selectedEnvelope) {
+                                    ForEach(envelopes, id: \.self) {
                                         Text("\($0)                      ")
                                     }
                                 }
@@ -121,7 +133,8 @@ struct NewTradeView: View {
                         VStack(alignment: .leading, spacing:16){
                             QuestionText(text: "What's the value?")
                             
-                            TradeField(textPlacer: "Ex. 25,00", item: $value, keyboardType: .decimalPad)
+                            TradeField(textPlacer: "Ex.25,00", item: $value, keyboardType: .default)
+                                
                             
                         }
                     }
@@ -134,7 +147,13 @@ struct NewTradeView: View {
                         QuestionText(text: "How you felt with the trade?")
                         HStack{
                             ForEach(0..<5, id: \.self) { index in
-                                EmotionOption()
+                                
+                                let isActive = ( index == emotion )
+                                EmotionOption(active: isActive)
+                                    .onTapGesture {
+                                        emotion = index
+                                    }
+                                
                                 if index != 4 {
                                     Spacer()
                                 }
@@ -144,18 +163,30 @@ struct NewTradeView: View {
                     
                     VStack(alignment: .leading, spacing: 24){
                         QuestionText(text: "What was your main motivation?")
-                        TagCloudView()
+                        TagCloudView(selectedTags: $selectedTags)
             
                     }
                 }
                 .padding(10)
                 
                 AddTradeButton()
+                    .onTapGesture {
+                        showNewTrade.toggle()
+                        print(tradeTitle)
+                        print(value)
+                        print(emotion)
+                        print(selectedTags)
+                        print(selectedEnvelope)
+                    }
                 
             }
             .padding(10)
+            .onAppear{
+                print("hi")
+            }
         }
     }
+
     
     func QuestionText(text: String) -> some View {
         Text(text)
@@ -174,12 +205,13 @@ struct NewTradeView: View {
         .cornerRadius(100)
     }
     
-    func EmotionOption() -> some View {
+    func EmotionOption(active: Bool) -> some View {
         Rectangle()
             .foregroundColor(.clear)
             .frame(width: 40, height: 40)
-            .background(Color(red: 0.85, green: 0.85, blue: 0.85))
+            .background(active ? .black : Color(red: 0.85, green: 0.85, blue: 0.85) )
             .cornerRadius(100)
+            
     }
     
     func Divider() -> some View {
@@ -208,9 +240,9 @@ struct NewTradeView: View {
 
 struct TagCloudView: View {
     let tags = Tags.getTags()
+    @Binding var selectedTags: [Tag]
 
-    @State private var totalHeight
-          = CGFloat.zero       // << variant for ScrollView/List
+    @State private var totalHeight = CGFloat.zero       // << variant for ScrollView/List
     //    = CGFloat.infinity   // << variant for VStack
 
     var body: some View {
@@ -255,19 +287,54 @@ struct TagCloudView: View {
             }
         }.background(viewHeightReader($totalHeight))
     }
+    
+//    func isSelected(tag: Tag) -> Bool {
+//        if let index = selectedTags.firstIndex(of: tag) {
+//            if self.selectedTags.contains(tag){
+//                return true
+//            }
+//        }
+//
+//        return false
+//    }
+    
+    func isSelectedTag(tag: Tag) -> Bool{
+        if let index = selectedTags.firstIndex(of: tag) {
+            if self.selectedTags.contains(tag){
+                return true
+            }
+        }
+        return false
+    }
 
     func TagOption(tag: Tag) -> some View {
+        
         Text(tag.name)
             .font(Font.custom("SF Pro Text", size: 14))
-            .foregroundColor(Color(red: 0.01, green: 0.01, blue: 0.01))
+            .foregroundColor(isSelectedTag(tag: tag) ? .white : Color(red: 0.01, green: 0.01, blue: 0.01))
             .padding(.horizontal, 12)
             .padding(.vertical, 4)
+            .background(isSelectedTag(tag: tag) ? .black : .white)
             .cornerRadius(16)
             .overlay(
                 RoundedRectangle(cornerRadius: 32)
                     .inset(by: 0.5)
                     .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
             )
+            
+            .onTapGesture {
+                print("tocado")
+
+                if isSelectedTag(tag: tag){
+                    if let index = selectedTags.firstIndex(of: tag){
+                        selectedTags.remove(at: index)
+                    }
+                } else {
+                    selectedTags.append(tag)
+                }
+                
+                
+            }
     }
 
     private func viewHeightReader(_ binding: Binding<CGFloat>) -> some View {
@@ -280,3 +347,5 @@ struct TagCloudView: View {
         }
     }
 }
+
+
