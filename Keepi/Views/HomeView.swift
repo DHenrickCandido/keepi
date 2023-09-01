@@ -14,6 +14,7 @@ struct HomeView: View {
     //str do campo que vai ir para o titulo
     @State var compraTitulo: String = ""
     
+    @State private var showNewTrade: Bool = false
     
     var userName: String = "Jujuba"
     var body: some View {
@@ -74,9 +75,8 @@ struct HomeView: View {
                             TextField("textooo: ", text: $compraTitulo)
                         }
                     Button {
-                        let compra = TradeModel(name: compraTitulo)
-                        tradeListManager.addTrade(item: compra)
                         
+                        showNewTrade.toggle()
                     } label: {
                         NewTradeButton()
                     }
@@ -88,6 +88,12 @@ struct HomeView: View {
                 
             }
             .padding(10)
+        }
+        .sheet(isPresented: $showNewTrade){
+            NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager)
+                .presentationDetents([.fraction(0.9)])
+                .interactiveDismissDisabled()
+                
         }
     }
 }
