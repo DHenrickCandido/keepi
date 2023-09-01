@@ -15,9 +15,9 @@ struct Example: View {
             showNewTrade.toggle()
         }
         .sheet(isPresented: $showNewTrade){
-            NewTradeView(showNewTrade: $showNewTrade)
-                .presentationDetents([.fraction(0.9)])
-                .interactiveDismissDisabled()
+//            NewTradeView(showNewTrade: $showNewTrade)
+//                .presentationDetents([.fraction(0.9)])
+//                .interactiveDismissDisabled()
                 
         }
         .onAppear{
@@ -35,6 +35,7 @@ struct Example_Previews: PreviewProvider {
 struct NewTradeView: View {
     
     @Binding var showNewTrade: Bool // toggle for Modal
+    @ObservedObject var tradeListManager: TradeListManager
     
     var tagManager: Tags = Tags()
     
@@ -203,6 +204,11 @@ struct NewTradeView: View {
         .frame(maxWidth: .infinity, alignment: .top)
         .background(Color(red: 0.9, green: 0.9, blue: 0.92))
         .cornerRadius(100)
+        .onTapGesture {
+            let compra = TradeModel(name: tradeTitle)
+            tradeListManager.addTrade(item: compra)
+            showNewTrade.toggle()
+        }
     }
     
     func EmotionOption(active: Bool) -> some View {

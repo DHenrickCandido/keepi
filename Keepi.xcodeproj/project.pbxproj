@@ -140,8 +140,8 @@
 		A745E5502A9E328500240832 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				A745E5512A9E32CC00240832 /* Feeling.swift */,
 				A745E5532A9E354300240832 /* Tags.swift */,
+				A745E5512A9E32CC00240832 /* Feeling.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
