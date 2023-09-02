@@ -48,7 +48,7 @@ struct NewTradeView: View {
     
 //    @State var feeling: Feeling = ""
     
-    @State private var selectedEnvelope = "iFood"
+    @State var selectedEnvelope = "iFood"
     let envelopes = ["iFood", "Social Life", "Others"]
     
 
@@ -182,9 +182,6 @@ struct NewTradeView: View {
                 
             }
             .padding(10)
-            .onAppear{
-                print("hi")
-            }
         }
     }
 
@@ -205,8 +202,10 @@ struct NewTradeView: View {
         .background(Color(red: 0.9, green: 0.9, blue: 0.92))
         .cornerRadius(100)
         .onTapGesture {
-            let compra = TradeModel(name: tradeTitle)
+            let valueFloat = Float(value)
+            let compra = TradeModel(name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags)
             tradeListManager.addTrade(item: compra)
+            
             showNewTrade.toggle()
         }
     }

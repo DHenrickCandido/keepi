@@ -11,9 +11,6 @@ struct HomeView: View {
     @StateObject var tradeModel: TradeModel
     @StateObject var tradeListManager: TradeListManager
     
-    //str do campo que vai ir para o titulo
-    @State var compraTitulo: String = ""
-    
     @State private var showNewTrade: Bool = false
     
     var userName: String = "Jujuba"
@@ -71,9 +68,6 @@ struct HomeView: View {
                     }
                     
                     VStack {
-                        VStack{
-                            TextField("textooo: ", text: $compraTitulo)
-                        }
                     Button {
                         
                         showNewTrade.toggle()
@@ -100,6 +94,6 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(tradeModel: TradeModel(name: "iFood"), tradeListManager: TradeListManager())
+        HomeView(tradeModel: TradeModel(name: "iFood", value: 25, tag: []), tradeListManager: TradeListManager())
     }
 }

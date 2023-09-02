@@ -10,6 +10,8 @@ import SwiftUI
 struct TradeCardComponent: View {
     @State var current_date = Date()
     @State var name: String
+    @State var value: Float
+    @State var selectedTags: [Tag]
     
     var body: some View {
         VStack{
@@ -51,7 +53,7 @@ struct TradeCardComponent: View {
                             }
                             
                             
-                            Text("valor")
+                            Text(String(format: "%.2f", value))
                         }
                         
                         HStack{
@@ -76,8 +78,9 @@ struct TradeCardComponent: View {
                     HStack(alignment: .center, spacing: 8){
                         ScrollView (.horizontal){
                             HStack {
-                                TagComponent()
-                                
+                                ForEach(selectedTags) { tag in
+                                    TagComponent(selectedTag: tag)
+                                }
                             }
                             
                         }
@@ -102,6 +105,6 @@ struct TradeCardComponent: View {
 
 struct TradeCardComponent_Previews: PreviewProvider {
     static var previews: some View {
-        TradeCardComponent(name: "teste")
+        TradeCardComponent(name: "teste", value: 25, selectedTags: [])
     }
 }

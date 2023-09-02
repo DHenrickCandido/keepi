@@ -16,8 +16,7 @@ struct ListaCompra: View {
                 Button(action: {
                     tradeListManager.removeTrade(indexItem: index)
                 }) {
-                    TradeCardComponent(name: item.name)
-//                    Text(item.name)
+                    TradeCardComponent(name: item.name, value: item.value, selectedTags: item.tag)
                 }
             }
         }
