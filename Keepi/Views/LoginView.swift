@@ -23,48 +23,59 @@ struct LoginView: View {
         
     }
     var content: some View {
-        VStack {
+        VStack(spacing: 20) {
+            Spacer()
+            Text("Welcome to MyApp")
+                .font(.largeTitle)
+                .bold()
+            
             TextField("Email", text: $email)
-                .textFieldStyle(.plain)
+                .textFieldStyle(.roundedBorder)
             
             SecureField("Password", text: $password)
-                .textFieldStyle(.plain)
+                .textFieldStyle(.roundedBorder)
             
-            Button {
+            Button(action: {
                 register()
-            } label: {
-                Text("Sign up")
-                    .bold()
-                    .frame(width: 200, height: 40)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(.blue)
-                    )
+            }) {
+                Text("Sign Up")
+                    .font(.headline)
                     .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(Color.blue)
+                    .cornerRadius(10)
             }
             
-            Button {
-                // login
-            } label: {
-                Text("Already have an account? Login")
-                    .bold()
+            Text("OR")
+            
+            Button(action: {
+                // Implement login functionality here
+            }) {
+                Text("Log In with Existing Account")
+                    .font(.headline)
+                    .foregroundColor(.blue)
             }
             
-            Button {
+            Button(action: {
                 anonymous()
-            } label: {
-                Text("anonymous")
-                    .bold()
+            }) {
+                Text("Continue as Guest")
+                    .font(.headline)
+                    .foregroundColor(.blue)
             }
+            
+            Spacer()
         }
-        .onAppear(){
-            Auth.auth().addStateDidChangeListener { auth, user in
-                if user != nil {
-                    userIsLoggedIn.toggle()
+                .onAppear(){
+                    Auth.auth().addStateDidChangeListener { auth, user in
+                        if user != nil {
+                            userIsLoggedIn.toggle()
+                        }
+                    }
                 }
-            }
-        }
-        .padding()
+                .padding()
+
     }
     func register() {
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
