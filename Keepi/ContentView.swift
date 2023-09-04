@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        HomeView(tradeModel: TradeModel(name: "testeName", value: 25, tag: []), tradeListManager: TradeListManager())
+        LoginView()
     }
 }
 

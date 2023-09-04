@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ExampleEdit: View {
     @State private var showEditTrade: Bool = false
-    @State var compra = TradeModel(name: "Hey")
+    @State var compra = TradeModel(name: "Hey", value: 23, tag: Tags.getTags())
     
     var body: some View {
         Button("click me") {

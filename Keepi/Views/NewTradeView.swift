@@ -204,9 +204,10 @@ struct NewTradeView: View {
         .onTapGesture {
             let valueFloat = Float(value)
             let compra = TradeModel(name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags)
-            tradeListManager.addTrade(item: compra)
-            
+            tradeListManager.addTrade(name: compra.name, value: compra.value)
+            tradeListManager.fetchTrades()
             showNewTrade.toggle()
+            
         }
     }
     
