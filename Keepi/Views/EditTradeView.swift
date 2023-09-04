@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ExampleEdit: View {
     @State private var showEditTrade: Bool = false
+    
     @State var compra = TradeModel(id: "34", name: "Hey", value: 23, tag: Tags.getTags())
     
     var body: some View {
@@ -17,9 +18,9 @@ struct ExampleEdit: View {
         }
         .sheet(isPresented: $showEditTrade){
             
-            EditTradeView(showEditTrade: $showEditTrade, trade: $compra)
-                .presentationDetents([.fraction(0.9)])
-                .interactiveDismissDisabled()
+//            EditTradeView(showEditTrade: $showEditTrade, trade: $compra)
+//                .presentationDetents([.fraction(0.9)])
+//                .interactiveDismissDisabled()
                 
         }
         .onAppear{
@@ -28,15 +29,17 @@ struct ExampleEdit: View {
     }
 }
 
-struct ExampleEdit_Previews: PreviewProvider {
-    static var previews: some View {
-        ExampleEdit()
-    }
-}
+//struct ExampleEdit_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ExampleEdit()
+//    }
+//}
 
 struct EditTradeView: View {
     
     @Binding var showEditTrade: Bool // toggle for Modal
+    @ObservedObject var tradeListManager: TradeListManager
+    var index: Int
     @Binding var trade: TradeModel
     
     var tagManager: Tags = Tags()
@@ -53,7 +56,15 @@ struct EditTradeView: View {
     @State private var selectedEnvelope = "iFood"
     let envelopes = ["iFood", "Social Life", "Others"]
     
-
+    init(showEditTrade: Binding<Bool>, tradeListManager: TradeListManager, index: Int, trade: Binding<TradeModel>){
+        self._showEditTrade = showEditTrade
+        self.tradeListManager = tradeListManager
+        self._trade = trade
+        self.index = index
+        
+        self.value = "\(trade.value)"
+        print(self.value)
+    }
     
     var body: some View {
         ScrollView{
@@ -93,9 +104,7 @@ struct EditTradeView: View {
                     .padding(.bottom, 15)
                     .frame(maxWidth: .infinity, alignment: .topTrailing)
                     .onTapGesture {
-                        /*
-                        TO-DO: Colocar o código de deletar
-                        */
+                        tradeListManager.removeTrade(indexItem: index)
                     }
                     
                 }
@@ -111,7 +120,7 @@ struct EditTradeView: View {
                             .font(.headline)
                             .bold()
                         
-                        TradeField(textPlacer: "Ex. Comidas, Roupas, Transporte", item: $trade.name, keyboardType: .default)
+                        TradeField(textPlacer: "Ex. Food, Clothes, Transport", item: $trade.name, keyboardType: .default)
                         
                     }
                     
@@ -148,8 +157,8 @@ struct EditTradeView: View {
                         
                         Spacer()
                         VStack(alignment: .leading, spacing:16){
-                            QuestionText(text: "What's the value?")
                             
+                            QuestionText(text: "What's the value?")
                             TradeField(textPlacer: "Ex.25.00", item: $value, keyboardType: .default)
                                 
                             
@@ -163,18 +172,18 @@ struct EditTradeView: View {
                     VStack(alignment: .leading, spacing:24){
                         QuestionText(text: "How you felt with the trade?")
                         HStack{
-//                            ForEach(FeelingList.getFeelings()) { feeling in
-//
-//                                let isActive = true
-//                                EmotionOption(active: isActive, feeling: feeling)
-//                                    .onTapGesture {
-//                                        emotion = feeling
-//                                    }
-//
-//                                if index != 4 {
-//                                    Spacer()
-//                                }
-//                            }
+                            ForEach(FeelingList.getFeelings(), id:\.self) { feeling in
+
+                                let isActive = (feeling == emotion)
+                                EmotionOption(active: isActive, feeling: feeling)
+                                    .onTapGesture {
+                                        emotion = feeling
+                                    }
+
+                                if index != 4 {
+                                    Spacer()
+                                }
+                            }
                         }
                     }
                     
@@ -199,7 +208,7 @@ struct EditTradeView: View {
             }
             .padding(10)
             .onAppear{
-                print("hi")
+                self.value = String(format: "%.2f", trade.value)
             }
         }
     }
@@ -225,6 +234,7 @@ struct EditTradeView: View {
     func EmotionOption(active: Bool, feeling: Feeling) -> some View {
         
         Image(feeling.icon)
+            .resizable()
             .foregroundColor(.clear)
             .frame(width: 40, height: 40)
             .background(active ? .black : Color(red: 0.85, green: 0.85, blue: 0.85) )

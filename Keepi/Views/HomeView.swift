@@ -13,6 +13,7 @@ struct HomeView: View {
     
     @State private var showNewTrade: Bool = false
     @State private var showEditTrade: Bool = false
+    @State var selectedTrade: Int = 0
     
     @State var compra = TradeModel(id: "34", name: "Hey", value: 23, tag: Tags.getTags())
     
@@ -78,7 +79,7 @@ struct HomeView: View {
                         NewTradeButton()
                     }
                         
-                        ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade)
+                        ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade, selectedTrade: $selectedTrade)
                         }
                     Spacer()
                 }
@@ -92,7 +93,11 @@ struct HomeView: View {
                 .interactiveDismissDisabled()
         }
         .sheet(isPresented: $showEditTrade){
-            EditTradeView(showEditTrade: $showEditTrade, trade: $compra)
+            EditTradeView(
+                showEditTrade: $showEditTrade,
+                tradeListManager: tradeListManager,
+                index: selectedTrade,
+                trade: $tradeListManager.lista[selectedTrade])
                 .presentationDetents([.fraction(0.9)])
                 .interactiveDismissDisabled()
         }
