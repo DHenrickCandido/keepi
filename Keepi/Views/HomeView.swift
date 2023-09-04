@@ -9,10 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var tradeModel: TradeModel
-    @StateObject var tradeListManager: TradeListManager
-    
-    //str do campo que vai ir para o titulo
-    @State var compraTitulo: String = ""
+    @EnvironmentObject var tradeListManager: TradeListManager
     
     @State private var showNewTrade: Bool = false
     
@@ -71,9 +68,6 @@ struct HomeView: View {
                     }
                     
                     VStack {
-                        VStack{
-                            TextField("textooo: ", text: $compraTitulo)
-                        }
                     Button {
                         
                         showNewTrade.toggle()
@@ -100,6 +94,7 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(tradeModel: TradeModel(name: "iFood"), tradeListManager: TradeListManager())
+        HomeView(tradeModel: TradeModel(id: "3", name: "iFood", value: 25, tag: []))
+            .environmentObject(TradeListManager())
     }
 }

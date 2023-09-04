@@ -48,7 +48,7 @@ struct NewTradeView: View {
     
 //    @State var feeling: Feeling = ""
     
-    @State private var selectedEnvelope = "iFood"
+    @State var selectedEnvelope = "iFood"
     let envelopes = ["iFood", "Social Life", "Others"]
     
 
@@ -182,9 +182,6 @@ struct NewTradeView: View {
                 
             }
             .padding(10)
-            .onAppear{
-                print("hi")
-            }
         }
     }
 
@@ -193,6 +190,14 @@ struct NewTradeView: View {
         Text(text)
             .font(.headline)
             .bold()
+    }
+    
+    func date2string(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMddHHmmss"
+        let dateString = dateFormatter.string(from: date)
+        
+        return dateString
     }
     
     func AddTradeButton() -> some View {
@@ -205,9 +210,13 @@ struct NewTradeView: View {
         .background(Color(red: 0.9, green: 0.9, blue: 0.92))
         .cornerRadius(100)
         .onTapGesture {
-            let compra = TradeModel(name: tradeTitle)
-            tradeListManager.addTrade(item: compra)
+            let valueFloat = Float(value)
+            let id = tradeTitle.replacingOccurrences(of: " ", with: "") + date2string(date: Date())
+            let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags)
+            tradeListManager.addTrade(id: compra.id, name: compra.name, value: compra.value)
+            tradeListManager.fetchTrades()
             showNewTrade.toggle()
+            
         }
     }
     

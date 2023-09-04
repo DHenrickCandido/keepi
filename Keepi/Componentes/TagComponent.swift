@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct TagComponent: View {
+    @State var selectedTag: Tag
+    
     var body: some View {
         VStack {
-            Text("tag1")
+            Text(selectedTag.name)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
@@ -21,6 +23,6 @@ struct TagComponent: View {
 
 struct TagComponent_Previews: PreviewProvider {
     static var previews: some View {
-        TagComponent()
+        TagComponent(selectedTag: Tags.getTags()[0])
     }
 }
