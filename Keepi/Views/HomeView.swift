@@ -94,7 +94,7 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(tradeModel: TradeModel(name: "iFood", value: 25, tag: []))
+        HomeView(tradeModel: TradeModel(id: "3", name: "iFood", value: 25, tag: []))
             .environmentObject(TradeListManager())
     }
 }

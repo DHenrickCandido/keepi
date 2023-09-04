@@ -14,7 +14,7 @@ struct LoginView: View {
     @State private var userIsLoggedIn = false
     var body: some View {
         if userIsLoggedIn {
-            HomeView(tradeModel: TradeModel(name: "iFood", value: 25, tag: []))
+            HomeView(tradeModel: TradeModel(id: "34", name: "iFood", value: 25, tag: []))
                 .environmentObject(TradeListManager())
 //            content
         } else {

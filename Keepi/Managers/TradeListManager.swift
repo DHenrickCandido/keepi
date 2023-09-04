@@ -15,7 +15,19 @@ class TradeListManager: ObservableObject {
 //    }
 //
     func removeTrade(indexItem: Int){
-        lista.remove(at: indexItem)
+//        lista.remove(at: indexItem)
+        let db = Firestore.firestore()
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        
+        print(lista[indexItem].name)
+        db.collection("Users").document(userID).collection("Trades").document(lista[indexItem].id).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+        fetchTrades()
     }
 
     init() {
@@ -43,27 +55,21 @@ class TradeListManager: ObservableObject {
                     let value = data["value"] as? Float ?? 0.0
 //                    let category = data["category"] as? String ?? ""
                     
-                    let trade = TradeModel(name: name, value: value,tag: [Tag(name: "Estava querendo")])
+                    let trade = TradeModel(id: id, name: name, value: value,tag: [Tag(name: "Estava querendo")])
                     self.lista.append(trade)
                 }
             }
         }
     }
     
-    func date2string(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMddHHmmss"
-        let dateString = dateFormatter.string(from: date)
-        
-        return dateString
-    }
+
     
-    func addTrade(name: String, value: Float){
+    func addTrade(id: String, name: String, value: Float){
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else { return }
 
 
-        let id = name.replacingOccurrences(of: " ", with: "") + date2string(date: Date())
+        
 
         let ref = db.collection("Users").document(userID).collection("Trades").document(id)
         

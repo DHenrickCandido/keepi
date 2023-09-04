@@ -8,7 +8,8 @@
 import SwiftUI
 
 class TradeModel: Identifiable, ObservableObject{
-    let id = UUID()
+//    let id = UUID()
+    @Published var id: String
     @Published var name: String
 //    @Published var envelope: Int
     @Published var value: Float
@@ -16,7 +17,8 @@ class TradeModel: Identifiable, ObservableObject{
     @Published var tag: [Tag]
 //    @Published var feeling: Feeling
     
-    init(name: String, value: Float, tag: [Tag]){
+    init(id: String, name: String, value: Float, tag: [Tag]){
+        self.id = id
         self.name = name
         self.value = value
         self.tag = tag
