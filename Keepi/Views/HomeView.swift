@@ -12,6 +12,9 @@ struct HomeView: View {
     @EnvironmentObject var tradeListManager: TradeListManager
     
     @State private var showNewTrade: Bool = false
+    @State private var showEditTrade: Bool = false
+    
+    @State var compra = TradeModel(id: "34", name: "Hey", value: 23, tag: Tags.getTags())
     
     var userName: String = "Jujuba"
     var body: some View {
@@ -75,7 +78,7 @@ struct HomeView: View {
                         NewTradeButton()
                     }
                         
-                        ListaCompra(tradeListManager: tradeListManager)
+                        ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade)
                         }
                     Spacer()
                 }
@@ -87,7 +90,11 @@ struct HomeView: View {
             NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager)
                 .presentationDetents([.fraction(0.9)])
                 .interactiveDismissDisabled()
-                
+        }
+        .sheet(isPresented: $showEditTrade){
+            EditTradeView(showEditTrade: $showEditTrade, trade: $compra)
+                .presentationDetents([.fraction(0.9)])
+                .interactiveDismissDisabled()
         }
     }
 }
