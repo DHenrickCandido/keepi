@@ -45,7 +45,7 @@ struct EditTradeView: View {
     // Elements of the trade
     @State var tradeTitle: String = ""
     @State var value: String = ""
-    @State var emotion: Int = 2
+    @State var emotion: Feeling = FeelingList.getFeelings()[2]
     @State var selectedTags: [Tag] = []
     
 //    @State var feeling: Feeling = ""
@@ -163,18 +163,18 @@ struct EditTradeView: View {
                     VStack(alignment: .leading, spacing:24){
                         QuestionText(text: "How you felt with the trade?")
                         HStack{
-                            ForEach(0..<5, id: \.self) { index in
-                                
-                                let isActive = ( index == emotion )
-                                EmotionOption(active: isActive)
-                                    .onTapGesture {
-                                        emotion = index
-                                    }
-                                
-                                if index != 4 {
-                                    Spacer()
-                                }
-                            }
+//                            ForEach(FeelingList.getFeelings()) { feeling in
+//
+//                                let isActive = true
+//                                EmotionOption(active: isActive, feeling: feeling)
+//                                    .onTapGesture {
+//                                        emotion = feeling
+//                                    }
+//
+//                                if index != 4 {
+//                                    Spacer()
+//                                }
+//                            }
                         }
                     }
                     
@@ -191,7 +191,7 @@ struct EditTradeView: View {
                         showEditTrade.toggle()
                         print(tradeTitle)
                         print(value)
-                        print(emotion)
+//                        print(emotion)
                         print(selectedTags)
                         print(selectedEnvelope)
                     }
@@ -222,8 +222,9 @@ struct EditTradeView: View {
         .cornerRadius(100)
     }
     
-    func EmotionOption(active: Bool) -> some View {
-        Rectangle()
+    func EmotionOption(active: Bool, feeling: Feeling) -> some View {
+        
+        Image(feeling.icon)
             .foregroundColor(.clear)
             .frame(width: 40, height: 40)
             .background(active ? .black : Color(red: 0.85, green: 0.85, blue: 0.85) )
