@@ -48,10 +48,9 @@ struct EditTradeView: View {
     // Elements of the trade
     @State var tradeTitle: String = ""
     @State var value: String = ""
-    @State var emotion: Feeling = FeelingList.getFeelings()[2]
+    @State var selectedFeeling: Int = 2
     @State var selectedTags: [Tag] = []
     
-//    @State var feeling: Feeling = ""
     
     @State private var selectedEnvelope = "iFood"
     let envelopes = ["iFood", "Social Life", "Others"]
@@ -174,13 +173,13 @@ struct EditTradeView: View {
                         HStack{
                             ForEach(FeelingList.getFeelings(), id:\.self) { feeling in
 
-                                let isActive = (feeling == emotion)
+                                let isActive = (feeling.index == selectedFeeling)
                                 EmotionOption(active: isActive, feeling: feeling)
                                     .onTapGesture {
-                                        emotion = feeling
+                                        selectedFeeling = feeling.index
                                     }
 
-                                if index != 4 {
+                                if feeling.index != 4 {
                                     Spacer()
                                 }
                             }
@@ -200,7 +199,7 @@ struct EditTradeView: View {
                         showEditTrade.toggle()
                         print(tradeTitle)
                         print(value)
-//                        print(emotion)
+                        print(selectedFeeling)
                         print(selectedTags)
                         print(selectedEnvelope)
                     }
@@ -220,15 +219,40 @@ struct EditTradeView: View {
             .bold()
     }
     
+    
+    func saveTrade(){
+        func date2string(date: Date) -> String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyyMMddHHmmss"
+            let dateString = dateFormatter.string(from: date)
+            
+            return dateString
+        }
+        
+        let valueFloat = Float(value)
+        let id = tradeListManager.lista[index].id
+        let date = tradeListManager.lista[index].date
+        
+        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, feeling: selectedFeeling, date: date)
+//        tradeListManager.updateTrade(compra)
+        tradeListManager.fetchTrades()
+        
+        // Fechar a modal
+        showEditTrade.toggle()
+    }
+    
     func AddTradeButton() -> some View {
         HStack(alignment: .top, spacing: 10) {
-            QuestionText(text: "Salvar troca")
+            QuestionText(text: "Save Trade")
         }
         .padding(.horizontal, 32)
         .padding(.vertical, 16)
         .frame(maxWidth: .infinity, alignment: .top)
         .background(Color(red: 0.9, green: 0.9, blue: 0.92))
         .cornerRadius(100)
+        .onTapGesture {
+            saveTrade()
+        }
     }
     
     func EmotionOption(active: Bool, feeling: Feeling) -> some View {
@@ -237,7 +261,7 @@ struct EditTradeView: View {
             .resizable()
             .foregroundColor(.clear)
             .frame(width: 40, height: 40)
-            .background(active ? .black : Color(red: 0.85, green: 0.85, blue: 0.85) )
+            .opacity(active ? 1 : 0.5)
             .cornerRadius(100)
             
     }
