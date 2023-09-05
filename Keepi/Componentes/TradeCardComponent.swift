@@ -76,7 +76,7 @@ struct TradeCardComponent: View {
                     
                     
                     HStack(alignment: .center, spacing: 8){
-                        ScrollView (.horizontal){
+                        ScrollView (.horizontal, showsIndicators: false){
                             HStack {
                                 ForEach(selectedTags) { tag in
                                     TagComponent(selectedTag: tag)
