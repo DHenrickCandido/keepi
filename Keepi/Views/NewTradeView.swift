@@ -38,20 +38,16 @@ struct NewTradeView: View {
     @ObservedObject var tradeListManager: TradeListManager
     
     var tagManager: Tags = Tags()
+    @State var selectedEnvelope = "iFood"
+    let envelopes = ["iFood", "Social Life", "Others"]
     
     
     // Elements of the trade
     @State var tradeTitle: String = ""
     @State var value: String = ""
-    @State var emotion: Int = 2
+    @State var selectedFeeling: Int = 2
     @State var selectedTags: [Tag] = []
-    
-//    @State var feeling: Feeling = ""
-    
-    @State var selectedEnvelope = "iFood"
-    let envelopes = ["iFood", "Social Life", "Others"]
-    
-
+    var todayDate = Date()
     
     var body: some View {
         ScrollView{
@@ -95,7 +91,7 @@ struct NewTradeView: View {
                             .font(.headline)
                             .bold()
                         
-                        TradeField(textPlacer: "Ex. Comidas, Roupas, Transporte", item: $tradeTitle, keyboardType: .default)
+                        TradeField(textPlacer: "Ex. Food, Clothes, Transport", item: $tradeTitle, keyboardType: .default)
                         
                     }
                     
@@ -147,15 +143,17 @@ struct NewTradeView: View {
                     VStack(alignment: .leading, spacing:24){
                         QuestionText(text: "How you felt with the trade?")
                         HStack{
-                            ForEach(0..<5, id: \.self) { index in
-                                
-                                let isActive = ( index == emotion )
-                                EmotionOption(active: isActive)
+                            ForEach(FeelingList.getFeelings(), id:\.self) { feeling in
+
+                                let isActiveFeeling = (feeling.index == selectedFeeling)
+                                EmotionOption(active: isActiveFeeling, feeling: feeling)
                                     .onTapGesture {
-                                        emotion = index
+                                        print(selectedTags)
+                                        selectedFeeling = feeling.index
+                                        print(selectedTags)
                                     }
-                                
-                                if index != 4 {
+
+                                if feeling.index != 4 {
                                     Spacer()
                                 }
                             }
@@ -175,7 +173,7 @@ struct NewTradeView: View {
                         showNewTrade.toggle()
                         print(tradeTitle)
                         print(value)
-                        print(emotion)
+                        print(selectedFeeling)
                         print(selectedTags)
                         print(selectedEnvelope)
                     }
@@ -200,9 +198,21 @@ struct NewTradeView: View {
         return dateString
     }
     
+    func saveTrade() {
+        let valueFloat = Float(value)
+        let id = tradeTitle.replacingOccurrences(of: " ", with: "") + date2string(date: todayDate)
+        
+        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, feeling: 2, date: todayDate)
+//        tradeListManager.addTrade(compra)
+        tradeListManager.fetchTrades()
+        
+        // Fechar a modal
+        showNewTrade.toggle()
+    }
+    
     func AddTradeButton() -> some View {
         HStack(alignment: .top, spacing: 10) {
-            QuestionText(text: "Adicionar troca")
+            QuestionText(text: "Add Trade")
         }
         .padding(.horizontal, 32)
         .padding(.vertical, 16)
@@ -210,21 +220,17 @@ struct NewTradeView: View {
         .background(Color(red: 0.9, green: 0.9, blue: 0.92))
         .cornerRadius(100)
         .onTapGesture {
-            let valueFloat = Float(value)
-            let id = tradeTitle.replacingOccurrences(of: " ", with: "") + date2string(date: Date())
-            let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: selectedEnvelope, feeling: emotion, date: Date())
-            tradeListManager.addTrade(trade: compra)
-            tradeListManager.fetchTrades()
-            showNewTrade.toggle()
-            
+            saveTrade()
         }
     }
     
-    func EmotionOption(active: Bool) -> some View {
-        Rectangle()
+    func EmotionOption(active: Bool, feeling: Feeling) -> some View {
+        
+        Image(feeling.icon)
+            .resizable()
             .foregroundColor(.clear)
             .frame(width: 40, height: 40)
-            .background(active ? .black : Color(red: 0.85, green: 0.85, blue: 0.85) )
+            .opacity(active ? 1 : 0.5)
             .cornerRadius(100)
             
     }
@@ -303,18 +309,8 @@ struct TagCloudView: View {
         }.background(viewHeightReader($totalHeight))
     }
     
-//    func isSelected(tag: Tag) -> Bool {
-//        if let index = selectedTags.firstIndex(of: tag) {
-//            if self.selectedTags.contains(tag){
-//                return true
-//            }
-//        }
-//
-//        return false
-//    }
-    
     func isSelectedTag(tag: Tag) -> Bool{
-        if let index = selectedTags.firstIndex(of: tag) {
+        if selectedTags.firstIndex(of: tag) != nil {
             if self.selectedTags.contains(tag){
                 return true
             }
@@ -336,10 +332,7 @@ struct TagCloudView: View {
                     .inset(by: 0.5)
                     .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
             )
-            
             .onTapGesture {
-                print("tocado")
-
                 if isSelectedTag(tag: tag){
                     if let index = selectedTags.firstIndex(of: tag){
                         selectedTags.remove(at: index)
