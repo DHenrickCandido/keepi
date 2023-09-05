@@ -212,8 +212,8 @@ struct NewTradeView: View {
         .onTapGesture {
             let valueFloat = Float(value)
             let id = tradeTitle.replacingOccurrences(of: " ", with: "") + date2string(date: Date())
-            let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags)
-            tradeListManager.addTrade(id: compra.id, name: compra.name, value: compra.value)
+            let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: selectedEnvelope, feeling: emotion, date: Date())
+            tradeListManager.addTrade(trade: compra)
             tradeListManager.fetchTrades()
             showNewTrade.toggle()
             
