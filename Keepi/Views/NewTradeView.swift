@@ -200,9 +200,21 @@ struct NewTradeView: View {
         return dateString
     }
     
+    func saveTrade() {
+        let valueFloat = Float(value)
+        let id = tradeTitle.replacingOccurrences(of: " ", with: "") + date2string(date: todayDate)
+        
+        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, feeling: 2, date: todayDate)
+//        tradeListManager.addTrade(compra)
+        tradeListManager.fetchTrades()
+        
+        // Fechar a modal
+        showNewTrade.toggle()
+    }
+    
     func AddTradeButton() -> some View {
         HStack(alignment: .top, spacing: 10) {
-            QuestionText(text: "Adicionar troca")
+            QuestionText(text: "Add Trade")
         }
         .padding(.horizontal, 32)
         .padding(.vertical, 16)
