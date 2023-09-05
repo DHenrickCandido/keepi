@@ -29,6 +29,10 @@
 		8B91F80B2AA5A3A1005F5728 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B91F80A2AA5A3A1005F5728 /* LoginView.swift */; };
 		8BB460302AA223BE00258E7F /* NewEnvelopeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */; };
 		907FB3DE2AA74EBD000754FA /* Onboarding1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3DD2AA74EBD000754FA /* Onboarding1View.swift */; };
+		907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3DF2AA75BEB000754FA /* Onboarding2View.swift */; };
+		907FB3E22AA75C0B000754FA /* OnboardingTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3E12AA75C0B000754FA /* OnboardingTabView.swift */; };
+		907FB3E42AA7605A000754FA /* Onboarding3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3E32AA7605A000754FA /* Onboarding3View.swift */; };
+		907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3E52AA76124000754FA /* Onboarding4View.swift */; };
 		A73161B62AA215B4003CB8F9 /* EditTradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73161B52AA215B4003CB8F9 /* EditTradeView.swift */; };
 		A745E5522A9E32CC00240832 /* Feeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5512A9E32CC00240832 /* Feeling.swift */; };
 		A745E5542A9E354300240832 /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5532A9E354300240832 /* Tags.swift */; };
@@ -55,6 +59,10 @@
 		8B91F80A2AA5A3A1005F5728 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEnvelopeView.swift; sourceTree = "<group>"; };
 		907FB3DD2AA74EBD000754FA /* Onboarding1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding1View.swift; sourceTree = "<group>"; };
+		907FB3DF2AA75BEB000754FA /* Onboarding2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding2View.swift; sourceTree = "<group>"; };
+		907FB3E12AA75C0B000754FA /* OnboardingTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTabView.swift; sourceTree = "<group>"; };
+		907FB3E32AA7605A000754FA /* Onboarding3View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding3View.swift; sourceTree = "<group>"; };
+		907FB3E52AA76124000754FA /* Onboarding4View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding4View.swift; sourceTree = "<group>"; };
 		A73161B52AA215B4003CB8F9 /* EditTradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTradeView.swift; sourceTree = "<group>"; };
 		A745E5512A9E32CC00240832 /* Feeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feeling.swift; sourceTree = "<group>"; };
 		A745E5532A9E354300240832 /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
@@ -163,7 +171,11 @@
 		907FB3DC2AA74E1D000754FA /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				907FB3E12AA75C0B000754FA /* OnboardingTabView.swift */,
 				907FB3DD2AA74EBD000754FA /* Onboarding1View.swift */,
+				907FB3DF2AA75BEB000754FA /* Onboarding2View.swift */,
+				907FB3E32AA7605A000754FA /* Onboarding3View.swift */,
+				907FB3E52AA76124000754FA /* Onboarding4View.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -257,10 +269,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
 				5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */,
+				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
+				907FB3E22AA75C0B000754FA /* OnboardingTabView.swift in Sources */,
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
 				907FB3DE2AA74EBD000754FA /* Onboarding1View.swift in Sources */,
 				5A8739EE2AA0C235008127A3 /* NewTradeButton.swift in Sources */,
@@ -272,6 +287,7 @@
 				5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */,
 				5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */,
 				5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */,
+				907FB3E42AA7605A000754FA /* Onboarding3View.swift in Sources */,
 				8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */,
 				5A5BAF8D2A98EEB800CBF7E3 /* Trade.swift in Sources */,
 				8BB460302AA223BE00258E7F /* NewEnvelopeView.swift in Sources */,
