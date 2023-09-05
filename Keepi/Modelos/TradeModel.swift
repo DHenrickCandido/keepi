@@ -17,7 +17,7 @@ class TradeModel: Identifiable, ObservableObject{
     @Published var tag: [Tag]
     @Published var feeling: Int // Int de 0 a 4 - vai definir o icon
     
-    init(id: String, name: String, value: Float, tag: [Tag], envelopeId: String, feeling: Int, date: Date){
+    init(id: String, name: String, value: Float, tag: [Tag], envelopeId: String = "", feeling: Int = 0, date: Date = Date()){
         self.id = id
         self.name = name
         self.value = value
