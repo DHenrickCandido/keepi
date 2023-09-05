@@ -104,6 +104,7 @@ struct EditTradeView: View {
                     .frame(maxWidth: .infinity, alignment: .topTrailing)
                     .onTapGesture {
                         tradeListManager.removeTrade(indexItem: index)
+                        showEditTrade.toggle()
                     }
                     
                 }
