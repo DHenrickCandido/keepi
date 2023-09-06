@@ -8,32 +8,47 @@
 import SwiftUI
 
 struct Onboarding4View: View {
-    let tela: CGFloat = 3
+    
     var body: some View {
         NavigationStack {
             ZStack {
-                GeometryReader { proxy in
-                    Image("backgroundOnboarding")
-                        .resizable()
-                        .frame(width: 1572, height: 852)
-                    
-                        .frame(width: proxy.size.width * 4, height: proxy.frame(in: .named("navstack")).height)
-                        .offset(x: -tela * proxy.size.width)
-                        .ignoresSafeArea()
-                    //                Color("lightGray")
-                    //                    .ignoresSafeArea()
-                    //
-                    //                //elipse grande verde escuro
-                    //                Ellipse()
-                    //                    .foregroundColor(Color("mainGreen"))
-                    //                    .frame(width: 2000, height: 1000)
-                    //                    .position(x: 300, y: 700)
-                    
-                    
-                    
+                Color("mainGreen")
+                    .ignoresSafeArea()
+                
+                Circle()
+                    .foregroundColor(Color("red"))
+                    .opacity(0.7)
+                    .frame(width: 200)
+                    .offset(x: -180, y: -350)
+                
+                Circle()
+                    .stroke(lineWidth: 4)
+                    .foregroundColor(Color("secondGreen"))
+                    .opacity(0.7)
+                    .frame(width: 100)
+                    .offset(x: 90, y: -130)
+                
+                NavigationLink {
+                    LoginView()
+                } label: {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Text("Skip")
+                                .font(.system(size: 20))
+                                .bold()
+                                .foregroundColor(.white)
+                                .padding(.trailing, 40)
+                        }
+                        .padding(.top, 80)
+                        Spacer()
+                    }
                 }
-                VStack {
+                
+             
                     Image("emotions")
+                    .offset(y: -50)
+              
                     
                     Text("Register and reflect on what motivated you to make a trade.")
                         .font(.system(size: 24))
@@ -41,20 +56,28 @@ struct Onboarding4View: View {
                         .foregroundColor(.white)
                         .frame(width: 350)
                         .multilineTextAlignment(.center)
+                        .offset(y: 150)
                     
+                VStack {
+                    Spacer()
                     NavigationLink {
                         LoginView()
                     } label: {
-                        Text("Get Started \(Image(systemName: "arrow.forward"))")
-                            .font(.system(size: 24))
+                        Text("Get Started  \(Image(systemName: "arrow.forward"))")
+                            .font(.system(size: 20))
+                            .bold()
+                            .foregroundColor(Color("mainGreen"))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background()
+                            .cornerRadius(16)
+                            .padding(.horizontal, 16)
                     }
                 }
+                .padding(.bottom, 80)
             }
             .ignoresSafeArea()
         }
-        .ignoresSafeArea()
-        .frame(maxWidth: .infinity)
-        .coordinateSpace(name: "navstack")
     }
 }
 

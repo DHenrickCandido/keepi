@@ -8,96 +8,68 @@
 import SwiftUI
 
 struct Onboarding1View: View {
-    let tela: CGFloat = 0
+    
     var body: some View {
-        ZStack {
-            GeometryReader { proxy in
-                Image("backgroundOnboarding")
-                    .resizable()
-//                    .frame(width: 1572, height: 852)
-                    .frame(width: proxy.size.width * 4, height: proxy.size.height)
-                    .offset(x: -tela * proxy.size.width)
-                    .ignoresSafeArea()
+        NavigationStack {
+            ZStack {
+                Color("mainGreen")
                 
-                //            // Circulo verde escuro
-                //            Circle()
-                //                .foregroundColor(Color("mainGreen"))
-                //                .position(x: 400, y: 60)
-                //                .frame(width: 800)
-                //
-                //            //Circulo claro em cima
-                //            Circle()
-                //                .foregroundColor(Color("lightGray"))
-                //                .frame(width: 450)
-                //                .position(x: 600, y: 0)
-                //
-                //            //Circulo verde claro vazado com stroke
-                //            Circle()
-                //                .stroke(lineWidth: 4)
-                //                .foregroundColor(Color("secondGreen"))
-                //                .frame(width: 70)
-                //                .position(x: 390, y: 100)
-                //
-                //            //Circulo amarelo pequeno
-                //            Circle()
-                //                .foregroundColor(Color("yellow"))
-                //                .frame(width: 30)
-                //                .position(x: 500, y: 425)
-                //
-                //            //Circulo verde claro pequeno
-                //            Circle()
-                //                .foregroundColor(Color("secondGreen"))
-                //                .frame(width: 20)
-                //                .position(x: 460, y: 435)
-                //
-                //
-                //            //Circulo amarelo vazado com stroke
-                //            Circle()
-                //                .stroke(lineWidth: 4)
-                //                .foregroundColor(Color("yellow"))
-                //                .frame(width: 200)
-                //                .position(x: 250, y: 750)
-                //
-                //            //Circulo verde escuro menor sobre o circulo amarelo vazado
-                //            Circle()
-                //                .foregroundColor(Color("mainGreen"))
-                //                .frame(width: 50)
-                //                .position(x: 335, y: 700)
-                //
-                //            //Elipse no cantinho direito
-                //            Ellipse()
-                //                .foregroundColor(Color("mainGreen"))
-                //                .frame(width: 2000, height: 1000)
-                //                .position(x: 1500, y: 700)
+                // ELEMENTOS DE ENFEITE
+                Circle()
+                    .foregroundColor(Color("secondGreen"))
+                    .frame(width: 200)
+                    .opacity(0.7)
+                    .offset(x: 200, y: -200)
                 
+                Circle()
+                    .stroke(lineWidth: 4)
+                    .foregroundColor(Color("red"))
+                    .opacity(0.7)
+                    .frame(width: 100)
+                    .offset(x: -120, y: -300)
                 
-                VStack {
-                    Spacer()
+                Circle()
+                    .foregroundColor(Color("yellow"))
+                    .frame(width: 300)
+                    .opacity(0.7)
+                    .offset(x: -200, y: 400)
                     
-//                    Image("keepi")
-//                        .resizable()
-//                        .frame(maxWidth: .infinity)
-//                        .scaledToFit()
-//                        .padding(.horizontal, 300)
-//                        .padding(.top, 100)
-                    
-                    Spacer()
-                    
-                    Text("Reflect the emotions of your currency trades.")
-                        .foregroundColor(Color("mainGreen"))
-                        .font(.system(size: 24))
-                        .bold()
-                        .frame(width: 350)
-                        .padding(.bottom, 80)
-                        .multilineTextAlignment(.center)
-                    
-                    Spacer()
+                
+                NavigationLink {
+                    LoginView()
+                } label: {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Text("Skip")
+                                .font(.system(size: 20))
+                                .bold()
+                                .foregroundColor(.white)
+                                .padding(.trailing, 40)
+                        }
+                        .padding(.top, 80)
+                        Spacer()
+                            
+                    }
                 }
+                
+                Image("keepi")
+                    .resizable()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .scaledToFit()
+                    .padding(.horizontal, 100)
+                    .offset(y: -50)
+                
+                Text("Reflect the emotions of your currency trades.")
+                    .foregroundColor(.white)
+                    .font(.system(size: 24))
+                    .bold()
+                    .frame(width: 255)
+                    .multilineTextAlignment(.center)
+                    .offset(y: 150)   
             }
+            .ignoresSafeArea()
         }
-        .background(.yellow)
-        .ignoresSafeArea()
-        .frame(maxWidth: .infinity)
     }
 }
 

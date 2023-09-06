@@ -8,37 +8,60 @@
 import SwiftUI
 
 struct Onboarding3View: View {
-    let tela: CGFloat = 2
+    
     var body: some View {
-        ZStack {
-            GeometryReader { proxy in
-                Image("backgroundOnboarding")
-                    .resizable()
-//                    .frame(width: 1572, height: 852)
+        NavigationStack {
+            ZStack {
+                Color("mainGreen")
                 
-                    .frame(width: proxy.size.width * 4, height: proxy.size.height)
-                    .offset(x: -tela * proxy.size.width)
-                    .ignoresSafeArea()
-                //            Color("lightGray")
-                //                .ignoresSafeArea()
-                //
-                //            // elipse grande verde escuro
-                //            Ellipse()
-                //                .foregroundColor(Color("mainGreen"))
-                //                .frame(width: 2000, height: 1000)
-                //                .position(x: 500, y: 700)
-                //
-                //            //circulo verde claro vazado com stroke
-                //            Circle()
-                //                .stroke(lineWidth: 4)
-                //                .foregroundColor(Color("secondGreen"))
-                //                .frame(width: 150)
-                //                .position(x: 0, y: 280)
+                Circle()
+                    .foregroundColor(Color("secondGreen"))
+                    .opacity(0.7)
+                    .frame(width: 150)
+                    .offset(x: -170, y: -380)
+                
+                Circle()
+                    .foregroundColor(Color("yellow"))
+                    .opacity(0.7)
+                    .frame(width: 40)
+                    .offset(x: -70, y: -320)
+                
+                Circle()
+                    .stroke(lineWidth: 4)
+                    .foregroundColor(Color("yellow"))
+                    .opacity(0.7)
+                    .frame(width: 320)
+                    .offset(x: 250, y: -110)
+                
+                Circle()
+                    .stroke(lineWidth: 4)
+                    .foregroundColor(Color("red"))
+                    .opacity(0.7)
+                    .frame(width: 100)
+                    .offset(x: -100, y: 300)
                 
                 
-            }
-            VStack {
+                
+                NavigationLink {
+                    LoginView()
+                } label: {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Text("Skip")
+                                .font(.system(size: 20))
+                                .bold()
+                                .foregroundColor(.white)
+                                .padding(.trailing, 40)
+                        }
+                        .padding(.top, 80)
+                        Spacer()
+                            
+                    }
+                }
+                
                 Image("envelopes")
+                    .offset(y: -50)
                 
                 Text("Use the envelopes to define the budget for each type of trade.")
                     .font(.system(size: 24))
@@ -46,10 +69,10 @@ struct Onboarding3View: View {
                     .foregroundColor(.white)
                     .frame(width: 350)
                     .multilineTextAlignment(.center)
+                    .offset(y: 150)
             }
+            .ignoresSafeArea()
         }
-        .ignoresSafeArea()
-        .frame(maxWidth: .infinity)
     }
 }
 

@@ -8,48 +8,53 @@
 import SwiftUI
 
 struct Onboarding2View: View {
-    let tela: CGFloat = 1
+    
     var body: some View {
-        ZStack {
-            GeometryReader { proxy in
-                Image("backgroundOnboarding")
-                    .resizable()
-//                    .frame(width: 1572, height: 852)
-                    .frame(width: proxy.size.width * 4, height: proxy.size.height)
-                    .offset(x: -tela * proxy.size.width)
-                    .ignoresSafeArea()
-                //            Color("lightGray")
-                //                .ignoresSafeArea()
-                //
-                //            // Circulo verde escuro
-                //            Circle()
-                //                .foregroundColor(Color("mainGreen"))
-                //                .position(x: 0, y: 60)
-                //                .frame(width: 850)
-                //
-                //            //Circulo claro em cima
-                //            Circle()
-                //                .foregroundColor(Color("lightGray"))
-                //                .frame(width: 450)
-                //                .position(x: 120, y: 0)
-                //
-                //            //elipse grande verde escuro
-                //            Ellipse()
-                //                .foregroundColor(Color("mainGreen"))
-                //                .frame(width: 2000, height: 1000)
-                //                .position(x: 1107, y: 700)
-                //
-                //            //circulo verde claro vazado com stroke
-                //            Circle()
-                //                .stroke(lineWidth: 4)
-                //                .foregroundColor(Color("secondGreen"))
-                //                .frame(width: 150)
-                //                .position(x: 620, y: 280)
-              
-            }
-            
-            VStack {
+        NavigationStack {
+            ZStack {
+                Color("mainGreen")
+                
+                //ELEMENTOS DE ENFEITE
+                Circle()
+                    .stroke(lineWidth: 4)
+                    .foregroundColor(Color("secondGreen"))
+                    .opacity(0.7)
+                    .frame(width: 250)
+                    .offset(x: 180, y: -120)
+                
+                Circle()
+                    .foregroundColor(Color("secondGreen"))
+                    .frame(width: 40)
+                    .offset(x: 60, y: -145)
+                
+                Circle()
+                    .stroke(lineWidth: 4)
+                    .foregroundColor(Color("yellow"))
+                    .opacity(0.7)
+                    .frame(width: 150)
+                    .offset(x: -170, y: 300)
+                
+                NavigationLink {
+                    LoginView()
+                } label: {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Text("Skip")
+                                .font(.system(size: 20))
+                                .bold()
+                                .foregroundColor(.white)
+                                .padding(.trailing, 40)
+                        }
+                        .padding(.top, 80)
+                        Spacer()
+                            
+                    }
+                }
+                
                 Image("trades")
+                    .offset(y: -50)
+                
                 
                 Text("Here at Keepi, your purchases are referred to as trades.")
                     .font(.system(size: 24))
@@ -57,10 +62,11 @@ struct Onboarding2View: View {
                     .foregroundColor(.white)
                     .frame(width: 350)
                     .multilineTextAlignment(.center)
+                    .offset(y: 150)
             }
+            
+            .ignoresSafeArea()
         }
-        .ignoresSafeArea()
-        .frame(maxWidth: .infinity)
     }
 }
 
