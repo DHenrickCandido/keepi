@@ -12,20 +12,25 @@ struct Example_test: View {
     
     @State private var showNewEnvelope: Bool = false
     
-    
     var body: some View {
         Button("click me") {
             showNewEnvelope.toggle()
         }
         .sheet(isPresented: $showNewEnvelope){
-            NewEnvelopeView(showNewEnvelope: $showNewEnvelope)
-                .presentationDetents([.fraction(0.9)])
-                .interactiveDismissDisabled()
+//            NewEnvelopeView(envelopeListManager: envelopeListManager, showNewEnvelope: $showNewEnvelope)
+//                .presentationDetents([.fraction(0.9)])
+//                .interactiveDismissDisabled()
         }
         .onAppear{
             showNewEnvelope = true
         }
     }
+}
+
+func QuestionText(text: String) -> some View {
+    Text(text)
+        .font(.headline)
+        .bold()
 }
 
 struct Example_test_Previews: PreviewProvider {
@@ -36,20 +41,14 @@ struct Example_test_Previews: PreviewProvider {
 
 struct NewEnvelopeView: View {
     
+    @ObservedObject var envelopeListManager: EnvelopeListManager
+    
     @Binding var showNewEnvelope: Bool
-    @State var iconSelected: Int = 0
+    
+    @State var iconSelected: String = Icons.getIcons()[0]
     @State var envelopeName: String = ""
     @State var envelopeBudget: String = ""
     @State private var selectedTheme = "Dark"
-    let tags = [
-        "Estava com vontade",
-        "Estava com amigos",
-        "Eu precisava",
-        "Não pensei muito sobre",
-        "Estava em promoção",
-        "Outro"
-    ]
-    let themes = ["iFood", "Vida Social", "Outros"]
     
     let columns = [GridItem(), GridItem(), GridItem(), GridItem()]
     
@@ -152,11 +151,13 @@ struct NewEnvelopeView: View {
                             NavigationStack {
                                 ScrollView {
                                     LazyVGrid(columns:columns) {
-                                        ForEach(0..<8, id: \.self) { index in
-                                            let isActive = ( index == iconSelected )
-                                                EmotionOption(active: isActive)
+                                        ForEach(Icons.getIcons(), id: \.self) { img in
+                                            let isActive = ( img == iconSelected )
+                                            IconEnvelopeOption(img:img, active: isActive)
                                                     .onTapGesture {
-                                                        iconSelected = index
+                                                        
+                                                        iconSelected = img
+                                                        print(iconSelected)
                                                     }
                                             
                                         }
@@ -172,23 +173,56 @@ struct NewEnvelopeView: View {
                 }
                 .padding(10)
                 
-                HStack(alignment: .top, spacing: 10) {
-                    Text("Add Envelope")
-                        .font(.headline)
-                        .bold()
-                }
-                .padding(.horizontal, 32)
-                .padding(.vertical, 16)
-                .frame(maxWidth: .infinity, alignment: .top)
-                .background(Color(red: 0.9, green: 0.9, blue: 0.92))
-                .cornerRadius(100)
+                AddEnvelopeButton()
+                
+//                HStack(alignment: .top, spacing: 10) {
+//                    Text("Add Envelope")
+//                        .font(.headline)
+//                        .bold()
+//                }
+//                .padding(.horizontal, 32)
+//                .padding(.vertical, 16)
+//                .frame(maxWidth: .infinity, alignment: .top)
+//                .background(Color(red: 0.9, green: 0.9, blue: 0.92))
+//                .cornerRadius(100)
             }
             .padding(10)
+                
+            
             .padding(.top, 16)
         }
     }
-    func EmotionOption(active: Bool) -> some View {
-        Rectangle()
+    
+    func saveEnvelope() {
+        let valueFloat = Float(envelopeBudget)
+        let id = envelopeName.replacingOccurrences(of: " ", with: "")
+
+        let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat ?? 0, icon: iconSelected)
+        print(envelope)
+        envelopeListManager.addEnvelope(item: envelope)
+//        tradeListManager.fetchTrades()
+
+        // Fechar a modal
+        showNewEnvelope.toggle()
+    }
+
+
+    func AddEnvelopeButton() -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            QuestionText(text: "Add Envelope")
+        }
+        .padding(.horizontal, 32)
+        .padding(.vertical, 16)
+        .frame(maxWidth: .infinity, alignment: .top)
+        .background(Color(red: 0.9, green: 0.9, blue: 0.92))
+        .cornerRadius(100)
+        .onTapGesture {
+            saveEnvelope()
+        }
+    }
+    
+    func IconEnvelopeOption(img: String, active: Bool) -> some View {
+        Image(img)
             .foregroundColor(.clear)
             .frame(width: 72, height: 72)
             .background(active ? .black : Color(red: 0.85, green: 0.85, blue: 0.85) )

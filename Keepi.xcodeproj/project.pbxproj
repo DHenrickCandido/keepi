@@ -9,11 +9,14 @@
 /* Begin PBXBuildFile section */
 		5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */; };
 		5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A48892AA004CF0094F751 /* TagComponent.swift */; };
-		5A5BAF8D2A98EEB800CBF7E3 /* Trade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8C2A98EEB800CBF7E3 /* Trade.swift */; };
 		5A5BAF8F2A98EFAD00CBF7E3 /* TradeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */; };
 		5A8739EE2AA0C235008127A3 /* NewTradeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */; };
 		5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */; };
 		5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */; };
+		5AE47BE22AA759ED00EE90D5 /* EnvelopeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */; };
+		5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */; };
+		5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */; };
+		5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE82AA8A14600EE90D5 /* Icons.swift */; };
 		8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */; };
 		8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */; };
 		8B4E8EEA2A98D9F200D3A6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */; };
@@ -37,11 +40,14 @@
 /* Begin PBXFileReference section */
 		5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeCardComponent.swift; sourceTree = "<group>"; };
 		5A3A48892AA004CF0094F751 /* TagComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagComponent.swift; sourceTree = "<group>"; };
-		5A5BAF8C2A98EEB800CBF7E3 /* Trade.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trade.swift; sourceTree = "<group>"; };
 		5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeModel.swift; sourceTree = "<group>"; };
 		5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTradeButton.swift; sourceTree = "<group>"; };
 		5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaCompra.swift; sourceTree = "<group>"; };
 		5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeListManager.swift; sourceTree = "<group>"; };
+		5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeModel.swift; sourceTree = "<group>"; };
+		5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeListManager.swift; sourceTree = "<group>"; };
+		5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaEnvelope.swift; sourceTree = "<group>"; };
+		5AE47BE82AA8A14600EE90D5 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
 		8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Keepi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepiApp.swift; sourceTree = "<group>"; };
 		8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,6 +87,7 @@
 				5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */,
 				5A3A48892AA004CF0094F751 /* TagComponent.swift */,
 				5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */,
+				5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */,
 			);
 			path = Componentes;
 			sourceTree = "<group>";
@@ -89,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */,
+				5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */,
 			);
 			path = Modelos;
 			sourceTree = "<group>";
@@ -96,10 +104,9 @@
 		5A92C73F2A9CE2D600F9C29A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				5A5BAF8C2A98EEB800CBF7E3 /* Trade.swift */,
+				8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
 				8B598DC12A9F7AD500FDA36D /* HomeView.swift */,
 				8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */,
-				8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
 				A745E5552A9F7B8C00240832 /* NewTradeView.swift */,
 				A73161B52AA215B4003CB8F9 /* EditTradeView.swift */,
 				8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */,
@@ -112,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */,
+				5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -162,6 +170,7 @@
 			children = (
 				A745E5532A9E354300240832 /* Tags.swift */,
 				A745E5512A9E32CC00240832 /* Feeling.swift */,
+				5AE47BE82AA8A14600EE90D5 /* Icons.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -247,6 +256,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
+				5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */,
+				5AE47BE22AA759ED00EE90D5 /* EnvelopeModel.swift in Sources */,
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
 				5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
@@ -261,11 +272,12 @@
 				5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */,
 				5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */,
 				8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */,
-				5A5BAF8D2A98EEB800CBF7E3 /* Trade.swift in Sources */,
 				8BB460302AA223BE00258E7F /* NewEnvelopeView.swift in Sources */,
 				8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */,
+				5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */,
 				8B91F80B2AA5A3A1005F5728 /* LoginView.swift in Sources */,
 				5A5BAF8F2A98EFAD00CBF7E3 /* TradeModel.swift in Sources */,
+				5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

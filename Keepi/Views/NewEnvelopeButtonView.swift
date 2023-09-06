@@ -26,6 +26,7 @@ struct NewEnvelopeButtonView: View {
         }
         .padding(.horizontal, 32)
             .padding(.vertical, 16)
+            .frame(width: 160, height: 160, alignment: .center)
 //            .background(Color(UIColor.systemGray6))
             .foregroundColor(.white)
             .overlay(
