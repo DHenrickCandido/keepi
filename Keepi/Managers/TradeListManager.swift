@@ -34,6 +34,14 @@ class TradeListManager: ObservableObject {
         fetchTrades()
     }
     
+    static func date2string(date: Date, dateFormat: String = "yyyyMMddHHmmss") -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = dateFormat
+        let dateString = dateFormatter.string(from: date)
+        
+        return dateString
+    }
+    
     func fetchTrades() {
         lista.removeAll()
         let db = Firestore.firestore()
@@ -53,9 +61,19 @@ class TradeListManager: ObservableObject {
                     let id = data["id"] as? String ?? ""
                     let name = data["name"] as? String ?? ""
                     let value = data["value"] as? Float ?? 0.0
-//                    let category = data["category"] as? String ?? ""
-                    
-                    let trade = TradeModel(id: id, name: name, value: value,tag: [Tag(name: "Estava querendo")])
+                    let envelopeId = data["envelopeId"] as? String ?? ""
+                    let date = data["date"] as? Timestamp
+                    let feeling = data["feeling"] as? Int ?? 0
+                    let listTagNames = data["tags"] as? [String] ?? []
+                    var tags = [Tag]()
+                    print("TESTE")
+                    print(envelopeId)
+//                    for tagName in listTagNames {
+//                        tags.append(Tag(id: tagName))
+//                    }
+                    tags = Tags.getTags(listNames: listTagNames)
+                    print(tags)
+                    let trade = TradeModel(id: id, name: name, value: value,tag: tags, envelopeId: envelopeId, feeling: feeling, date: Date(timeIntervalSince1970: TimeInterval(date!.seconds)))
                     self.lista.append(trade)
                 }
             }
@@ -64,18 +82,21 @@ class TradeListManager: ObservableObject {
     
 
     
-    func addTrade(id: String, name: String, value: Float){
+    func addTrade(trade: TradeModel){
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else { return }
-
-
         
 
-        let ref = db.collection("Users").document(userID).collection("Trades").document(id)
+        
+
+        let ref = db.collection("Users").document(userID).collection("Trades").document(trade.id)
+        var listTagNames = [String]()
+        for tag in trade.tag{
+            listTagNames.append(tag.name)
+        }
         
         
-        
-        ref.setData(["name": name, "value": value, "id": id]) { error in
+        ref.setData(["name": trade.name, "value": trade.value, "id": trade.id, "tags": listTagNames, "envelopeId": trade.envelopeId, "date": trade.date, "feeling": trade.feeling]) { error in
             if let error = error {
                 print(error.localizedDescription)
             }
