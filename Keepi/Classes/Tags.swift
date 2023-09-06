@@ -17,7 +17,20 @@ struct Tags {
             Tag(id: 5, name: "I didn't think much about"),
             Tag(id: 6, name: "Other")
         ]
-        
         return allTags
+    }
+    
+    static func getTags(listNames: [String]) -> [Tag] {
+        var tagsList: [Tag] = []
+        for name in listNames {
+            print(name)
+            for tag in getTags() {
+                print(tag)
+                if name == tag.name{
+                    tagsList.append(tag)
+                }
+            }
+        }
+        return tagsList
     }
 }
