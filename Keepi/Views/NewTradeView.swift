@@ -194,10 +194,10 @@ struct NewTradeView: View {
     
     func saveTrade() {
         let valueFloat = Float(value)
-        let id = tradeTitle.replacingOccurrences(of: " ", with: "") + date2string(date: todayDate)
+        let id = tradeTitle.replacingOccurrences(of: " ", with: "") + TradeListManager.date2string(date: todayDate)
         
-        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, feeling: 2, date: todayDate)
-//        tradeListManager.addTrade(compra)
+        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: selectedEnvelope, feeling: selectedFeeling, date: todayDate)
+        tradeListManager.addTrade(trade: compra)
         tradeListManager.fetchTrades()
         
         // Fechar a modal
@@ -214,15 +214,8 @@ struct NewTradeView: View {
         .background(Color(red: 0.9, green: 0.9, blue: 0.92))
         .cornerRadius(100)
         .onTapGesture {
-            let valueFloat = Float(value)
-            let id = tradeTitle.replacingOccurrences(of: " ", with: "") + TradeListManager.date2string(date: Date())
-            let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: selectedEnvelope, feeling: emotion, date: Date())
-            tradeListManager.addTrade(trade: compra)
-            tradeListManager.fetchTrades()
-            showNewTrade.toggle()
-            
-            //saveTrade()
 
+            saveTrade()
         }
     }
     
