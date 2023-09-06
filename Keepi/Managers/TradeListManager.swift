@@ -55,13 +55,15 @@ class TradeListManager: ObservableObject {
                     let value = data["value"] as? Float ?? 0.0
                     let envelopeId = data["envelopeId"] as? String ?? ""
                     let date = data["date"] as? Timestamp
-                    let feeling = data["feeling"] as? String
-                    let listTagNames = data["trade"] as? [String] ?? []
+                    let feeling = data["feeling"] as? Int ?? 0
+                    let listTagNames = data["tags"] as? [String] ?? []
                     var tags = [Tag]()
+                    print("TESTE")
+                    print(envelopeId)
                     for tagName in listTagNames {
                         tags.append(Tag(name: tagName))
                     }
-                    let trade = TradeModel(id: id, name: name, value: value,tag: tags, date: Date(timeIntervalSince1970: TimeInterval(date!.seconds)))
+                    let trade = TradeModel(id: id, name: name, value: value,tag: tags, envelopeId: envelopeId, feeling: feeling, date: Date(timeIntervalSince1970: TimeInterval(date!.seconds)))
                     self.lista.append(trade)
                 }
             }
@@ -84,7 +86,7 @@ class TradeListManager: ObservableObject {
         }
         
         
-        ref.setData(["name": trade.name, "value": trade.value, "id": trade.id, "tags": listTagNames, "envolepeId": trade.envelopeId, "date": trade.date, "feeling": trade.feeling]) { error in
+        ref.setData(["name": trade.name, "value": trade.value, "id": trade.id, "tags": listTagNames, "envelopeId": trade.envelopeId, "date": trade.date, "feeling": trade.feeling]) { error in
             if let error = error {
                 print(error.localizedDescription)
             }

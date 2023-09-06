@@ -12,6 +12,7 @@ struct TradeCardComponent: View {
     @State var name: String
     @State var value: Float
     @State var selectedTags: [Tag]
+    @State var envelopeName: String
     
     var body: some View {
         VStack{
@@ -36,7 +37,7 @@ struct TradeCardComponent: View {
                             .fontWeight(.bold)
                             .foregroundColor(Color(.black))
                         
-                        Text("envelope")
+                        Text(envelopeName)
                             .font(.subheadline)
                             .foregroundColor(Color(.systemGray))
                     }
@@ -105,6 +106,6 @@ struct TradeCardComponent: View {
 
 struct TradeCardComponent_Previews: PreviewProvider {
     static var previews: some View {
-        TradeCardComponent(name: "teste", value: 25, selectedTags: [])
+        TradeCardComponent(name: "teste", value: 25, selectedTags: [], envelopeName: "ifood")
     }
 }

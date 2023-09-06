@@ -20,7 +20,7 @@ struct ListaCompra: View {
                     selectedTrade = index
 //                    tradeListManager.removeTrade(indexItem: index)
                 }) {
-                    TradeCardComponent(name: item.name, value: item.value, selectedTags: item.tag)
+                    TradeCardComponent(name: item.name, value: item.value, selectedTags: item.tag, envelopeName: item.envelopeId)
                 }
             }
         }
