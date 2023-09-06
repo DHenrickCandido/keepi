@@ -10,10 +10,14 @@ import SwiftUI
 struct HomeView: View {
     @StateObject var tradeModel: TradeModel
     @EnvironmentObject var tradeListManager: TradeListManager
+    @EnvironmentObject var envelopeListManager: EnvelopeListManager
     
     @State private var showNewTrade: Bool = false
     @State private var showEditTrade: Bool = false
     @State var selectedTrade: Int = 0
+    
+    @State private var showNewEnvelope: Bool = false
+    @State private var selectedEnvelope: Int = 0
     
     @State var compra = TradeModel(id: "34", name: "Hey", value: 23, tag: Tags.getTags())
     
@@ -49,11 +53,12 @@ struct HomeView: View {
                             
                             ScrollView (.horizontal, showsIndicators: false){
                                 HStack{
-                                    ForEach(0..<2) {_ in
-                                        EnvelopeCardView(icon: "birthday.cake.fill", name: "iFood", budget: 200.0)
+                                    ListaEnvelope(envelopeListManager: envelopeListManager, selectedEnvelope: $selectedEnvelope)
+                                    Button {
+                                        showNewEnvelope.toggle()
+                                    } label: {
+                                        NewEnvelopeButtonView()
                                     }
-                                    NewEnvelopeButtonView()
-                                    
                                 }
                             }
                         }
@@ -101,12 +106,19 @@ struct HomeView: View {
                 .presentationDetents([.fraction(0.9)])
                 .interactiveDismissDisabled()
         }
+        .sheet(isPresented: $showNewEnvelope){
+            NewEnvelopeView(envelopeListManager: envelopeListManager, showNewEnvelope: $showNewEnvelope)
+                .presentationDetents([.fraction(0.9)])
+                .interactiveDismissDisabled()
+        }
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView(tradeModel: TradeModel(id: "3", name: "iFood", value: 25, tag: []))
+            .environmentObject(EnvelopeListManager())
             .environmentObject(TradeListManager())
+            
     }
 }

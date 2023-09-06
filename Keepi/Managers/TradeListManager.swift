@@ -59,7 +59,7 @@ class TradeListManager: ObservableObject {
                     let listTagNames = data["trade"] as? [String] ?? []
                     var tags = [Tag]()
                     for tagName in listTagNames {
-                        tags.append(Tag(name: tagName))
+                        tags.append(Tags.getTags()[0])
                     }
                     let trade = TradeModel(id: id, name: name, value: value,tag: tags, date: Date(timeIntervalSince1970: TimeInterval(date!.seconds)))
                     self.lista.append(trade)
