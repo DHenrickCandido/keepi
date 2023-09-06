@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TradeCardComponent: View {
-    @State var current_date = Date()
+    @State var date: Date
     @State var name: String
     @State var value: Float
     @State var selectedTags: [Tag]
@@ -67,7 +67,7 @@ struct TradeCardComponent: View {
                                     .font(.system(size: 12))
                             }
                             
-                            Text("18/08/2023")
+                            Text(TradeListManager.date2string(date: date, dateFormat: "dd MMM"))
                             
                         
                         }
@@ -106,6 +106,6 @@ struct TradeCardComponent: View {
 
 struct TradeCardComponent_Previews: PreviewProvider {
     static var previews: some View {
-        TradeCardComponent(name: "teste", value: 25, selectedTags: [], envelopeName: "ifood")
+        TradeCardComponent(date: Date(), name: "teste", value: 25, selectedTags: [], envelopeName: "ifood")
     }
 }

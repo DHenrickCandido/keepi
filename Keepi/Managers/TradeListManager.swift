@@ -34,6 +34,14 @@ class TradeListManager: ObservableObject {
         fetchTrades()
     }
     
+    static func date2string(date: Date, dateFormat: String = "yyyyMMddHHmmss") -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = dateFormat
+        let dateString = dateFormatter.string(from: date)
+        
+        return dateString
+    }
+    
     func fetchTrades() {
         lista.removeAll()
         let db = Firestore.firestore()

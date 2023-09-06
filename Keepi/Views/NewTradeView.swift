@@ -192,13 +192,7 @@ struct NewTradeView: View {
             .bold()
     }
     
-    func date2string(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMddHHmmss"
-        let dateString = dateFormatter.string(from: date)
-        
-        return dateString
-    }
+
     
     func AddTradeButton() -> some View {
         HStack(alignment: .top, spacing: 10) {
@@ -211,7 +205,7 @@ struct NewTradeView: View {
         .cornerRadius(100)
         .onTapGesture {
             let valueFloat = Float(value)
-            let id = tradeTitle.replacingOccurrences(of: " ", with: "") + date2string(date: Date())
+            let id = tradeTitle.replacingOccurrences(of: " ", with: "") + TradeListManager.date2string(date: Date())
             let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: selectedEnvelope, feeling: emotion, date: Date())
             tradeListManager.addTrade(trade: compra)
             tradeListManager.fetchTrades()
