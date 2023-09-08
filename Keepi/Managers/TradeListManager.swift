@@ -104,5 +104,27 @@ class TradeListManager: ObservableObject {
         }
     }
     
+    func updateTrade(trade: TradeModel){
+        let db = Firestore.firestore()
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        
+
+        
+
+        let ref = db.collection("Users").document(userID).collection("Trades").document(trade.id)
+        var listTagNames = [String]()
+        for tag in trade.tag{
+            listTagNames.append(tag.name)
+        }
+        
+        
+        ref.updateData(["name": trade.name, "value": trade.value, "id": trade.id, "tags": listTagNames, "envelopeId": trade.envelopeId, "date": trade.date, "feeling": trade.feeling]) { error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            
+        }
+    }
+    
     
 }

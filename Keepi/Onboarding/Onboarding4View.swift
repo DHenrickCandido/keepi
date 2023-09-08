@@ -62,6 +62,8 @@ struct Onboarding4View: View {
                     Spacer()
                     NavigationLink {
                         LoginView()
+                            .navigationBarBackButtonHidden(true)
+                        
                     } label: {
                         Text("Get Started  \(Image(systemName: "arrow.forward"))")
                             .font(.system(size: 20))

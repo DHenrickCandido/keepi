@@ -33,9 +33,9 @@ struct Onboarding2View: View {
                     .opacity(0.7)
                     .frame(width: 150)
                     .offset(x: -170, y: 300)
-                
                 NavigationLink {
                     LoginView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     VStack {
                         HStack {
