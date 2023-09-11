@@ -16,8 +16,8 @@ struct ListaCompra: View {
         VStack {
             ForEach(Array(tradeListManager.lista.enumerated()), id: \.element.id) { index, item in
                 Button(action: {
-                    showEditView.toggle()
                     selectedTrade = index
+
 //                    tradeListManager.removeTrade(indexItem: index)
                 }) {
                     TradeCardComponent(date: item.date, name: item.name, value: item.value, selectedTags: item.tag, envelopeName: item.envelopeId)

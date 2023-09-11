@@ -62,7 +62,7 @@ struct EditTradeView: View {
         self.envelopeListManager = envelopeListManager
         self._trade = trade
         self.index = index
-        
+        print(self.index)
         self.value = "\(trade.value)"
         print(self.value)
         
