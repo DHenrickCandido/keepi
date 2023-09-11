@@ -17,7 +17,6 @@ struct ListaCompra: View {
             ForEach(Array(tradeListManager.lista.enumerated()), id: \.element.id) { index, item in
                 Button(action: {
                     selectedTrade = index
-                    
                 }) {
                     TradeCardComponent(date: item.date, name: item.name, value: item.value, selectedTags: item.tag, envelopeName: item.envelopeId)
                 }

@@ -40,6 +40,7 @@ struct EditTradeView: View {
     
     @Binding var showEditTrade: Bool // toggle for Modal
     @ObservedObject var tradeListManager: TradeListManager
+    @ObservedObject var envelopeListManager: EnvelopeListManager
     var index: Int
     @Binding var trade: TradeModel
     
@@ -52,18 +53,34 @@ struct EditTradeView: View {
     @State var selectedFeeling: Int = 2
     @State var selectedTags: [Tag] = []
     
+    @State var selectedEnvelope = ""
+    var envelopes: [Keepi.EnvelopeModel] = []
+    var envelopeNames: [String] = []
     
-    @State var selectedEnvelope = "iFood"
-    let envelopes = ["iFood", "Social Life", "Others"]
-    
-    init(showEditTrade: Binding<Bool>, tradeListManager: TradeListManager, index: Int, trade: Binding<TradeModel>){
+
+
+    init(showEditTrade: Binding<Bool>, tradeListManager: TradeListManager, envelopeListManager: EnvelopeListManager, index: Int, trade: Binding<TradeModel>){
         self._showEditTrade = showEditTrade
         self.tradeListManager = tradeListManager
+        self.envelopeListManager = envelopeListManager
         self._trade = trade
         self.index = index
         
 //        self.value = "\(trade.value)"
+
+        self.value = "\(trade.value)"
         print(self.value)
+        
+        self.envelopes = envelopeListManager.listaEnvelope
+        for envelope in self.envelopes {
+            self.envelopeNames.append(envelope.name) // Assuming "name" is the property holding the envelope name
+        }
+        
+        if !self.envelopes.isEmpty {
+            self.selectedEnvelope = self.envelopeNames[0]
+        } else {
+            envelopeNames = ["Any envelope"]
+        }
     }
     
     var body: some View {
@@ -133,7 +150,7 @@ struct EditTradeView: View {
                                 .bold()
                             HStack(alignment: .center){
                                 Picker("Select", selection: $selectedEnvelope) {
-                                    ForEach(envelopes, id: \.self) {
+                                    ForEach(envelopeNames, id: \.self) {
                                         Text("\($0)                      ")
                                     }
                                 }
@@ -226,6 +243,16 @@ struct EditTradeView: View {
             .bold()
     }
     
+    func getEnvelopeId() -> String {
+        for envelope in envelopes {
+            if  selectedEnvelope == envelope.name{
+                return envelope.id
+            }
+        }
+        
+        return "0"
+    }
+    
     
     func saveTrade(){
         func date2string(date: Date) -> String {
@@ -239,11 +266,13 @@ struct EditTradeView: View {
         let valueFloat = Float(value)
         let id = tradeListManager.lista[index].id
         let date = tradeListManager.lista[index].date
+        let envelopeId = getEnvelopeId()
         
         let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: selectedEnvelope, feeling: selectedFeeling, date: date)
         print("teste")
         print(compra.name)
         tradeListManager.updateTrade(trade: compra)
+
         tradeListManager.fetchTrades()
         
         // Fechar a modal

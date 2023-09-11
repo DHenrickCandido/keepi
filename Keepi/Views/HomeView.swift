@@ -92,10 +92,11 @@ struct HomeView: View {
             }
             .padding(10)
         }.onChange(of: selectedTrade, perform: { _ in
+
             showEditTrade.toggle()
         })
         .sheet(isPresented: $showNewTrade){
-            NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager)
+            NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager, envelopeListManager: envelopeListManager)
                 .presentationDetents([.fraction(0.9)])
                 .interactiveDismissDisabled()
         }
