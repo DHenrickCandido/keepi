@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ExampleEdit: View {
     @State private var showEditTrade: Bool = false
-    
+    @ObservedObject var tradeListManager: TradeListManager
+
     @State var compra = TradeModel(id: "34", name: "Hey", value: 23, tag: Tags.getTags())
     
     var body: some View {
@@ -56,13 +57,17 @@ struct EditTradeView: View {
     var envelopes: [Keepi.EnvelopeModel] = []
     var envelopeNames: [String] = []
     
+
+
     init(showEditTrade: Binding<Bool>, tradeListManager: TradeListManager, envelopeListManager: EnvelopeListManager, index: Int, trade: Binding<TradeModel>){
         self._showEditTrade = showEditTrade
         self.tradeListManager = tradeListManager
         self.envelopeListManager = envelopeListManager
         self._trade = trade
         self.index = index
-        print(self.index)
+        
+//        self.value = "\(trade.value)"
+
         self.value = "\(trade.value)"
         print(self.value)
         
@@ -133,7 +138,7 @@ struct EditTradeView: View {
                             .font(.headline)
                             .bold()
                         
-                        TradeField(textPlacer: "Ex. Food, Clothes, Transport", item: $trade.name, keyboardType: .default)
+                        TradeField(textPlacer: "Ex. Food, Clothes, Transport", item: $tradeTitle, keyboardType: .default)
                         
                     }
                     
@@ -221,7 +226,12 @@ struct EditTradeView: View {
             }
             .padding(10)
             .onAppear{
+                print("TESTE \(trade.name)")
                 self.value = String(format: "%.2f", trade.value)
+                self.tradeTitle = "\(trade.name)"
+                self.selectedEnvelope = "\(trade.envelopeId)"
+                self.selectedTags = trade.tag
+                self.selectedFeeling = trade.feeling
             }
         }
     }
@@ -258,8 +268,11 @@ struct EditTradeView: View {
         let date = tradeListManager.lista[index].date
         let envelopeId = getEnvelopeId()
         
-//        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, feeling: selectedFeeling, date: date)
-//        tradeListManager.updateTrade(compra)
+        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: selectedEnvelope, feeling: selectedFeeling, date: date)
+        print("teste")
+        print(compra.name)
+        tradeListManager.updateTrade(trade: compra)
+
         tradeListManager.fetchTrades()
         
         // Fechar a modal

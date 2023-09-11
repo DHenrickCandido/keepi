@@ -91,8 +91,8 @@ struct HomeView: View {
                 
             }
             .padding(10)
-        }
-        .onChange(of: selectedTrade, perform: {_ in
+        }.onChange(of: selectedTrade, perform: { _ in
+
             showEditTrade.toggle()
         })
         .sheet(isPresented: $showNewTrade){

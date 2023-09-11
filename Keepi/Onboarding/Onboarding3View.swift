@@ -44,6 +44,7 @@ struct Onboarding3View: View {
                 
                 NavigationLink {
                     LoginView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     VStack {
                         HStack {

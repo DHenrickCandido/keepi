@@ -199,8 +199,8 @@ struct NewEnvelopeView: View {
 
         let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat ?? 0, icon: iconSelected)
         print(envelope)
-        envelopeListManager.addEnvelope(item: envelope)
-//        tradeListManager.fetchTrades()
+        envelopeListManager.addEnvelope(envelope: envelope)
+        envelopeListManager.fetchEnvelopes()
 
         // Fechar a modal
         showNewEnvelope.toggle()
