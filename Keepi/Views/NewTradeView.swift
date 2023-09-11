@@ -68,11 +68,13 @@ struct NewTradeView: View {
             self.envelopeNames.append(envelope.name) // Assuming "name" is the property holding the envelope name
         }
         
-        if !self.envelopes.isEmpty {
-            self.selectedEnvelope = self.envelopeNames[0]
-        } else {
+        if self.envelopes.isEmpty {
             envelopeNames = ["Any envelope"]
         }
+        
+        print("aaaaaaaaa--------olhaq")
+        print(self.selectedEnvelope)
+        self.selectedEnvelope = self.envelopeNames[0]
         
     }
     
@@ -221,13 +223,18 @@ struct NewTradeView: View {
     }
     
     func getEnvelopeId() -> String {
+
         for envelope in envelopes {
+            print("OLHA AQUI ANDI E DIEGO")
+            print(selectedEnvelope)
+            print(envelope.name)
             if  selectedEnvelope == envelope.name{
+                
                 return envelope.id
             }
         }
         
-        return "0"
+        return self.envelopeNames[0]
     }
 
     

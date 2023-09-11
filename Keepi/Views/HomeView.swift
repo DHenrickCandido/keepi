@@ -14,7 +14,7 @@ struct HomeView: View {
     
     @State private var showNewTrade: Bool = false
     @State private var showEditTrade: Bool = false
-    @State var selectedTrade: Int = 0
+    @State var selectedTrade: Int = -1
     
     @State private var showNewEnvelope: Bool = false
     @State private var selectedEnvelope: Int = 0
@@ -91,7 +91,8 @@ struct HomeView: View {
                 
             }
             .padding(10)
-        }.onChange(of: selectedTrade, perform: { _ in
+        }
+        .onChange(of: selectedTrade, perform: { _ in
 
             showEditTrade.toggle()
         })
@@ -104,6 +105,7 @@ struct HomeView: View {
             EditTradeView(
                 showEditTrade: $showEditTrade,
                 tradeListManager: tradeListManager,
+                envelopeListManager: envelopeListManager,
                 index: selectedTrade,
                 trade: $tradeListManager.lista[selectedTrade])
                 .presentationDetents([.fraction(0.9)])
