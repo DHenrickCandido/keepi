@@ -24,6 +24,7 @@ struct HomeView: View {
     
     var userName: String = "Jujuba"
     var body: some View {
+        NavigationView{
             ZStack {
                 
                 //Header (logo + mascote)
@@ -35,7 +36,7 @@ struct HomeView: View {
                             .onChange(of: showEditTrade, perform: { _ in }) // NAO TIRA ISSO
                             .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
                         
-
+                        
                         
                         HStack (alignment: .top) {
                             Image("keepi")
@@ -79,7 +80,7 @@ struct HomeView: View {
                         ScrollView (.horizontal, showsIndicators: false) {
                             HStack {
                                 //Inicio Envelope
-                                ListaEnvelope(envelopeListManager: envelopeListManager, selectedEnvelope: $selectedEnvelope)
+                                ListaEnvelope(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, selectedEnvelope: $selectedEnvelope)
                                 Button {
                                     showNewEnvelope.toggle()
                                 } label: {
@@ -131,8 +132,8 @@ struct HomeView: View {
                                 .background(Color("darkGreenKeepi"))
                                 .cornerRadius(16)
                             }
-
-
+                            
+                            
                             //Fim botao novas trocas
                             
                         }
@@ -150,10 +151,10 @@ struct HomeView: View {
                             }
                             
                             Spacer()
-
+                            
                             ScrollView (showsIndicators: false){
                                 VStack {
-
+                                    
                                     ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade, selectedTrade: $selectedTrade)
                                 }
                             }
@@ -172,36 +173,36 @@ struct HomeView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color("lightGrayKeepi"))
-//                .onChange(of: selectedTrade, perform: { _ in
-//                    showEditTrade.toggle()
-//                })
-                .sheet(isPresented: $showNewTrade){
-                    NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager, envelopeListManager: envelopeListManager)
-                        .presentationDetents([.fraction(0.9)])
-                        .interactiveDismissDisabled()
-                }
-                .sheet(isPresented: $showEditTrade){
-                    let _ = print("AAA - selectedTrade (HomeView) \(selectedTrade)")
-                    EditTradeView(
-                        showEditTrade: $showEditTrade,
-                        tradeListManager: tradeListManager,
-                        envelopeListManager: envelopeListManager,
-                        index: selectedTrade,
-                        trade: $tradeListManager.lista[selectedTrade],
-                        selectedIndex: $selectedTrade)
-                        .presentationDetents([.fraction(0.9)])
-                        .interactiveDismissDisabled()
-//                        .id("\(selectedTrade) - \(showEditTrade)")
-                }
-                .sheet(isPresented: $showNewEnvelope){
-                    NewEnvelopeView(envelopeListManager: envelopeListManager, showNewEnvelope: $showNewEnvelope)
-                        .presentationDetents([.fraction(0.9)])
-                        .interactiveDismissDisabled()
-                }
-                .onAppear(){
-                    anonymous()
-                }
-        }
+            //                .onChange(of: selectedTrade, perform: { _ in
+            //                    showEditTrade.toggle()
+            //                })
+            .sheet(isPresented: $showNewTrade){
+                NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager, envelopeListManager: envelopeListManager)
+                    .presentationDetents([.fraction(0.9)])
+                    .interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $showEditTrade){
+                let _ = print("AAA - selectedTrade (HomeView) \(selectedTrade)")
+                EditTradeView(
+                    showEditTrade: $showEditTrade,
+                    tradeListManager: tradeListManager,
+                    envelopeListManager: envelopeListManager,
+                    index: selectedTrade,
+                    trade: $tradeListManager.lista[selectedTrade],
+                    selectedIndex: $selectedTrade)
+                .presentationDetents([.fraction(0.9)])
+                .interactiveDismissDisabled()
+                //                        .id("\(selectedTrade) - \(showEditTrade)")
+            }
+            .sheet(isPresented: $showNewEnvelope){
+                NewEnvelopeView(envelopeListManager: envelopeListManager, showNewEnvelope: $showNewEnvelope)
+                    .presentationDetents([.fraction(0.9)])
+                    .interactiveDismissDisabled()
+            }
+            .onAppear(){
+                anonymous()
+            }
+        }}
         
 //    }
     func anonymous() {

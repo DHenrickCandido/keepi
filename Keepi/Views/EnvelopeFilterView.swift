@@ -18,7 +18,8 @@ struct EnvelopeFilterView: View {
             ForEach(Array(tradeListManager.lista.enumerated()), id: \.element.id){ index, item in
                 if(item.envelopeId == envelopeId){
 //                    Text(item.name)
-                    TradeCardComponent(date: item.date, name: item.name, value: item.value, selectedTags: item.tag, envelopeName: item.envelopeId)
+                    TradeCardComponent(date: item.date, name: item.name, value: item.value, selectedTags: item.tag, envelopeName: item.envelopeId, feeling: item.feeling)
+                        .padding(16)
                 }
 //
                 
