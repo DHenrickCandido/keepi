@@ -41,6 +41,7 @@
 		A745E5522A9E32CC00240832 /* Feeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5512A9E32CC00240832 /* Feeling.swift */; };
 		A745E5542A9E354300240832 /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5532A9E354300240832 /* Tags.swift */; };
 		A745E5562A9F7B8C00240832 /* NewTradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5552A9F7B8C00240832 /* NewTradeView.swift */; };
+		A76AD9332AB0D6AA00F647CA /* EditEnvelopeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +76,7 @@
 		A745E5512A9E32CC00240832 /* Feeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feeling.swift; sourceTree = "<group>"; };
 		A745E5532A9E354300240832 /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
 		A745E5552A9F7B8C00240832 /* NewTradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTradeView.swift; sourceTree = "<group>"; };
+		A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEnvelopeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				A745E5552A9F7B8C00240832 /* NewTradeView.swift */,
 				A73161B52AA215B4003CB8F9 /* EditTradeView.swift */,
 				8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */,
+				A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */,
 				8B91F80A2AA5A3A1005F5728 /* LoginView.swift */,
 				5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */,
 			);
@@ -302,6 +305,7 @@
 				5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */,
 				5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */,
 				907FB3E42AA7605A000754FA /* Onboarding3View.swift in Sources */,
+				A76AD9332AB0D6AA00F647CA /* EditEnvelopeView.swift in Sources */,
 				8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */,
 				8BB460302AA223BE00258E7F /* NewEnvelopeView.swift in Sources */,
 				8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */,
