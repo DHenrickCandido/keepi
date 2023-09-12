@@ -92,4 +92,20 @@ class EnvelopeListManager: ObservableObject {
             
         }
     }
+    
+    func updateEnvelope(envelope: EnvelopeModel){
+        let db = Firestore.firestore()
+        guard let userID = Auth.auth().currentUser?.uid else { return }
+        
+
+        let ref = db.collection("Users").document(userID).collection("Envelopes").document(envelope.id)
+        
+        
+        ref.updateData(["name": envelope.name, "budget": envelope.budget, "id": envelope.id, "icon": envelope.icon]) { error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            
+        }
+    }
 }

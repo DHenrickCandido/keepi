@@ -22,7 +22,7 @@ struct ExampleEditEnvelope_test: View {
 
 struct ExampleEditEnvelope_test_Previews: PreviewProvider {
     static var previews: some View {
-        Example_test()
+        ExampleEditEnvelope_test()
     }
 }
 

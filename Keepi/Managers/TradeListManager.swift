@@ -47,7 +47,7 @@ class TradeListManager: ObservableObject {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else { return }
 
-        let ref = db.collection("Users").document(userID).collection("Trades")
+        let ref = db.collection("Users").document(userID).collection("Trades").order(by: "date", descending: true)
 
         ref.getDocuments { snapshot, error in
             guard error == nil else {
@@ -90,6 +90,8 @@ class TradeListManager: ObservableObject {
         
 
         let ref = db.collection("Users").document(userID).collection("Trades").document(trade.id)
+        let refEnvelope = db.collection("Users").document(userID).collection("Envelopes").document(trade.envelopeId)
+        
         var listTagNames = [String]()
         for tag in trade.tag{
             listTagNames.append(tag.name)
