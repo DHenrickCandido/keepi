@@ -14,6 +14,7 @@ struct KeepiApp: App {
     init() {
         FirebaseApp.configure()
     }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

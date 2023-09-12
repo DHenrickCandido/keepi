@@ -12,7 +12,6 @@
 		5A5BAF8F2A98EFAD00CBF7E3 /* TradeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */; };
 		5A68A7A02AB0955B009637C8 /* EnvelopeFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */; };
 		5A8739EE2AA0C235008127A3 /* NewTradeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */; };
-		5A91F5BF2AB0876300852C2A /* ListaFiltro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A91F5BE2AB0876300852C2A /* ListaFiltro.swift */; };
 		5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */; };
 		5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */; };
 		5AE47BE22AA759ED00EE90D5 /* EnvelopeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */; };
@@ -50,7 +49,6 @@
 		5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeModel.swift; sourceTree = "<group>"; };
 		5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeFilterView.swift; sourceTree = "<group>"; };
 		5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTradeButton.swift; sourceTree = "<group>"; };
-		5A91F5BE2AB0876300852C2A /* ListaFiltro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaFiltro.swift; sourceTree = "<group>"; };
 		5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaCompra.swift; sourceTree = "<group>"; };
 		5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeListManager.swift; sourceTree = "<group>"; };
 		5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeModel.swift; sourceTree = "<group>"; };
@@ -102,7 +100,6 @@
 				5A3A48892AA004CF0094F751 /* TagComponent.swift */,
 				5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */,
 				5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */,
-				5A91F5BE2AB0876300852C2A /* ListaFiltro.swift */,
 			);
 			path = Componentes;
 			sourceTree = "<group>";
@@ -291,7 +288,6 @@
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
 				5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */,
 				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
-				5A91F5BF2AB0876300852C2A /* ListaFiltro.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
 				907FB3E22AA75C0B000754FA /* OnboardingTabView.swift in Sources */,
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,

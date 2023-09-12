@@ -22,6 +22,8 @@ struct HomeView: View {
     
     @State var compra = TradeModel(id: "34", name: "Hey", value: 23, tag: Tags.getTags())
     
+//    @Binding var listTitleEnvelopeName: String
+    
     var userName: String = "Jujuba"
     var body: some View {
         NavigationView{
@@ -81,6 +83,9 @@ struct HomeView: View {
                             HStack {
                                 //Inicio Envelope
                                 ListaEnvelope(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, selectedEnvelope: $selectedEnvelope)
+                                
+//                                ListaEnvelope(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, selectedEnvelope: $selectedEnvelope, listTitleEnvelopeName: $listTitleEnvelopeName)
+                                
                                 Button {
                                     showNewEnvelope.toggle()
                                 } label: {
@@ -237,6 +242,9 @@ extension View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView(tradeModel: TradeModel(id: "3", name: "iFood", value: 25, tag: []))
+        
+//        HomeView(tradeModel: TradeModel(id: "3", name: "iFood", value: 25, tag: []), listTitleEnvelopeName: .constant("Uber"))
+        
             .environmentObject(EnvelopeListManager())
             .environmentObject(TradeListManager())
             

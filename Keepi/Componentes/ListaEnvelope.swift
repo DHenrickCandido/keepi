@@ -19,6 +19,8 @@ struct ListaEnvelope: View {
     @Binding var selectedEnvelope: Int
     @State var envelopeModelSelected: EnvelopeModel!
     
+//    @Binding var listTitleEnvelopeName: String
+    
     var body: some View {
         HStack {
             ForEach(Array(envelopeListManager.listaEnvelope.enumerated()), id: \.element.id) { index, item in
@@ -26,10 +28,16 @@ struct ListaEnvelope: View {
                 
                 NavigationLink {
                     EnvelopeFilterView(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, envelopeId: item.id)
+                    
+//                    EnvelopeFilterView(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, listTitleEnvelopeName: $listTitleEnvelopeName, envelopeId: item.id)
+                    
                 } label: {
                     EnvelopeCardView(icon: item.icon, name: item.name, budget: item.budget)
                     
                 }
+//                .onTapGesture {
+//                    listTitleEnvelopeName = item.name
+//                }
                 
                 
                 

@@ -12,9 +12,12 @@ struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var userIsLoggedIn = false
+//    @Binding var listTitleEnvelopeName: String
     var body: some View {
         if userIsLoggedIn {
             HomeView(tradeModel: TradeModel(id: "34", name: "Comida", value: 25, tag: []))
+            
+//            HomeView(tradeModel: TradeModel(id: "34", name: "Comida", value: 25, tag: []), listTitleEnvelopeName: $listTitleEnvelopeName)
                 .environmentObject(TradeListManager())
                 .environmentObject(EnvelopeListManager())
 //            content
@@ -109,5 +112,6 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
+//        LoginView(listTitleEnvelopeName: .constant("Uber"))
     }
 }
