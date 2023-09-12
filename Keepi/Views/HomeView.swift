@@ -109,7 +109,7 @@ struct HomeView: View {
                 envelopeListManager: envelopeListManager,
                 index: selectedTrade,
                 trade: $tradeListManager.lista[selectedTrade])
-                .presentationDetents([.fraction(0.9)])
+                .presentationDetents([.height(650)])
                 .interactiveDismissDisabled()
         }
         .sheet(isPresented: $showNewEnvelope){
