@@ -17,7 +17,8 @@ struct EnvelopeFilterView: View {
         ScrollView {
             ForEach(Array(tradeListManager.lista.enumerated()), id: \.element.id){ index, item in
                 if(item.envelopeId == envelopeId){
-                    Text(item.name)
+//                    Text(item.name)
+                    TradeCardComponent(date: item.date, name: item.name, value: item.value, selectedTags: item.tag, envelopeName: item.envelopeId)
                 }
 //
                 
