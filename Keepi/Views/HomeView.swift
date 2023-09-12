@@ -53,7 +53,7 @@ struct HomeView: View {
                             
                             ScrollView (.horizontal, showsIndicators: false){
                                 HStack{
-                                    ListaEnvelope(envelopeListManager: envelopeListManager, selectedEnvelope: $selectedEnvelope)
+                                    ListaEnvelope(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, selectedEnvelope: $selectedEnvelope)
                                     Button {
                                         showNewEnvelope.toggle()
                                     } label: {
