@@ -98,8 +98,9 @@ struct HomeView: View {
         })
         .sheet(isPresented: $showNewTrade){
             NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager, envelopeListManager: envelopeListManager)
-                .presentationDetents([.fraction(0.9)])
+                .presentationDetents([.height(650)])
                 .interactiveDismissDisabled()
+               
         }
         .sheet(isPresented: $showEditTrade){
             EditTradeView(
@@ -108,7 +109,7 @@ struct HomeView: View {
                 envelopeListManager: envelopeListManager,
                 index: selectedTrade,
                 trade: $tradeListManager.lista[selectedTrade])
-                .presentationDetents([.fraction(0.9)])
+                .presentationDetents([.height(650)])
                 .interactiveDismissDisabled()
         }
         .sheet(isPresented: $showNewEnvelope){
