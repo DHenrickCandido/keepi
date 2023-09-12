@@ -32,16 +32,20 @@ struct Example_Previews: PreviewProvider {
     }
 }
 
+enum steps {
+    case firstStep
+    case secondStep
+}
+
 struct NewTradeView: View {
     
     @Binding var showNewTrade: Bool // toggle for Modal
+    
     @ObservedObject var tradeListManager: TradeListManager
     @ObservedObject var envelopeListManager: EnvelopeListManager
     
     var tagManager: Tags = Tags()
-    @State var selectedEnvelope = ""
-    var envelopes: [Keepi.EnvelopeModel] = []
-    var envelopeNames: [String] = []
+    @State var selectedEnvelope: EnvelopeModel!
     
     
     // Elements of the trade
@@ -51,170 +55,259 @@ struct NewTradeView: View {
     @State var selectedTags: [Tag] = []
     var todayDate = Date()
     
-    init(showNewTrade: Binding<Bool>, tradeListManager: TradeListManager, envelopeListManager: EnvelopeListManager, tagManager: Tags = Tags(), selectedEnvelope: String = "", tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, selectedTags: [Tag] = [], todayDate: Date = Date()) {
-        self._showNewTrade = showNewTrade
+    @State var stepsIndicator: steps = .firstStep
+    @State var showAlert = false
+    
+    init(showNewTrade: Binding<Bool>, tradeListManager: TradeListManager, envelopeListManager: EnvelopeListManager, tagManager: Tags = Tags(), tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, selectedTags: [Tag] = [], todayDate: Date = Date()) {
+        self._showNewTrade = showNewTrade        
         self.tradeListManager = tradeListManager
         self.envelopeListManager = envelopeListManager
         self.tagManager = tagManager
-        self.selectedEnvelope = selectedEnvelope
+        
         self.tradeTitle = tradeTitle
         self.value = value
         self.selectedFeeling = selectedFeeling
         self.selectedTags = selectedTags
         self.todayDate = todayDate
         
-        self.envelopes = envelopeListManager.listaEnvelope
-        for envelope in self.envelopes {
-            self.envelopeNames.append(envelope.name) // Assuming "name" is the property holding the envelope name
-        }
-        
-        if self.envelopes.isEmpty {
-            envelopeNames = ["Any envelope"]
-        }
-        
-        print("aaaaaaaaa--------olhaq")
-        print(self.selectedEnvelope)
-        self.selectedEnvelope = self.envelopeNames[0]
+        self.selectedEnvelope = envelopeListManager.listaEnvelope.first
         
     }
     
     var body: some View {
-        ScrollView{
-            VStack(spacing:10){
-                
-                ZStack(){
-                    
-                    VStack(alignment: .center, spacing: 0) {
-                        Text("New Trade")
-                            .font(.title2)
-                            .bold()
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-                    .padding(.bottom, 15)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    
-                    VStack(alignment: .trailing, spacing: 0) {
-                        Image(systemName: "xmark")
-                            .font(.title2)
-                            .bold()
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-                    .padding(.bottom, 15)
-                    .frame(maxWidth: .infinity, alignment: .topTrailing)
-                    .onTapGesture {
-                        showNewTrade.toggle()
-                    }
-                    
-                }
-                
-                
-                
-                VStack(spacing: 32){
-                    
-                    
-                    // Qual sua Troca + TextField
-                    VStack (alignment: .leading) {
-                        Text("What's your new trade?")
-                            .font(.headline)
-                            .bold()
-                        
-                        TradeField(textPlacer: "Ex. Food, Clothes, Transport", item: $tradeTitle, keyboardType: .default)
-                        
-                    }
-                    
-                    // Envelope + Qual valor
-                    HStack(){
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text("Envelope")
-                                .font(.headline)
-                                .bold()
-                            HStack(alignment: .center){
-                                Picker("Select", selection: $selectedEnvelope) {
-                                    ForEach(envelopeNames, id: \.self) {
-                                        Text("\($0)                      ")
-                                    }
-                                }
-                                .pickerStyle(.menu)
-                                .accentColor(.black)
-                
-                                
-                                
-                            }
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 5)
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                            .cornerRadius(54)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 54)
-                                .inset(by: 0.5)
-                                .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
-                            )
-                        }
-                        .padding(0)
-                        .frame(width: 171, alignment: .topLeading)
-                        
-                        Spacer()
-                        VStack(alignment: .leading, spacing:16){
-                            QuestionText(text: "What's the value?")
-                            
-                            TradeField(textPlacer: "Ex.25,00", item: $value, keyboardType: .default)
-                                
-                            
-                        }
-                    }
-                    
-                    // Divider
-                    Divider()
-                    
-                    // Feelings section
-                    VStack(alignment: .leading, spacing:24){
-                        QuestionText(text: "How you felt with the trade?")
-                        HStack{
-                            ForEach(FeelingList.getFeelings(), id:\.self) { feeling in
-
-                                let isActiveFeeling = (feeling.index == selectedFeeling)
-                                EmotionOption(active: isActiveFeeling, feeling: feeling)
-                                    .onTapGesture {
-                                        print(selectedTags)
-                                        selectedFeeling = feeling.index
-                                        print(selectedTags)
-                                    }
-
-                                if feeling.index != 4 {
-                                    Spacer()
-                                }
-                            }
-                        }
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 24){
-                        QuestionText(text: "What was your main motivation?")
-                        TagCloudView(selectedTags: $selectedTags)
+        VStack(alignment: .leading, spacing: 40){
             
+            if(stepsIndicator == .firstStep){
+                FirstStep()
+                    
+            } else if (stepsIndicator == .secondStep ) {
+                SecondStep()
+            }
+        
+        }
+        .padding(16)
+    }
+    
+    func FirstStep() -> some View {
+        Group{
+            // Cabeçalho
+            ZStack {
+                
+                HStack {
+                    Image(systemName: "xmark")
+                        .fontWeight(.bold)
+                        .onTapGesture {
+                            showNewTrade.toggle()
+                        }
+                    
+                    Spacer()
+                    
+                    Text("Step 1 of 2")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                }
+                
+                Text("New trade")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("blackKeepi"))
+                
+            }
+            
+            //inicio Qual envelope?
+            VStack (alignment: .leading) {
+                QuestionText(text: "Which envelope?")
+                ScrollView (.horizontal) {
+                    HStack {
+                        ForEach(Array(envelopeListManager.listaEnvelope.enumerated()), id: \.element.id) { index, item in
+                            EnvelopeCard(envelope: item)
+                        }
+                        
+                        AddEnvelopeButton()
+                        
+                    }
+                    
+                }.scrollIndicators(.hidden)
+                
+                
+            }
+            //Fim qual envelope?
+        
+            TradeField(
+                question: "What's your new trade?",
+                textPlacer: "Ex. Tea, new shoes...",
+                item: $tradeTitle,
+                keyboardType: .default
+            )
+            
+            TradeField(
+                question: "What's the value?",
+                textPlacer: "Ex.20,00",
+                item: $value,
+                keyboardType: .default
+            )
+            
+            Spacer()
+            
+            NextButton()
+        }
+        .onAppear{
+            selectedEnvelope = envelopeListManager.listaEnvelope.first
+        }
+    }
+    
+    func SecondStep() -> some View {
+        Group{
+            // Cabeçalho
+            ZStack {
+                
+                HStack {
+                    Image(systemName: "xmark")
+                        .fontWeight(.bold)
+                        .onTapGesture {
+                            showNewTrade.toggle()
+                        }
+                    
+                    Spacer()
+                    
+                    Text("Step 2 of 2")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    
+                }
+                
+                Text("New trade")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("blackKeepi"))
+                
+            }
+            
+            //Inicio como voce se sentiu?
+            VStack (alignment: .leading) {
+                Text("How did you feel?")
+                    .font(.headline)
+                .fontWeight(.bold)
+                
+                HStack {
+                    ForEach(FeelingList.getFeelings(), id:\.self) { feeling in
+
+                        EmotionOption(active: (feeling.index == selectedFeeling) , feeling: feeling)
+                            .onTapGesture {
+                                selectedFeeling = feeling.index
+                            }
+
+                        if feeling.index != 4 {
+                            Spacer()
+                        }
                     }
                 }
-                .padding(10)
-                
-                AddTradeButton()
-                    .onTapGesture {
-                        showNewTrade.toggle()
-                        print(tradeTitle)
-                        print(value)
-                        print(selectedFeeling)
-                        print(selectedTags)
-                        print(getEnvelopeId())
-                    }
-                
+                .padding(8)
+                .frame(maxWidth: .infinity)
+                .background(Color("lightGrayKeepi"))
+                .cornerRadius(16)
             }
-            .padding(10)
-            .onAppear{
-                
+            //Fim como voce se sentiu?
+            VStack(alignment: .leading){
+                QuestionText(text: "What's your main motivation?")
+                TagCloudView(selectedTags: $selectedTags)
             }
+            
+            Spacer()
+            
+            AddTradeButton()
+        }
+    }
+    
+    func EnvelopeCard(envelope: EnvelopeModel) -> some View {
+        VStack {
+            Image(envelope.icon)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(8)
+                .frame(width: 48, height: 48)
+                .background(.white)
+                .cornerRadius(8)
+            
+            VStack {
+                Text(envelope.name)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("blackKeepi"))
+                
+                Text("R$ \(envelope.budget.formatted(.number.precision(.fractionLength(2))))")
+                    .font(.subheadline)
+                    .foregroundColor(Color(UIColor.darkGray))
+            }
+        }
+        .padding(8)
+        .frame(width: 142, height: 119)
+        .background(Color("lightGrayKeepi"))
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+            .inset(by: 1)
+            .stroke(selectedEnvelope == envelope ? Color("lightGreenKeepi") : Color.clear, lineWidth: 2)
+        )
+        .onTapGesture {
+            selectedEnvelope = envelope
         }
     }
 
+    func AddEnvelopeButton() -> some View {
+        VStack {
+            Image(systemName: "plus.app.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(8)
+                .frame(width: 48, height: 48)
+                .foregroundColor(Color("darkGreenKeepi"))
+                .cornerRadius(8)
+            
+            VStack {
+                Text("Add\nenvelope")
+                    .multilineTextAlignment(.center)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color("darkGreenKeepi"))
+                
+            }
+        }
+        .padding(8)
+        .frame(width: 142, height: 119)
+        .background(Color("lightGrayKeepi"))
+        .cornerRadius(16)
+        .onTapGesture {
+            print("TO-DO")
+        }
+    }
+    
+    func NextButton() -> some View {
+        HStack {
+            
+            Spacer()
+            
+            Text("Continue")
+                .font(.body)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .frame(width: 150, height: 54)
+                .background(Color("darkGreenKeepi"))
+                .cornerRadius(16)
+                .onTapGesture {
+                    if envelopeListManager.listaEnvelope.isEmpty{
+                       showAlert = true
+                    } else {
+                        stepsIndicator = .secondStep
+                    }
+                }
+                .alert(isPresented: $showAlert){
+                    Alert(title: Text("No envelope selected"), message: Text("Please create an envelope to proceed with your trade creation."), dismissButton: .default(Text("Got it!")))
+                }
+            
+        }
+    }
     
     func QuestionText(text: String) -> some View {
         Text(text)
@@ -222,26 +315,10 @@ struct NewTradeView: View {
             .bold()
     }
     
-    func getEnvelopeId() -> String {
-
-        for envelope in envelopes {
-            print("OLHA AQUI ANDI E DIEGO")
-            print(selectedEnvelope)
-            print(envelope.name)
-            if  selectedEnvelope == envelope.name{
-                
-                return envelope.id
-            }
-        }
-        
-        return self.envelopeNames[0]
-    }
-
-    
     func saveTrade() {
         let valueFloat = Float(value)
         let id = tradeTitle.replacingOccurrences(of: " ", with: "") + TradeListManager.date2string(date: todayDate)
-        let envelopeId: String = getEnvelopeId()
+        let envelopeId = selectedEnvelope.id
         
         let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: todayDate)
         tradeListManager.addTrade(trade: compra)
@@ -252,51 +329,58 @@ struct NewTradeView: View {
     }
     
     func AddTradeButton() -> some View {
-        HStack(alignment: .top, spacing: 10) {
-            QuestionText(text: "Add Trade")
+        HStack {
+            Spacer()
+            
+            Text("Save trade")
+                .font(.body)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .frame(width: 150, height: 54)
+                .background(Color("darkGreenKeepi"))
+                .cornerRadius(16)
+                .onTapGesture {
+                    saveTrade()
+                }
+            
         }
-        .padding(.horizontal, 32)
-        .padding(.vertical, 16)
-        .frame(maxWidth: .infinity, alignment: .top)
-        .background(Color(red: 0.9, green: 0.9, blue: 0.92))
-        .cornerRadius(100)
-        .onTapGesture {
-
-            saveTrade()
-        }
+        
     }
     
     func EmotionOption(active: Bool, feeling: Feeling) -> some View {
-        
+            
         Image(feeling.icon)
             .resizable()
-            .foregroundColor(.clear)
-            .frame(width: 40, height: 40)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 50, height: 50)
+            .saturation(active ? 1 : 0)
             .opacity(active ? 1 : 0.5)
-            .cornerRadius(100)
+    }
+    
+    func TradeField(question: String, textPlacer: String, item: Binding<String>, keyboardType: UIKeyboardType) -> some View {
+        
+        VStack (alignment: .leading) {
+            Text(question)
+                .font(.headline)
+                .bold()
             
-    }
-    
-    func Divider() -> some View {
-        VStack(){}
-        .frame(maxWidth: .infinity, minHeight: 1, maxHeight: 1)
-        .background(Color(red: 0.56, green: 0.56, blue: 0.58))
-    }
-    
-    func TradeField(textPlacer: String, item: Binding<String>, keyboardType: UIKeyboardType) -> some View {
-        HStack(alignment: .top, spacing: 10) {
-            TextField(textPlacer, text: item)
-                .keyboardType(keyboardType)
+            HStack(alignment: .top, spacing: 10) {
+                TextField(textPlacer, text: item)
+                    .keyboardType(keyboardType)
+                    .font(.callout)
+                    .foregroundColor(.gray)
+                    .multilineTextAlignment(.leading)
+                    .padding(16)
+                    .frame(maxWidth: .infinity)
+                    .background(Color("lightGrayKeepi"))
+                    .cornerRadius(16)
+            }
+            
+            
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .frame(maxWidth: .infinity)
-        .cornerRadius(54)
-        .overlay(
-            RoundedRectangle(cornerRadius: 54)
-                .inset(by: 0.5)
-                .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
-        )
+        
+        
+        
     }
     
 }
@@ -363,17 +447,20 @@ struct TagCloudView: View {
     func TagOption(tag: Tag) -> some View {
         
         Text(tag.name)
-            .font(Font.custom("SF Pro Text", size: 14))
-            .foregroundColor(isSelectedTag(tag: tag) ? .white : Color(red: 0.01, green: 0.01, blue: 0.01))
+            .font(.body)
+            .fontWeight(isSelectedTag(tag: tag) ? .bold : .regular)
+            .foregroundColor(isSelectedTag(tag: tag) ? .white : Color("darkGreenKeepi"))
             .padding(.horizontal, 12)
             .padding(.vertical, 4)
-            .background(isSelectedTag(tag: tag) ? .black : .white)
-            .cornerRadius(16)
+            .background(isSelectedTag(tag: tag) ? Color("darkGreenKeepi") : Color.clear)
             .overlay(
-                RoundedRectangle(cornerRadius: 32)
-                    .inset(by: 0.5)
-                    .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(lineWidth: 2)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .foregroundColor(isSelectedTag(tag: tag) ? Color.clear : Color("darkGreenKeepi") )
+                
             )
+            .cornerRadius(16)
             .onTapGesture {
                 if isSelectedTag(tag: tag){
                     if let index = selectedTags.firstIndex(of: tag){
@@ -382,7 +469,6 @@ struct TagCloudView: View {
                 } else {
                     selectedTags.append(tag)
                 }
-                
                 
             }
     }
