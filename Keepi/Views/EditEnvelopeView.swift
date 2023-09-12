@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-struct Example_test: View {
+struct ExampleEditEnvelope_test: View {
     
     @State private var showNewEnvelope: Bool = false
     
@@ -20,22 +20,17 @@ struct Example_test: View {
     }
 }
 
-func QuestionText(text: String) -> some View {
-    Text(text)
-        .font(.headline)
-        .bold()
-}
-
-struct Example_test_Previews: PreviewProvider {
+struct ExampleEditEnvelope_test_Previews: PreviewProvider {
     static var previews: some View {
         Example_test()
     }
 }
 
-struct NewEnvelopeView: View {
+struct EditEnvelopeView: View {
     
     @ObservedObject var envelopeListManager: EnvelopeListManager
     
+    var selectedEnvelopeIndex: Int
     @Binding var showNewEnvelope: Bool
     
     @State var iconSelected: String = Icons.getIcons()[0]
@@ -165,6 +160,11 @@ struct NewEnvelopeView: View {
             }
         }
         .padding(16)
+        .onAppear{
+            iconSelected = envelopeListManager.listaEnvelope[selectedEnvelopeIndex].icon
+            envelopeName = envelopeListManager.listaEnvelope[selectedEnvelopeIndex].name
+            envelopeBudget = String(format: "%.2f", envelopeListManager.listaEnvelope[selectedEnvelopeIndex].budget)
+        }
     }
     
     func saveEnvelope() {
@@ -173,7 +173,7 @@ struct NewEnvelopeView: View {
 
         let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat ?? 0, icon: iconSelected)
         print(envelope)
-        envelopeListManager.addEnvelope(envelope: envelope)
+//        envelopeListManager.addEnvelope(envelope: envelope) TO-DO: Update envelope
         envelopeListManager.fetchEnvelopes()
 
         // Fechar a modal
@@ -207,4 +207,5 @@ struct NewEnvelopeView: View {
             
     }
 }
+
 
