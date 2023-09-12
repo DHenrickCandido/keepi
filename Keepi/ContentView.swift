@@ -8,9 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var showingOnboarding: Bool = true
     var body: some View {
-        LoginView()
-//        LoginView()
+        if showingOnboarding {
+            OnboardingTabView(showingOnboarding: $showingOnboarding)
+
+        } else {
+            HomeView(tradeModel: TradeModel(id: "34", name: "Comida", value: 25, tag: []))
+                .environmentObject(TradeListManager())
+                .environmentObject(EnvelopeListManager())
+                .navigationBarBackButtonHidden(true)
+        }
     }
 }
 
