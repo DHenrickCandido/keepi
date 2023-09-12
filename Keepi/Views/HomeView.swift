@@ -23,74 +23,76 @@ struct HomeView: View {
     
     var userName: String = "Jujuba"
     var body: some View {
-        ScrollView {
-            VStack (spacing: 16){
-                VStack{
-                    HStack{
-                        Text("Hello, \(userName)!")
-                            .font(.largeTitle)
-                            .bold()
-                        Spacer()
+        NavigationView{
+            ScrollView {
+                VStack (spacing: 16){
+                    VStack{
+                        HStack{
+                            Text("Hello, \(userName)!")
+                                .font(.largeTitle)
+                                .bold()
+                            Spacer()
+                        }
+                        HStack{
+                            Text("Any interesting trades today?")
+                                .foregroundColor(Color(UIColor.systemGray))
+                            Spacer()
+                        }
                     }
-                    HStack{
-                        Text("Any interesting trades today?")
-                            .foregroundColor(Color(UIColor.systemGray))
-                        Spacer()
-                    }
-                }
-                .padding(.horizontal, 16)
-                Divider()
-                
-                VStack{
-                    HStack{
-                        VStack {
-                            HStack{
-                                Text("My envelopes")
-                                    .font(.title3)
-                                    .fontWeight(.semibold)
-                                Spacer()
-                            }
-                            
-                            ScrollView (.horizontal, showsIndicators: false){
+                    .padding(.horizontal, 16)
+                    Divider()
+                    
+                    VStack{
+                        HStack{
+                            VStack {
                                 HStack{
-                                    ListaEnvelope(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, selectedEnvelope: $selectedEnvelope)
-                                    Button {
-                                        showNewEnvelope.toggle()
-                                    } label: {
-                                        NewEnvelopeButtonView()
+                                    Text("My envelopes")
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
+                                    Spacer()
+                                }
+                                
+                                ScrollView (.horizontal, showsIndicators: false){
+                                    HStack{
+                                        ListaEnvelope(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, selectedEnvelope: $selectedEnvelope)
+                                        Button {
+                                            showNewEnvelope.toggle()
+                                        } label: {
+                                            NewEnvelopeButtonView()
+                                        }
                                     }
                                 }
                             }
                         }
+                        
+                        
+                        
                     }
                     
-                    
-                    
-                }
-                
-                VStack{
-                    HStack {
-                        Text("Last Trades")
-                            .font(.title3)
-                            .fontWeight(.semibold)
+                    VStack{
+                        HStack {
+                            Text("Last Trades")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                            Spacer()
+                        }
+                        
+                        VStack {
+                            Button {
+                                
+                                showNewTrade.toggle()
+                            } label: {
+                                NewTradeButton()
+                            }
+                            
+                            ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade, selectedTrade: $selectedTrade)
+                        }
                         Spacer()
                     }
                     
-                    VStack {
-                    Button {
-                        
-                        showNewTrade.toggle()
-                    } label: {
-                        NewTradeButton()
-                    }
-                        
-                        ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade, selectedTrade: $selectedTrade)
-                        }
-                    Spacer()
                 }
-                
+                .padding(10)
             }
-            .padding(10)
         }
         .onChange(of: selectedTrade, perform: { _ in
 
