@@ -30,12 +30,6 @@ struct ExampleEdit: View {
     }
 }
 
-//struct ExampleEdit_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ExampleEdit()
-//    }
-//}
-
 struct EditTradeView: View {
     
     @Binding var showEditTrade: Bool // toggle for Modal
