@@ -14,7 +14,7 @@ struct HomeView: View {
     
     @State private var showNewTrade: Bool = false
     @State private var showEditTrade: Bool = false
-    @State var selectedTrade: Int = -1
+    @State var selectedTrade: Int = 0
     
     @State private var showNewEnvelope: Bool = false
     @State private var selectedEnvelope: Int = 0
@@ -23,99 +23,6 @@ struct HomeView: View {
     
     var userName: String = "Jujuba"
     var body: some View {
-//        ScrollView {
-            //            VStack (spacing: 16){
-            //                VStack{
-            //                    HStack{
-            //                        Text("Hello, \(userName)!")
-            //                            .font(.largeTitle)
-            //                            .bold()
-            //                        Spacer()
-            //                    }
-            //                    HStack{
-            //                        Text("Any interesting trades today?")
-            //                            .foregroundColor(Color(UIColor.systemGray))
-            //                        Spacer()
-            //                    }
-            //                }
-            //                .padding(.horizontal, 16)
-            //                Divider()
-            //
-            //                VStack{
-            //                    HStack{
-            //                        VStack {
-            //                            HStack{
-            //                                Text("My envelopes")
-            //                                    .font(.title3)
-            //                                    .fontWeight(.semibold)
-            //                                Spacer()
-            //                            }
-            //
-            //                            ScrollView (.horizontal, showsIndicators: false){
-            //                                HStack{
-            //                                    ListaEnvelope(envelopeListManager: envelopeListManager, selectedEnvelope: $selectedEnvelope)
-            //                                    Button {
-            //                                        showNewEnvelope.toggle()
-            //                                    } label: {
-            //                                        NewEnvelopeButtonView()
-            //                                    }
-            //                                }
-            //                            }
-            //                        }
-            //                    }
-            //
-            //
-            //
-            //                }
-            //
-            //                VStack{
-            //                    HStack {
-            //                        Text("Last Trades")
-            //                            .font(.title3)
-            //                            .fontWeight(.semibold)
-            //                        Spacer()
-            //                    }
-            //
-            //                    VStack {
-            //                    Button {
-            //
-            //                        showNewTrade.toggle()
-            //                    } label: {
-            //                        NewTradeButton()
-            //                    }
-            //
-            //                        ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade, selectedTrade: $selectedTrade)
-            //                        }
-            //                    Spacer()
-            //                }
-            //
-            //            }
-            //            .padding(10)
-            //        }
-            //        .onChange(of: selectedTrade, perform: { _ in
-            //
-            //            showEditTrade.toggle()
-            //        })
-            //        .sheet(isPresented: $showNewTrade){
-            //            NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager, envelopeListManager: envelopeListManager)
-            //                .presentationDetents([.fraction(0.9)])
-            //                .interactiveDismissDisabled()
-            //        }
-            //        .sheet(isPresented: $showEditTrade){
-            //            EditTradeView(
-            //                showEditTrade: $showEditTrade,
-            //                tradeListManager: tradeListManager,
-            //                envelopeListManager: envelopeListManager,
-            //                index: selectedTrade,
-            //                trade: $tradeListManager.lista[selectedTrade])
-            //                .presentationDetents([.fraction(0.9)])
-            //                .interactiveDismissDisabled()
-            //        }
-            //        .sheet(isPresented: $showNewEnvelope){
-            //            NewEnvelopeView(envelopeListManager: envelopeListManager, showNewEnvelope: $showNewEnvelope)
-            //                .presentationDetents([.fraction(0.9)])
-            //                .interactiveDismissDisabled()
-            //    }
             ZStack {
                 
                 //Header (logo + mascote)
@@ -124,7 +31,10 @@ struct HomeView: View {
                         Rectangle()
                             .frame(height: 240)
                             .foregroundColor(Color("darkGreenKeepi"))
+                            .onChange(of: showEditTrade, perform: { _ in }) // NAO TIRA ISSO
                             .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
+                        
+
                         
                         HStack (alignment: .top) {
                             Image("keepi")
@@ -239,27 +149,12 @@ struct HomeView: View {
                             }
                             
                             Spacer()
-//                            HStack {
-//                                Text("Last Trades")
-//                                    .font(.title3)
-//                                    .fontWeight(.semibold)
-//                                Spacer()
-//                            }
+
                             ScrollView (showsIndicators: false){
-                                
-                                
                                 VStack {
-                                    //                                Button {
-                                    //
-                                    //                                    showNewTrade.toggle()
-                                    //                                } label: {
-                                    //                                    NewTradeButton()
-                                    //                                }
-                                    
+
                                     ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade, selectedTrade: $selectedTrade)
                                 }
-                                //                            Spacer()
-                                
                             }
                         }
                     }
@@ -273,24 +168,26 @@ struct HomeView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color("lightGrayKeepi"))
-                .onChange(of: selectedTrade, perform: { _ in
-        
-                    showEditTrade.toggle()
-                })
+//                .onChange(of: selectedTrade, perform: { _ in
+//                    showEditTrade.toggle()
+//                })
                 .sheet(isPresented: $showNewTrade){
                     NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager, envelopeListManager: envelopeListManager)
                         .presentationDetents([.fraction(0.9)])
                         .interactiveDismissDisabled()
                 }
                 .sheet(isPresented: $showEditTrade){
+                    let _ = print("AAA - selectedTrade (HomeView) \(selectedTrade)")
                     EditTradeView(
                         showEditTrade: $showEditTrade,
                         tradeListManager: tradeListManager,
                         envelopeListManager: envelopeListManager,
                         index: selectedTrade,
-                        trade: $tradeListManager.lista[selectedTrade])
+                        trade: $tradeListManager.lista[selectedTrade],
+                        selectedIndex: $selectedTrade)
                         .presentationDetents([.fraction(0.9)])
                         .interactiveDismissDisabled()
+//                        .id("\(selectedTrade) - \(showEditTrade)")
                 }
                 .sheet(isPresented: $showNewEnvelope){
                     NewEnvelopeView(envelopeListManager: envelopeListManager, showNewEnvelope: $showNewEnvelope)

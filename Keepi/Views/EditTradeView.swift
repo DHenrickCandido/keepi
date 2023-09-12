@@ -48,26 +48,30 @@ struct EditTradeView: View {
     @State var selectedTags: [Tag] = []
     @State var selectedEnvelope: EnvelopeModel!
     @State var stepsIndicator: steps = .firstStep
+    @Binding var selectedIndex: Int
 
-
-    init(showEditTrade: Binding<Bool>, tradeListManager: TradeListManager, envelopeListManager: EnvelopeListManager, index: Int, trade: Binding<TradeModel>){
+    init(showEditTrade: Binding<Bool>, tradeListManager: TradeListManager, envelopeListManager: EnvelopeListManager, index: Int, trade: Binding<TradeModel>, selectedIndex: Binding<Int>){
         self._showEditTrade = showEditTrade
         
         self.tradeListManager = tradeListManager
         self.envelopeListManager = envelopeListManager
         self._trade = trade
         self.index = index
-        
+        self._selectedIndex = selectedIndex
         
         self.tradeTitle = self.trade.name
         self.value = String(format: "%.2f", self.trade.value)
         self.selectedTags = self.trade.tag
         self.selectedFeeling = self.trade.feeling
-   
+        
+        
+        
+        print("AAA - Called init \(index)")
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 40){
+            let _ = print("AAA - Evaluate \(index)")
             
             if(stepsIndicator == .firstStep){
                 FirstStep()
@@ -156,6 +160,10 @@ struct EditTradeView: View {
                     selectedEnvelope = envelope
                 }
             }
+        }
+        .onDisappear(){
+            selectedIndex = 0
+            print("AAA - called disappear")
         }
     }
     
