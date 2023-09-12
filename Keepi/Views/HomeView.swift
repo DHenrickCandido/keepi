@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct HomeView: View {
     @StateObject var tradeModel: TradeModel
@@ -194,9 +195,20 @@ struct HomeView: View {
                         .presentationDetents([.fraction(0.9)])
                         .interactiveDismissDisabled()
                 }
+                .onAppear(){
+                    anonymous()
+                }
         }
+        
 //    }
-    
+    func anonymous() {
+
+        Auth.auth().signInAnonymously { authResult, error in
+            if error != nil {
+                print(error!.localizedDescription)
+            }
+        }
+    }
 }
 
 //Estrutura e função para fazer o retangulo ter arredondamento só embaixo
