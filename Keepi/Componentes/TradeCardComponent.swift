@@ -13,29 +13,31 @@ struct TradeCardComponent: View {
     @State var value: Float
     @State var selectedTags: [Tag]
     @State var envelopeName: String
-    
+    @State var feeling: Int
     var body: some View {
         VStack{
             HStack(spacing: 18){
                 //icon
                 VStack{
                     //img aqui
-                    Circle()
-                        .frame(width: 48, height: 48)
+                    Image("feeling\(feeling)")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 50, height: 50)
                         
                         
                 }
-                .frame(width: 90, height: 94)
-                .background(.white)
-                .cornerRadius(10)
+                .frame(width: 70, height: 108)
+                .background(Color("lightGrayKeepi"))
+                .cornerRadius(12)
                 
                 //info da compra
                 VStack (spacing: 8){
                     VStack (alignment: .leading){
                         Text(name)
-                            .font(.body)
+                            .font(.headline)
                             .fontWeight(.bold)
-                            .foregroundColor(Color(.black))
+                            .foregroundColor(Color("blackKeepi"))
                         
                         Text(envelopeName)
                             .font(.subheadline)
@@ -47,34 +49,36 @@ struct TradeCardComponent: View {
                         HStack{
                             //img aqui
                             ZStack{
-                                Circle()
-                                    .fill(.white)
-                                    .frame(width: 20, height: 20)
                                 Text("$")
+                                    .font(.footnote)
+                                    .foregroundColor(Color("darkGreenKeepi"))
                             }
                             
                             
                             Text(String(format: "%.2f", value))
+                                .font(.footnote)
+
                         }
+                        .frame(width: 80, alignment: .leading)
+
                         
-                        HStack{
+                        HStack(spacing: 4){
                             //img aqui
                             ZStack{
-                                Circle()
-                                    .fill(.white)
-                                    .frame(width: 20, height: 20)
                                 Image(systemName: "calendar")
                                     .font(.system(size: 12))
+                                    .foregroundColor(Color("darkGreenKeepi"))
                             }
                             
                             Text(TradeListManager.date2string(date: date, dateFormat: "dd MMM"))
-                            
+                                .font(.footnote)
                         
                         }
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
+                    Divider()
                     
                     HStack(alignment: .center, spacing: 8){
                         ScrollView (.horizontal, showsIndicators: false){
@@ -96,16 +100,19 @@ struct TradeCardComponent: View {
             
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 10)
-        .padding(.horizontal, 12)
-        .background(Color(.systemGray6))
+        .padding(.vertical, 16)
+        .padding(.horizontal, 16)
+        .background(Color(.white))
         .foregroundColor(Color(.systemGray))
+
         .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+
     }
 }
 
 struct TradeCardComponent_Previews: PreviewProvider {
     static var previews: some View {
-        TradeCardComponent(date: Date(), name: "teste", value: 25, selectedTags: [], envelopeName: "ifood")
+        TradeCardComponent(date: Date(), name: "teste", value: 25, selectedTags: [], envelopeName: "ifood", feeling: 4)
     }
 }

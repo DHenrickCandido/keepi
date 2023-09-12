@@ -13,11 +13,14 @@ struct TagComponent: View {
     var body: some View {
         VStack {
             Text(selectedTag.name)
+                .font(.footnote)
+                .fontWeight(.bold)
+                .foregroundColor(Color("mainGreen"))
         }
-        .padding(.horizontal, 8)
+        .padding(.horizontal, 12)
         .padding(.vertical, 4)
-        .background(Color.white)
-        .cornerRadius(4)
+        .background(Color("lightGrayKeepi"))
+        .cornerRadius(16)
     }
 }
 
