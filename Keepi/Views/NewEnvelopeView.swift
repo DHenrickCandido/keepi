@@ -103,7 +103,7 @@ struct NewEnvelopeView: View {
                 
                 TextField("Ex. Food, Clothes, Transportation", text: $envelopeName)
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.black)
                     .multilineTextAlignment(.leading)
                     .padding(16)
                     .frame(maxWidth: .infinity)
@@ -122,22 +122,22 @@ struct NewEnvelopeView: View {
                 
                 TextField("Ex. 200.00", text: $envelopeBudget)
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.black)
                     .multilineTextAlignment(.leading)
                     .padding(16)
                     .frame(maxWidth: .infinity)
                     .background(Color("lightGrayKeepi"))
                     .cornerRadius(16)
-                    .keyboardType(.default)
-                    .onReceive(Just(envelopeBudget)) { newValue in
-                        let filtered = newValue.filter { "0123456789,.".contains($0) }
-                        if filtered != newValue {
-                            self.envelopeBudget = filtered
-                        }
-                    
-                        
-                        
-                    }
+                    .keyboardType(.decimalPad)
+//                    .onReceive(Just(envelopeBudget)) { newValue in
+//                        let filtered = newValue.filter { "0123456789.".contains($0) }
+//                        if filtered != newValue {
+//                            self.envelopeBudget = filtered
+//                        }
+//
+//
+//
+//                    }
                 //fim Quanto quer gastar?
                 
                 
@@ -161,6 +161,10 @@ struct NewEnvelopeView: View {
                     .frame(width: 150, height: 54)
                     .background(Color("darkGreenKeepi"))
                     .cornerRadius(16)
+                    .onTapGesture {
+                        saveEnvelope()
+                        showNewEnvelope.toggle()
+                    }
                 
             }
         }
@@ -168,6 +172,7 @@ struct NewEnvelopeView: View {
     }
     
     func saveEnvelope() {
+        envelopeBudget = envelopeBudget.replacingOccurrences(of: ",", with: ".")
         let valueFloat = Float(envelopeBudget)
         let id = envelopeName.replacingOccurrences(of: " ", with: "")
 
@@ -204,6 +209,8 @@ struct NewEnvelopeView: View {
                     .stroke(lineWidth: active ? 2 : 0)
                     .foregroundColor(active ? Color("lightGreenKeepi") : Color.clear)
             )
+            .saturation(active ? 1 : 0)
+            .opacity(active ? 1 : 0.5)
             
     }
 }

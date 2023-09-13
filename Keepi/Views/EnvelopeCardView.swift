@@ -25,7 +25,7 @@ struct EnvelopeCardView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
-                Text("R$ \(budget.formatted(.number.precision(.fractionLength(2))))")
+                Text("$ \(budget.formatted(.number.precision(.fractionLength(2))))")
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
             }

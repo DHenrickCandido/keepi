@@ -34,23 +34,25 @@ struct Onboarding2View: View {
                     .opacity(0.7)
                     .frame(width: 150)
                     .offset(x: -170, y: 300)
-                Button {
-                    showingOnboarding = false
-                } label: {
-                    VStack {
-                        HStack {
-                            Spacer()
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button {
+                            showingOnboarding = false
+                        } label: {
                             Text("Skip")
                                 .font(.system(size: 20))
                                 .bold()
                                 .foregroundColor(.white)
                                 .padding(.trailing, 40)
                         }
-                        .padding(.top, 80)
-                        Spacer()
-                            
+                        
                     }
+                    .padding(.top, 80)
+                    Spacer()
+                        
                 }
+                
                 
                 Image("trades")
                     .offset(y: -50)

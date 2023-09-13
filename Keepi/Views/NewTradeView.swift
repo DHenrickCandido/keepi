@@ -145,7 +145,7 @@ struct NewTradeView: View {
                 question: "What's the value?",
                 textPlacer: "Ex.20,00",
                 item: $value,
-                keyboardType: .default
+                keyboardType: .decimalPad
             )
             
             Spacer()
@@ -236,7 +236,7 @@ struct NewTradeView: View {
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
                 
-                Text("R$ \(envelope.budget.formatted(.number.precision(.fractionLength(2))))")
+                Text("$ \(envelope.budget.formatted(.number.precision(.fractionLength(2))))")
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
             }
@@ -316,6 +316,7 @@ struct NewTradeView: View {
     }
     
     func saveTrade() {
+        value = value.replacingOccurrences(of: ",", with: ".")
         let valueFloat = Float(value)
         let id = tradeTitle.replacingOccurrences(of: " ", with: "") + TradeListManager.date2string(date: todayDate)
         let envelopeId = selectedEnvelope.id
@@ -368,7 +369,7 @@ struct NewTradeView: View {
                 TextField(textPlacer, text: item)
                     .keyboardType(keyboardType)
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.black)
                     .multilineTextAlignment(.leading)
                     .padding(16)
                     .frame(maxWidth: .infinity)

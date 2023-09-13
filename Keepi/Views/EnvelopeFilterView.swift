@@ -22,6 +22,7 @@ struct EnvelopeFilterView: View {
     
             ZStack{
                 VStack {
+                    
                     ZStack (alignment: .leading) {
                         Rectangle()
                             .frame(height: 240)
@@ -42,6 +43,8 @@ struct EnvelopeFilterView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: 120)
+                            
+                            
                         }
                         .padding(.horizontal, 16)
                     }
@@ -49,6 +52,8 @@ struct EnvelopeFilterView: View {
                     
                     Spacer()
                 }.ignoresSafeArea()
+                
+                
                 
                 ScrollView{
 //
@@ -76,6 +81,7 @@ struct EnvelopeFilterView: View {
         .onTapGesture {
             print("cheguei")
         }
+        
         .navigationBarItems(leading:
                     Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
@@ -86,15 +92,23 @@ struct EnvelopeFilterView: View {
                                 .font(.title2)
                                 .fontWeight(.bold)
                         }
+                        .padding(.vertical, 244)
                 })
-//        .navigationBarTitleDisplayMode(.inline)
-//        .toolbar {
-//            ToolbarItem(placement: .principal) {
-//                Text(listTitleEnvelopeName)
-//                    .font(.largeTitle.bold())
-//                    .accessibilityAddTraits(.isHeader)
-//            }
-//        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                VStack {
+                    Text(envelopeListManager.getEnvelopeNameById(id: envelopeId))
+                        .foregroundColor(.white)
+                        .font(.title)
+                        .fontWeight(.bold)
+                    .accessibilityAddTraits(.isHeader)
+                }
+                .padding(.vertical, 244)
+
+            }
+            
+        }
     }
 }
 

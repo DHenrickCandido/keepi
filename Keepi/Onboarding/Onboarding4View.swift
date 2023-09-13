@@ -29,21 +29,23 @@ struct Onboarding4View: View {
                     .frame(width: 100)
                     .offset(x: 90, y: -130)
                 
-                Button {
-                    showingOnboarding = false
-                } label: {
-                    VStack {
-                        HStack {
-                            Spacer()
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button {
+                            showingOnboarding = false
+                        } label: {
                             Text("Skip")
                                 .font(.system(size: 20))
                                 .bold()
                                 .foregroundColor(.white)
                                 .padding(.trailing, 40)
                         }
-                        .padding(.top, 80)
-                        Spacer()
+                        
                     }
+                    .padding(.top, 80)
+                    Spacer()
+                        
                 }
                 
              
