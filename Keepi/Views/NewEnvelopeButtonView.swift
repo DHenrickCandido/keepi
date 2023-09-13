@@ -10,31 +10,24 @@ import SwiftUI
 struct NewEnvelopeButtonView: View {
     var body: some View {
         VStack{
-            Image(systemName: "plus.square.fill")
-                .foregroundColor(Color(UIColor.systemGray2))
-                .font(.system(size: 50))
-                .padding()
-            Text("Novo")
-                .foregroundColor(Color(UIColor.systemGray))
-                .fontWeight(.semibold)
+            Image(systemName: "plus.app.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(8)
+                .frame(width: 48, height: 48)
+                .foregroundColor(Color("darkGreenKeepi"))
+                .cornerRadius(8)
+
+            Text("Adicionar \n envelope")
                 .font(.headline)
-            Text("Envelope")
-                .foregroundColor(Color(UIColor.systemGray))
                 .fontWeight(.semibold)
-                .font(.headline)
+                .foregroundColor(Color("darkGreenKeepi"))
 
         }
-        .padding(.horizontal, 32)
-            .padding(.vertical, 16)
-            .frame(width: 160, height: 160, alignment: .center)
-//            .background(Color(UIColor.systemGray6))
-            .foregroundColor(.white)
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .inset(by: 0.5)
-                    .stroke(Color(red: 0.56, green: 0.56, blue: 0.58), style: StrokeStyle(lineWidth: 1, dash: [5, 5]))
-            )
-            
+        .padding(8)
+        .frame(width: 142, height: 119)
+        .background(Color("lightGrayKeepi"))
+        .cornerRadius(16)
             
         
     }

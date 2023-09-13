@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct Onboarding1View: View {
-    
+    @Binding var showingOnboarding: Bool
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -35,9 +36,9 @@ struct Onboarding1View: View {
                     .offset(x: -200, y: 400)
                     
                 
-                NavigationLink {
-                    LoginView()
-                        .navigationBarBackButtonHidden(true)
+                Button {
+                    showingOnboarding = false
+                    
                 } label: {
                     VStack {
                         HStack {
@@ -76,6 +77,6 @@ struct Onboarding1View: View {
 
 struct Onboarding1View_Previews: PreviewProvider {
     static var previews: some View {
-        Onboarding1View()
+        Onboarding1View(showingOnboarding: .constant(false))
     }
 }

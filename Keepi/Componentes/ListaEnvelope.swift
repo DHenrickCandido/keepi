@@ -7,19 +7,50 @@
 
 import SwiftUI
 
+// View
+// @State var lista: ListaFiltro
+// ListaEnvelope(listaFiltroStruct: $lista
+//
+
 struct ListaEnvelope: View {
     @ObservedObject var envelopeListManager: EnvelopeListManager
+    @ObservedObject var tradeListManager: TradeListManager
+//    @State var listaFiltroStruct: ListaFiltro = ListaFiltro()
     @Binding var selectedEnvelope: Int
+    @State var envelopeModelSelected: EnvelopeModel!
+    
+//    @Binding var listTitleEnvelopeName: String
     
     var body: some View {
         HStack {
             ForEach(Array(envelopeListManager.listaEnvelope.enumerated()), id: \.element.id) { index, item in
-                Button(action: {
-                    selectedEnvelope = index
-//                    tradeListManager.removeTrade(indexItem: index)
-                }) {
+                
+                
+                NavigationLink {
+                    EnvelopeFilterView(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, envelopeId: item.id)
+                    
+//                    EnvelopeFilterView(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, listTitleEnvelopeName: $listTitleEnvelopeName, envelopeId: item.id)
+                    
+                } label: {
                     EnvelopeCardView(icon: item.icon, name: item.name, budget: item.budget)
+                    
                 }
+//                .onTapGesture {
+//                    listTitleEnvelopeName = item.name
+//                }
+                
+                
+                
+                //                Button(action: {
+                //                    envelopeModelSelected = item
+                //                    goToFilter.toggle()
+                //                    print("É nulo?")
+                //                    print(envelopeModelSelected == nil)
+                //                    print(goToFilter)
+                //
+                //                }) {
+                //                    EnvelopeCardView(icon: item.icon, name: item.name, budget: item.budget)
+                //                }
             }
         }
     }
