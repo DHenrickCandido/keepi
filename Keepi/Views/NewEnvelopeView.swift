@@ -5,6 +5,7 @@ struct Example_test: View {
     
     @State private var showNewEnvelope: Bool = false
     
+    
     var body: some View {
         Button("click me") {
             showNewEnvelope.toggle()
@@ -45,6 +46,7 @@ struct NewEnvelopeView: View {
     
     let columns = [GridItem(), GridItem(), GridItem(), GridItem()]
     
+    @State var clickable: Bool = false
     
     var body: some View {
         VStack (alignment: .leading, spacing: 40) {
@@ -159,19 +161,38 @@ struct NewEnvelopeView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .frame(width: 150, height: 54)
-                    .background(Color("darkGreenKeepi"))
+                    .background(clickable ? Color("darkGreenKeepi"):.gray)
                     .cornerRadius(16)
                     .onTapGesture {
-                        saveEnvelope()
-                        showNewEnvelope.toggle()
+                        if envelopeName != "" && envelopeBudget != "" {
+                            saveEnvelope()
+                        }
+                        
                     }
                 
             }
         }
         .padding(16)
+        .onChange(of: envelopeName){newValue in
+            if newValue == "" || envelopeBudget == ""{
+                clickable = false
+            }
+            else {
+                clickable = true
+            }
+        }
+        .onChange(of: envelopeBudget){newValue in
+            if newValue == "" || envelopeName == ""{
+                clickable = false
+            }
+            else {
+                clickable = true
+            }
+        }
     }
     
     func saveEnvelope() {
+        
         envelopeBudget = envelopeBudget.replacingOccurrences(of: ",", with: ".")
         let valueFloat = Float(envelopeBudget)
         let id = envelopeName.replacingOccurrences(of: " ", with: "")
@@ -183,6 +204,8 @@ struct NewEnvelopeView: View {
 
         // Fechar a modal
         showNewEnvelope.toggle()
+        
+        
     }
 
 
@@ -193,6 +216,7 @@ struct NewEnvelopeView: View {
         .padding(.horizontal, 32)
         .padding(.vertical, 16)
         .frame(maxWidth: .infinity, alignment: .top)
+        
         .background(Color(red: 0.9, green: 0.9, blue: 0.92))
         .cornerRadius(100)
         .onTapGesture {
