@@ -204,6 +204,8 @@ struct NewEnvelopeView: View {
                     .stroke(lineWidth: active ? 2 : 0)
                     .foregroundColor(active ? Color("lightGreenKeepi") : Color.clear)
             )
+            .saturation(active ? 1 : 0)
+            .opacity(active ? 1 : 0.5)
             
     }
 }
