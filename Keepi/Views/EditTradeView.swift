@@ -264,7 +264,7 @@ struct EditTradeView: View {
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
                 
-                Text("R$ \(envelope.budget.formatted(.number.precision(.fractionLength(2))))")
+                Text("$ \(envelope.budget.formatted(.number.precision(.fractionLength(2))))")
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
             }
