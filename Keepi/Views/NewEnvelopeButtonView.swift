@@ -18,7 +18,7 @@ struct NewEnvelopeButtonView: View {
                 .foregroundColor(Color("darkGreenKeepi"))
                 .cornerRadius(8)
 
-            Text("Adicionar \n envelope")
+            Text("Add\nenvelope")
                 .font(.headline)
                 .fontWeight(.semibold)
                 .foregroundColor(Color("darkGreenKeepi"))
