@@ -58,7 +58,7 @@ struct Onboarding1View: View {
                     .resizable()
                     .frame(maxWidth: .infinity, alignment: .center)
                     .scaledToFit()
-                    .padding(.horizontal, 100)
+                    .padding(.horizontal, 91.5)
                     .offset(y: -50)
                 
                 Text("Reflect the emotions of your currency trades.")

@@ -10,13 +10,27 @@ import Firebase
 
 @main
 struct KeepiApp: App {
+    @State var splash = 1.0
     @StateObject var tradeListManager = TradeListManager()
     init() {
         FirebaseApp.configure()
     }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ZStack {
+                ContentView()
+                SplashScreenView()
+                    .opacity(splash)
+
+            }
+            .animation(.easeInOut, value: splash)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                    withAnimation {
+                        splash = 0.0
+                    }
+                }
+            }
         }
     }
 }

@@ -36,6 +36,8 @@
 		907FB3E22AA75C0B000754FA /* OnboardingTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3E12AA75C0B000754FA /* OnboardingTabView.swift */; };
 		907FB3E42AA7605A000754FA /* Onboarding3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3E32AA7605A000754FA /* Onboarding3View.swift */; };
 		907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3E52AA76124000754FA /* Onboarding4View.swift */; };
+		90DC0E0D2AB084BD00F56B0A /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DC0E0C2AB084BD00F56B0A /* View+.swift */; };
+		90DC0E0F2AB084DC00F56B0A /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DC0E0E2AB084DC00F56B0A /* SplashScreenView.swift */; };
 		A73161B62AA215B4003CB8F9 /* EditTradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73161B52AA215B4003CB8F9 /* EditTradeView.swift */; };
 		A745E5522A9E32CC00240832 /* Feeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5512A9E32CC00240832 /* Feeling.swift */; };
 		A745E5542A9E354300240832 /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5532A9E354300240832 /* Tags.swift */; };
@@ -69,6 +71,8 @@
 		907FB3E12AA75C0B000754FA /* OnboardingTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTabView.swift; sourceTree = "<group>"; };
 		907FB3E32AA7605A000754FA /* Onboarding3View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding3View.swift; sourceTree = "<group>"; };
 		907FB3E52AA76124000754FA /* Onboarding4View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding4View.swift; sourceTree = "<group>"; };
+		90DC0E0C2AB084BD00F56B0A /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
+		90DC0E0E2AB084DC00F56B0A /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		A73161B52AA215B4003CB8F9 /* EditTradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTradeView.swift; sourceTree = "<group>"; };
 		A745E5512A9E32CC00240832 /* Feeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feeling.swift; sourceTree = "<group>"; };
 		A745E5532A9E354300240832 /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
@@ -153,6 +157,7 @@
 		8B4E8EE42A98D9F100D3A6F1 /* Keepi */ = {
 			isa = PBXGroup;
 			children = (
+				90DC0E0B2AB0849D00F56B0A /* SplashScreen */,
 				907FB3DC2AA74E1D000754FA /* Onboarding */,
 				A745E5502A9E328500240832 /* Classes */,
 				5AB3E7D32A9F5C2400935335 /* Managers */,
@@ -186,6 +191,15 @@
 				907FB3E52AA76124000754FA /* Onboarding4View.swift */,
 			);
 			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		90DC0E0B2AB0849D00F56B0A /* SplashScreen */ = {
+			isa = PBXGroup;
+			children = (
+				90DC0E0C2AB084BD00F56B0A /* View+.swift */,
+				90DC0E0E2AB084DC00F56B0A /* SplashScreenView.swift */,
+			);
+			path = SplashScreen;
 			sourceTree = "<group>";
 		};
 		A745E5502A9E328500240832 /* Classes */ = {
@@ -290,10 +304,12 @@
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
 				907FB3DE2AA74EBD000754FA /* Onboarding1View.swift in Sources */,
 				5A8739EE2AA0C235008127A3 /* NewTradeButton.swift in Sources */,
+				90DC0E0D2AB084BD00F56B0A /* View+.swift in Sources */,
 				A745E5542A9E354300240832 /* Tags.swift in Sources */,
 				A745E5522A9E32CC00240832 /* Feeling.swift in Sources */,
 				8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */,
 				A745E5562A9F7B8C00240832 /* NewTradeView.swift in Sources */,
+				90DC0E0F2AB084DC00F56B0A /* SplashScreenView.swift in Sources */,
 				A73161B62AA215B4003CB8F9 /* EditTradeView.swift in Sources */,
 				5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */,
 				5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */,
