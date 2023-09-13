@@ -98,7 +98,7 @@ struct EditEnvelopeView: View {
                 
                 TextField("Ex. Food, Clothes, Transportation", text: $envelopeName)
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.black)
                     .multilineTextAlignment(.leading)
                     .padding(16)
                     .frame(maxWidth: .infinity)
@@ -117,7 +117,7 @@ struct EditEnvelopeView: View {
                 
                 TextField("Ex. 200.00", text: $envelopeBudget)
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.black)
                     .multilineTextAlignment(.leading)
                     .padding(16)
                     .frame(maxWidth: .infinity)
