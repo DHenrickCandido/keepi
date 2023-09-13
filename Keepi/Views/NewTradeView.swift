@@ -368,7 +368,7 @@ struct NewTradeView: View {
                 TextField(textPlacer, text: item)
                     .keyboardType(keyboardType)
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.black)
                     .multilineTextAlignment(.leading)
                     .padding(16)
                     .frame(maxWidth: .infinity)
