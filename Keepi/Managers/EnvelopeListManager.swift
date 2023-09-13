@@ -72,8 +72,6 @@ class EnvelopeListManager: ObservableObject {
         }
     }
     
-
-    
     func addEnvelope(envelope: EnvelopeModel){
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else { return }
@@ -91,5 +89,15 @@ class EnvelopeListManager: ObservableObject {
             }
             
         }
+    }
+    
+    func getEnvelopeNameById(id: String) -> String{
+        for envelope in listaEnvelope {
+            if envelope.id == id {
+                return envelope.name
+            }
+        }
+        
+        return "Nulo"
     }
 }

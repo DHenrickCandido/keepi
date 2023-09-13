@@ -87,14 +87,14 @@ struct EnvelopeFilterView: View {
                                 .fontWeight(.bold)
                         }
                 })
-//        .navigationBarTitleDisplayMode(.inline)
-//        .toolbar {
-//            ToolbarItem(placement: .principal) {
-//                Text(listTitleEnvelopeName)
-//                    .font(.largeTitle.bold())
-//                    .accessibilityAddTraits(.isHeader)
-//            }
-//        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(envelopeListManager.getEnvelopeNameById(id: envelopeId))
+                    .font(.largeTitle.bold())
+                    .accessibilityAddTraits(.isHeader)
+            }
+        }
     }
 }
 
