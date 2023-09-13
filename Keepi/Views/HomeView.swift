@@ -151,18 +151,24 @@ struct HomeView: View {
                                 Spacer()
                                 
                                 Image("keepiTrocas")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 186)
+                                
                                 
                                 Spacer()
-                            }
-                            
-                            Spacer()
-                            
-                            ScrollView (showsIndicators: false){
-                                VStack {
-                                    
-                                    ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade, selectedTrade: $selectedTrade)
+                            } else {
+                                Spacer()
+                                                            
+                                ScrollView (showsIndicators: false){
+                                    VStack {
+                                        
+                                        ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade, selectedTrade: $selectedTrade)
+                                    }
                                 }
                             }
+                            
+
                         }
                         
                         
