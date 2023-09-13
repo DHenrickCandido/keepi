@@ -142,7 +142,7 @@ struct EditTradeView: View {
                 question: "What's the value?",
                 textPlacer: "Ex.20,00",
                 item: $value,
-                keyboardType: .default
+                keyboardType: .decimalPad
             )
             
             Spacer()
@@ -348,6 +348,8 @@ struct EditTradeView: View {
             return dateString
         }
         
+        value = value.replacingOccurrences(of: ",", with: ".")
+        
         let valueFloat = Float(value)
         let id = trade.id
         let date = trade.date
@@ -400,6 +402,12 @@ struct EditTradeView: View {
         .background(Color(red: 0.56, green: 0.56, blue: 0.58))
     }
     
+    func converter(textInput: String) -> String {
+        let textDouble = Double(textInput.replacingOccurrences(of: ",", with: ".")) ?? 0
+        // If the Textfield is empty, 0 will be returned
+        return String(format: "%.2f", textDouble)
+    }
+    
     func TradeField(question: String, textPlacer: String, item: Binding<String>, keyboardType: UIKeyboardType) -> some View {
         
         VStack (alignment: .leading) {
@@ -417,6 +425,10 @@ struct EditTradeView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color("lightGrayKeepi"))
                     .cornerRadius(16)
+//                    .onChange(of: item.wrappedValue){
+//                        item.wrappedValue = converter(textInput: <#T##String#>)
+//                    }
+                
             }
             
             

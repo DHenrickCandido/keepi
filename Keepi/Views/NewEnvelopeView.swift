@@ -128,16 +128,16 @@ struct NewEnvelopeView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color("lightGrayKeepi"))
                     .cornerRadius(16)
-                    .keyboardType(.default)
-                    .onReceive(Just(envelopeBudget)) { newValue in
-                        let filtered = newValue.filter { "0123456789,.".contains($0) }
-                        if filtered != newValue {
-                            self.envelopeBudget = filtered
-                        }
-                    
-                        
-                        
-                    }
+                    .keyboardType(.decimalPad)
+//                    .onReceive(Just(envelopeBudget)) { newValue in
+//                        let filtered = newValue.filter { "0123456789.".contains($0) }
+//                        if filtered != newValue {
+//                            self.envelopeBudget = filtered
+//                        }
+//
+//
+//
+//                    }
                 //fim Quanto quer gastar?
                 
                 
@@ -161,6 +161,10 @@ struct NewEnvelopeView: View {
                     .frame(width: 150, height: 54)
                     .background(Color("darkGreenKeepi"))
                     .cornerRadius(16)
+                    .onTapGesture {
+                        saveEnvelope()
+                        showNewEnvelope.toggle()
+                    }
                 
             }
         }
@@ -168,6 +172,7 @@ struct NewEnvelopeView: View {
     }
     
     func saveEnvelope() {
+        envelopeBudget = envelopeBudget.replacingOccurrences(of: ",", with: ".")
         let valueFloat = Float(envelopeBudget)
         let id = envelopeName.replacingOccurrences(of: " ", with: "")
 

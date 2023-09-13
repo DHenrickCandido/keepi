@@ -145,7 +145,7 @@ struct NewTradeView: View {
                 question: "What's the value?",
                 textPlacer: "Ex.20,00",
                 item: $value,
-                keyboardType: .default
+                keyboardType: .decimalPad
             )
             
             Spacer()
@@ -316,6 +316,7 @@ struct NewTradeView: View {
     }
     
     func saveTrade() {
+        value = value.replacingOccurrences(of: ",", with: ".")
         let valueFloat = Float(value)
         let id = tradeTitle.replacingOccurrences(of: " ", with: "") + TradeListManager.date2string(date: todayDate)
         let envelopeId = selectedEnvelope.id
