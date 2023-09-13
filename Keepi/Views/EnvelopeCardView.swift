@@ -12,31 +12,28 @@ struct EnvelopeCardView: View {
     @State var name: String
     @State var budget: Float
     var body: some View {
-        VStack(alignment: .center, spacing: 8){
+        VStack{
             Image(icon)
                 .resizable()
-                .frame(width: 64, height: 64)
-                .foregroundColor(Color(UIColor.systemGray2))
+                .aspectRatio(contentMode: .fit)
                 .padding(8)
-            VStack(alignment: .center){
+                .frame(width: 48, height: 48)
+                .background(.white)
+                .cornerRadius(8)
+            VStack{
                 Text(name)
-                    .foregroundColor(Color(UIColor.black))
                     .font(.headline)
-                    .bold()
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("blackKeepi"))
                 Text("R$ \(budget.formatted(.number.precision(.fractionLength(2))))")
-                    .foregroundColor(Color(UIColor.systemGray))
-                    .fontWeight(.regular)
+                    .font(.subheadline)
+                    .foregroundColor(Color(UIColor.darkGray))
             }
-            .padding(0)
-            .frame(width: 120, height: 42, alignment: .top)
-            
         }
-//            .padding(.horizontal, 34)
-            .padding(.vertical, 16)
-            .frame(width: 160, height: 160, alignment: .center)
-            .background(Color(UIColor.systemGray6))
-            .foregroundColor(.white)
-            .cornerRadius(16)
+        .padding(8)
+        .frame(width: 142, height: 119)
+        .background(Color("lightGrayKeepi"))
+        .cornerRadius(16)
             
     }
 }
