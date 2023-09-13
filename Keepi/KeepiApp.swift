@@ -26,7 +26,7 @@ struct KeepiApp: App {
             }
             .animation(.easeInOut, value: splash)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                     withAnimation {
                         splash = 0.0
                     }

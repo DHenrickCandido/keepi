@@ -43,22 +43,23 @@ struct Onboarding3View: View {
                 
                 
                 
-                Button {
-                    showingOnboarding = false
-                } label: {
-                    VStack {
-                        HStack {
-                            Spacer()
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button {
+                            showingOnboarding = false
+                        } label: {
                             Text("Skip")
                                 .font(.system(size: 20))
                                 .bold()
                                 .foregroundColor(.white)
                                 .padding(.trailing, 40)
                         }
-                        .padding(.top, 80)
-                        Spacer()
-                            
+                        
                     }
+                    .padding(.top, 80)
+                    Spacer()
+                        
                 }
                 
                 Image("envelopes")
