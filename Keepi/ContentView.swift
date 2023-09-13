@@ -23,6 +23,7 @@ struct ContentView: View {
                 .environmentObject(TradeListManager())
                 .environmentObject(EnvelopeListManager())
                 .navigationBarBackButtonHidden(true)
+                .preferredColorScheme(.light)
         }
     }
 }
