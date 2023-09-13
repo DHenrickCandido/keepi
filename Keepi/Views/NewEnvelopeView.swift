@@ -153,18 +153,6 @@ struct NewEnvelopeView: View {
             HStack {
                 
                 Spacer()
-                Button {
-                    saveEnvelope()
-                } label: {
-                    Text("Save envelope")
-                        .font(.body)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .frame(width: 150, height: 54)
-                        .background(Color("darkGreenKeepi"))
-                        .cornerRadius(16)
-                }
-
                 
                 Text("Save envelope")
                     .font(.body)

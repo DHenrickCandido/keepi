@@ -87,6 +87,9 @@ class EnvelopeListManager {
             }
             
         }
+        self.listaEnvelope.insert(envelope, at: 0)
+        self.subject.send(self.listaEnvelope)
+
     }
     
     func getEnvelopeNameById(id: String) -> String {
