@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ExampleEdit: View {
     @State private var showEditTrade: Bool = false
-    @ObservedObject var tradeListManager: TradeListManager
 
     @State var compra = TradeModel(id: "34", name: "Hey", value: 23, tag: Tags.getTags())
     
@@ -33,8 +32,7 @@ struct ExampleEdit: View {
 struct EditTradeView: View {
     
     @Binding var showEditTrade: Bool // toggle for Modal
-    @ObservedObject var tradeListManager: TradeListManager
-    @ObservedObject var envelopeListManager: EnvelopeListManager
+    @EnvironmentObject var interactor: HomeInteractor
     var index: Int
     @Binding var trade: TradeModel
     
@@ -50,11 +48,9 @@ struct EditTradeView: View {
     @State var stepsIndicator: steps = .firstStep
     @Binding var selectedIndex: Int
 
-    init(showEditTrade: Binding<Bool>, tradeListManager: TradeListManager, envelopeListManager: EnvelopeListManager, index: Int, trade: Binding<TradeModel>, selectedIndex: Binding<Int>){
+    init(showEditTrade: Binding<Bool>, index: Int, trade: Binding<TradeModel>, selectedIndex: Binding<Int>){
         self._showEditTrade = showEditTrade
         
-        self.tradeListManager = tradeListManager
-        self.envelopeListManager = envelopeListManager
         self._trade = trade
         self.index = index
         self._selectedIndex = selectedIndex
@@ -94,6 +90,7 @@ struct EditTradeView: View {
                     Image(systemName: "xmark")
                         .fontWeight(.bold)
                         .onTapGesture {
+                            
                             showEditTrade.toggle()
                         }
 
@@ -117,7 +114,7 @@ struct EditTradeView: View {
                 QuestionText(text: "Which envelope?")
                 ScrollView (.horizontal) {
                     HStack {
-                        ForEach(Array(envelopeListManager.listaEnvelope.enumerated()), id: \.element.id) { index, item in
+                        ForEach(Array(interactor.listEnvelopes.enumerated()), id: \.element.id) { index, item in
                             EnvelopeCard(envelope: item)
                         }
 
@@ -155,14 +152,14 @@ struct EditTradeView: View {
             self.selectedTags = self.trade.tag
             self.selectedFeeling = self.trade.feeling
             
-            for envelope in envelopeListManager.listaEnvelope {
+            interactor.listEnvelopes.forEach({ envelope in
                 if envelope.id == trade.envelopeId {
                     selectedEnvelope = envelope
                 }
-            }
+            })
         }
         .onDisappear(){
-            selectedIndex = 0
+//            selectedIndex = 0
             print("AAA - called disappear")
         }
     }
@@ -243,7 +240,7 @@ struct EditTradeView: View {
             
             )
             .onTapGesture {
-                tradeListManager.removeTrade(indexItem: index)
+                interactor.removeTrade(indexItem: index)
                 showEditTrade.toggle()
             }
     }
@@ -354,14 +351,13 @@ struct EditTradeView: View {
         let id = trade.id
         let date = trade.date
         let envelopeId = selectedEnvelope.id
-        
-        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: date)
-    
-        tradeListManager.updateTrade(trade: compra)
+        print("BBB TRADE PURIN \(trade)")
 
-        tradeListManager.fetchTrades()
+        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: date)
         
-        // Fechar a modal
+        interactor.updateTrade(trade: compra)
+        
+
         showEditTrade.toggle()
     }
     
@@ -380,6 +376,7 @@ struct EditTradeView: View {
                 .cornerRadius(16)
                 .onTapGesture {
                     saveTrade()
+
                 }
         }
         

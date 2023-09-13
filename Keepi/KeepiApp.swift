@@ -11,7 +11,7 @@ import Firebase
 @main
 struct KeepiApp: App {
     @State var splash = 1.0
-    @StateObject var tradeListManager = TradeListManager()
+    
     init() {
         FirebaseApp.configure()
     }

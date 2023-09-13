@@ -17,11 +17,7 @@ struct ContentView: View {
 
         } else {
             HomeView(tradeModel: TradeModel(id: "34", name: "Comida", value: 25, tag: []))
-            
-//            HomeView(tradeModel: TradeModel(id: "34", name: "Comida", value: 25, tag: []), listTitleEnvelopeName: $listTitleEnvelopeName)
-            
-                .environmentObject(TradeListManager())
-                .environmentObject(EnvelopeListManager())
+                .environmentObject(HomeInteractor(tradeListManager: TradeListManager(), envelopeListManager: EnvelopeListManager()))
                 .navigationBarBackButtonHidden(true)
                 .preferredColorScheme(.light)
         }

@@ -7,12 +7,16 @@
 
 import SwiftUI
 
-class EnvelopeModel: Identifiable, ObservableObject, Equatable {
+class EnvelopeModel: Identifiable, ObservableObject, Equatable, CustomStringConvertible {
 //    let id = UUID()
     @Published var id: String
     @Published var name: String
     @Published var budget: Float
     @Published var icon: String
+    
+    var description: String {
+        return "id: \(id), name: \(name), budget: \(budget), icon: \(icon)"
+    }
     
     init(id: String, name: String, budget: Float, icon: String){
         self.id = id

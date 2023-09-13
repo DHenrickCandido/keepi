@@ -28,7 +28,7 @@ struct ExampleEditEnvelope_test_Previews: PreviewProvider {
 
 struct EditEnvelopeView: View {
     
-    @ObservedObject var envelopeListManager: EnvelopeListManager
+    var envelopeListManager: EnvelopeListManager
     
     var selectedEnvelopeIndex: Int
     @Binding var showNewEnvelope: Bool

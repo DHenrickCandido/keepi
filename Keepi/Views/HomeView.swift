@@ -10,8 +10,7 @@ import Firebase
 
 struct HomeView: View {
     @StateObject var tradeModel: TradeModel
-    @EnvironmentObject var tradeListManager: TradeListManager
-    @EnvironmentObject var envelopeListManager: EnvelopeListManager
+    @EnvironmentObject var interactor: HomeInteractor
     
     @State private var showNewTrade: Bool = false
     @State private var showEditTrade: Bool = false
@@ -35,7 +34,9 @@ struct HomeView: View {
                         Rectangle()
                             .frame(height: 240)
                             .foregroundColor(Color("darkGreenKeepi"))
-                            .onChange(of: showEditTrade, perform: { _ in }) // NAO TIRA ISSO
+                            .onChange(of: showEditTrade, perform: { _ in
+                                
+                            }) // NAO TIRA ISSO
                             .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
                         
                         
@@ -82,9 +83,7 @@ struct HomeView: View {
                         ScrollView (.horizontal, showsIndicators: false) {
                             HStack {
                                 //Inicio Envelope
-                                ListaEnvelope(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, selectedEnvelope: $selectedEnvelope)
-                                
-//                                ListaEnvelope(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, selectedEnvelope: $selectedEnvelope, listTitleEnvelopeName: $listTitleEnvelopeName)
+                                ListaEnvelope(selectedEnvelope: $selectedEnvelope)
                                 
                                 Button {
                                     showNewEnvelope.toggle()
@@ -147,7 +146,7 @@ struct HomeView: View {
                         Spacer()
                         
                         VStack (alignment: .center) {
-                            if(tradeListManager.lista.count == 0) {
+                            if(interactor.listTrades.count == 0) {
                                 Spacer()
                                 
                                 Image("keepiTrocas")
@@ -157,14 +156,14 @@ struct HomeView: View {
                                 
                                 
                                 Spacer()
-                            } else {
-                                Spacer()
-                                                            
-                                ScrollView (showsIndicators: false){
-                                    VStack {
-                                        
-                                        ListaCompra(tradeListManager: tradeListManager, showEditView: $showEditTrade, selectedTrade: $selectedTrade)
-                                    }
+                            }
+                            
+                            Spacer()
+                            
+                            ScrollView (showsIndicators: false){
+                                VStack {
+                                    
+                                    ListaCompra(showEditView: $showEditTrade, selectedTrade: $selectedTrade)
                                 }
                             }
                             
@@ -182,37 +181,40 @@ struct HomeView: View {
                 
                 
             }
+
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color("lightGrayKeepi"))
-            //                .onChange(of: selectedTrade, perform: { _ in
-            //                    showEditTrade.toggle()
-            //                })
+//            .onChange(of: tradeListManager.lista.count, perform: { _ in
+//                envelopeListManager.fetchEnvelopes()
+//            })
+
             .sheet(isPresented: $showNewTrade){
-                NewTradeView(showNewTrade: $showNewTrade, tradeListManager: tradeListManager, envelopeListManager: envelopeListManager)
+                NewTradeView(showNewTrade: $showNewTrade, interactor: interactor)
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
             }
             .sheet(isPresented: $showEditTrade){
-                let _ = print("AAA - selectedTrade (HomeView) \(selectedTrade)")
+                let _ = print("BBB - selectedTrade (HomeView) \(selectedTrade)")
+                let _ = print("BBB - selectedTrade (HomeView) \(interactor.listTrades[selectedTrade])")
+
                 EditTradeView(
                     showEditTrade: $showEditTrade,
-                    tradeListManager: tradeListManager,
-                    envelopeListManager: envelopeListManager,
                     index: selectedTrade,
-                    trade: $tradeListManager.lista[selectedTrade],
+                    trade: $interactor.listTrades[selectedTrade],
                     selectedIndex: $selectedTrade)
                 .presentationDetents([.fraction(0.9)])
                 .interactiveDismissDisabled()
                 //                        .id("\(selectedTrade) - \(showEditTrade)")
             }
             .sheet(isPresented: $showNewEnvelope){
-                NewEnvelopeView(envelopeListManager: envelopeListManager, showNewEnvelope: $showNewEnvelope)
+                NewEnvelopeView(showNewEnvelope: $showNewEnvelope)
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
             }
             .onAppear(){
                 anonymous()
             }
+
         }}
         
 //    }
@@ -248,11 +250,6 @@ extension View {
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView(tradeModel: TradeModel(id: "3", name: "iFood", value: 25, tag: []))
-        
-//        HomeView(tradeModel: TradeModel(id: "3", name: "iFood", value: 25, tag: []), listTitleEnvelopeName: .constant("Uber"))
-        
-            .environmentObject(EnvelopeListManager())
-            .environmentObject(TradeListManager())
-            
+                    
     }
 }

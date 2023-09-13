@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct EnvelopeFilterView: View {
-    @ObservedObject var envelopeListManager: EnvelopeListManager
-    @ObservedObject var tradeListManager: TradeListManager
-    @Environment(\.presentationMode) var presentationMode
     
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var interactor: HomeInteractor
 //    @State var listTitleEnvelopeName: String
     
     var envelopeId: String
@@ -60,7 +59,7 @@ struct EnvelopeFilterView: View {
 //                    Spacer()
 //                        .frame(height: 46)
                     
-                    ForEach(Array(tradeListManager.lista.enumerated()), id: \.element.id){ index, item in
+                    ForEach(Array(interactor.listTrades.enumerated()), id: \.element.id){ index, item in
                         if(item.envelopeId == envelopeId){
                             //                    Text(item.name)
                             TradeCardComponent(date: item.date, name: item.name, value: item.value, selectedTags: item.tag, envelopeName: item.envelopeId, feeling: item.feeling)
@@ -98,7 +97,7 @@ struct EnvelopeFilterView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 VStack {
-                    Text(envelopeListManager.getEnvelopeNameById(id: envelopeId))
+                    Text(interactor.getEnvelopeNameById(id: envelopeId))
                         .foregroundColor(.white)
                         .font(.title)
                         .fontWeight(.bold)
@@ -112,8 +111,4 @@ struct EnvelopeFilterView: View {
     }
 }
 
-//struct EnvelopeFilterView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EnvelopeFilterView()
-//    }
-//}
+

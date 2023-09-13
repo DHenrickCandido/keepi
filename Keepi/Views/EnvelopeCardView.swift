@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct EnvelopeCardView: View {
-    @State var icon: String
-    @State var name: String
-    @State var budget: Float
+    var icon: String
+    var name: String
+    var budget: Float
     var body: some View {
         VStack{
             Image(icon)
