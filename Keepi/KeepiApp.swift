@@ -20,7 +20,10 @@ struct KeepiApp: App {
         WindowGroup {
             ZStack {
                 ContentView()
+                    .preferredColorScheme(.light)
+
                 SplashScreenView()
+                    .preferredColorScheme(.light)
                     .opacity(splash)
 
             }
@@ -33,5 +36,6 @@ struct KeepiApp: App {
                 }
             }
         }
+        
     }
 }

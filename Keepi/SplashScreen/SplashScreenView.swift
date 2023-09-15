@@ -25,7 +25,7 @@ struct SplashScreenView: View {
         ZStack {
             Color("mainGreen")
             
-            Image("sapoFeliz")
+            Image("SapoFeliz")
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: 200)
