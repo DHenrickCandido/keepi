@@ -26,7 +26,7 @@ struct ListaEnvelope: View {
                 let _ = print("aaaa LISTA ENVELOPE - \(item)")
                 
                 NavigationLink {
-                    EnvelopeFilterView(envelopeId: item.id)
+                    EnvelopeFilterView(selectedEnvelope: selectedEnvelope, envelopeId: item.id)
 
                     
                 } label: {
