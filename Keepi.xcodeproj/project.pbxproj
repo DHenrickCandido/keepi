@@ -7,18 +7,86 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */; };
+		5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A48892AA004CF0094F751 /* TagComponent.swift */; };
+		5A5BAF8F2A98EFAD00CBF7E3 /* TradeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */; };
+		5A68A7A02AB0955B009637C8 /* EnvelopeFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */; };
+		5A8739EE2AA0C235008127A3 /* NewTradeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */; };
+		5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */; };
+		5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */; };
+		5AE47BE22AA759ED00EE90D5 /* EnvelopeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */; };
+		5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */; };
+		5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */; };
+		5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE82AA8A14600EE90D5 /* Icons.swift */; };
+		8B49CB502AB1E0B100883808 /* HomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */; };
+		8B49CB522AB3ECD900883808 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB512AB3ECD900883808 /* ReportView.swift */; };
+		8B49CB542AB3F1B900883808 /* MostTradesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB532AB3F1B900883808 /* MostTradesView.swift */; };
 		8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */; };
 		8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */; };
 		8B4E8EEA2A98D9F200D3A6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */; };
 		8B4E8EED2A98D9F200D3A6F1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B4E8EEC2A98D9F200D3A6F1 /* Preview Assets.xcassets */; };
+		8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC12A9F7AD500FDA36D /* HomeView.swift */; };
+		8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */; };
+		8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */; };
+		8B68B0EA2AA6020600B32296 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8B68B0E92AA6020600B32296 /* GoogleService-Info.plist */; };
+		8B91F8012AA591E2005F5728 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8002AA591E2005F5728 /* FirebaseAuth */; };
+		8B91F8032AA591E2005F5728 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8022AA591E2005F5728 /* FirebaseAuthCombine-Community */; };
+		8B91F8052AA591E2005F5728 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8042AA591E2005F5728 /* FirebaseFirestore */; };
+		8B91F8072AA591E2005F5728 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8062AA591E2005F5728 /* FirebaseFirestoreSwift */; };
+		8B91F80B2AA5A3A1005F5728 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B91F80A2AA5A3A1005F5728 /* LoginView.swift */; };
+		8BB460302AA223BE00258E7F /* NewEnvelopeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */; };
+		907FB3DE2AA74EBD000754FA /* Onboarding1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3DD2AA74EBD000754FA /* Onboarding1View.swift */; };
+		907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3DF2AA75BEB000754FA /* Onboarding2View.swift */; };
+		907FB3E22AA75C0B000754FA /* OnboardingTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3E12AA75C0B000754FA /* OnboardingTabView.swift */; };
+		907FB3E42AA7605A000754FA /* Onboarding3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3E32AA7605A000754FA /* Onboarding3View.swift */; };
+		907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3E52AA76124000754FA /* Onboarding4View.swift */; };
+		90DC0E0D2AB084BD00F56B0A /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DC0E0C2AB084BD00F56B0A /* View+.swift */; };
+		90DC0E0F2AB084DC00F56B0A /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DC0E0E2AB084DC00F56B0A /* SplashScreenView.swift */; };
+		A73161B62AA215B4003CB8F9 /* EditTradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73161B52AA215B4003CB8F9 /* EditTradeView.swift */; };
+		A745E5522A9E32CC00240832 /* Feeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5512A9E32CC00240832 /* Feeling.swift */; };
+		A745E5542A9E354300240832 /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5532A9E354300240832 /* Tags.swift */; };
+		A745E5562A9F7B8C00240832 /* NewTradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5552A9F7B8C00240832 /* NewTradeView.swift */; };
+		A76AD9332AB0D6AA00F647CA /* EditEnvelopeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeCardComponent.swift; sourceTree = "<group>"; };
+		5A3A48892AA004CF0094F751 /* TagComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagComponent.swift; sourceTree = "<group>"; };
+		5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeModel.swift; sourceTree = "<group>"; };
+		5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeFilterView.swift; sourceTree = "<group>"; };
+		5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTradeButton.swift; sourceTree = "<group>"; };
+		5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaCompra.swift; sourceTree = "<group>"; };
+		5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeListManager.swift; sourceTree = "<group>"; };
+		5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeModel.swift; sourceTree = "<group>"; };
+		5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeListManager.swift; sourceTree = "<group>"; };
+		5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaEnvelope.swift; sourceTree = "<group>"; };
+		5AE47BE82AA8A14600EE90D5 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
+		8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeInteractor.swift; sourceTree = "<group>"; };
+		8B49CB512AB3ECD900883808 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
+		8B49CB532AB3F1B900883808 /* MostTradesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostTradesView.swift; sourceTree = "<group>"; };
 		8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Keepi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepiApp.swift; sourceTree = "<group>"; };
 		8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8B4E8EEC2A98D9F200D3A6F1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8B598DC12A9F7AD500FDA36D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeCardView.swift; sourceTree = "<group>"; };
+		8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEnvelopeButtonView.swift; sourceTree = "<group>"; };
+		8B68B0E92AA6020600B32296 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8B91F80A2AA5A3A1005F5728 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEnvelopeView.swift; sourceTree = "<group>"; };
+		907FB3DD2AA74EBD000754FA /* Onboarding1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding1View.swift; sourceTree = "<group>"; };
+		907FB3DF2AA75BEB000754FA /* Onboarding2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding2View.swift; sourceTree = "<group>"; };
+		907FB3E12AA75C0B000754FA /* OnboardingTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTabView.swift; sourceTree = "<group>"; };
+		907FB3E32AA7605A000754FA /* Onboarding3View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding3View.swift; sourceTree = "<group>"; };
+		907FB3E52AA76124000754FA /* Onboarding4View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding4View.swift; sourceTree = "<group>"; };
+		90DC0E0C2AB084BD00F56B0A /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
+		90DC0E0E2AB084DC00F56B0A /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		A73161B52AA215B4003CB8F9 /* EditTradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTradeView.swift; sourceTree = "<group>"; };
+		A745E5512A9E32CC00240832 /* Feeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feeling.swift; sourceTree = "<group>"; };
+		A745E5532A9E354300240832 /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
+		A745E5552A9F7B8C00240832 /* NewTradeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTradeView.swift; sourceTree = "<group>"; };
+		A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEnvelopeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,12 +94,65 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B91F8012AA591E2005F5728 /* FirebaseAuth in Frameworks */,
+				8B91F8032AA591E2005F5728 /* FirebaseAuthCombine-Community in Frameworks */,
+				8B91F8052AA591E2005F5728 /* FirebaseFirestore in Frameworks */,
+				8B91F8072AA591E2005F5728 /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A92C73D2A9CE2B500F9C29A /* Componentes */ = {
+			isa = PBXGroup;
+			children = (
+				5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */,
+				5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */,
+				5A3A48892AA004CF0094F751 /* TagComponent.swift */,
+				5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */,
+				5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */,
+			);
+			path = Componentes;
+			sourceTree = "<group>";
+		};
+		5A92C73E2A9CE2C200F9C29A /* Modelos */ = {
+			isa = PBXGroup;
+			children = (
+				5A5BAF8E2A98EFAD00CBF7E3 /* TradeModel.swift */,
+				5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */,
+			);
+			path = Modelos;
+			sourceTree = "<group>";
+		};
+		5A92C73F2A9CE2D600F9C29A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
+				8B598DC12A9F7AD500FDA36D /* HomeView.swift */,
+				8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */,
+				A745E5552A9F7B8C00240832 /* NewTradeView.swift */,
+				A73161B52AA215B4003CB8F9 /* EditTradeView.swift */,
+				8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */,
+				A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */,
+				8B91F80A2AA5A3A1005F5728 /* LoginView.swift */,
+				5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */,
+				8B49CB512AB3ECD900883808 /* ReportView.swift */,
+				8B49CB532AB3F1B900883808 /* MostTradesView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5AB3E7D32A9F5C2400935335 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */,
+				5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */,
+				8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		8B4E8ED92A98D9F100D3A6F1 = {
 			isa = PBXGroup;
 			children = (
@@ -51,9 +172,17 @@
 		8B4E8EE42A98D9F100D3A6F1 /* Keepi */ = {
 			isa = PBXGroup;
 			children = (
+				90DC0E0B2AB0849D00F56B0A /* SplashScreen */,
+				907FB3DC2AA74E1D000754FA /* Onboarding */,
+				A745E5502A9E328500240832 /* Classes */,
+				5AB3E7D32A9F5C2400935335 /* Managers */,
+				5A92C73D2A9CE2B500F9C29A /* Componentes */,
+				5A92C73E2A9CE2C200F9C29A /* Modelos */,
+				5A92C73F2A9CE2D600F9C29A /* Views */,
 				8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */,
 				8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */,
 				8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */,
+				8B68B0E92AA6020600B32296 /* GoogleService-Info.plist */,
 				8B4E8EEB2A98D9F200D3A6F1 /* Preview Content */,
 			);
 			path = Keepi;
@@ -65,6 +194,37 @@
 				8B4E8EEC2A98D9F200D3A6F1 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		907FB3DC2AA74E1D000754FA /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				907FB3E12AA75C0B000754FA /* OnboardingTabView.swift */,
+				907FB3DD2AA74EBD000754FA /* Onboarding1View.swift */,
+				907FB3DF2AA75BEB000754FA /* Onboarding2View.swift */,
+				907FB3E32AA7605A000754FA /* Onboarding3View.swift */,
+				907FB3E52AA76124000754FA /* Onboarding4View.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		90DC0E0B2AB0849D00F56B0A /* SplashScreen */ = {
+			isa = PBXGroup;
+			children = (
+				90DC0E0C2AB084BD00F56B0A /* View+.swift */,
+				90DC0E0E2AB084DC00F56B0A /* SplashScreenView.swift */,
+			);
+			path = SplashScreen;
+			sourceTree = "<group>";
+		};
+		A745E5502A9E328500240832 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				A745E5532A9E354300240832 /* Tags.swift */,
+				A745E5512A9E32CC00240832 /* Feeling.swift */,
+				5AE47BE82AA8A14600EE90D5 /* Icons.swift */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +243,12 @@
 			dependencies = (
 			);
 			name = Keepi;
+			packageProductDependencies = (
+				8B91F8002AA591E2005F5728 /* FirebaseAuth */,
+				8B91F8022AA591E2005F5728 /* FirebaseAuthCombine-Community */,
+				8B91F8042AA591E2005F5728 /* FirebaseFirestore */,
+				8B91F8062AA591E2005F5728 /* FirebaseFirestoreSwift */,
+			);
 			productName = Keepi;
 			productReference = 8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +277,9 @@
 				Base,
 			);
 			mainGroup = 8B4E8ED92A98D9F100D3A6F1;
+			packageReferences = (
+				8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 8B4E8EE32A98D9F100D3A6F1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -127,6 +296,7 @@
 			files = (
 				8B4E8EED2A98D9F200D3A6F1 /* Preview Assets.xcassets in Resources */,
 				8B4E8EEA2A98D9F200D3A6F1 /* Assets.xcassets in Resources */,
+				8B68B0EA2AA6020600B32296 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,8 +307,41 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */,
+				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
+				5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */,
+				5AE47BE22AA759ED00EE90D5 /* EnvelopeModel.swift in Sources */,
+				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
+				5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */,
+				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
+				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
+				907FB3E22AA75C0B000754FA /* OnboardingTabView.swift in Sources */,
+				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
+				8B49CB502AB1E0B100883808 /* HomeInteractor.swift in Sources */,
+				907FB3DE2AA74EBD000754FA /* Onboarding1View.swift in Sources */,
+				5A8739EE2AA0C235008127A3 /* NewTradeButton.swift in Sources */,
+				90DC0E0D2AB084BD00F56B0A /* View+.swift in Sources */,
+				A745E5542A9E354300240832 /* Tags.swift in Sources */,
+				A745E5522A9E32CC00240832 /* Feeling.swift in Sources */,
 				8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */,
+				A745E5562A9F7B8C00240832 /* NewTradeView.swift in Sources */,
+				90DC0E0F2AB084DC00F56B0A /* SplashScreenView.swift in Sources */,
+				A73161B62AA215B4003CB8F9 /* EditTradeView.swift in Sources */,
+				8B49CB542AB3F1B900883808 /* MostTradesView.swift in Sources */,
+				5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */,
+				5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */,
+				5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */,
+				907FB3E42AA7605A000754FA /* Onboarding3View.swift in Sources */,
+				8B49CB522AB3ECD900883808 /* ReportView.swift in Sources */,
+				A76AD9332AB0D6AA00F647CA /* EditEnvelopeView.swift in Sources */,
+				8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */,
+				8BB460302AA223BE00258E7F /* NewEnvelopeView.swift in Sources */,
 				8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */,
+				5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */,
+				8B91F80B2AA5A3A1005F5728 /* LoginView.swift in Sources */,
+				5A5BAF8F2A98EFAD00CBF7E3 /* TradeModel.swift in Sources */,
+				5A68A7A02AB0955B009637C8 /* EnvelopeFilterView.swift in Sources */,
+				5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +542,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8B91F8002AA591E2005F5728 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		8B91F8022AA591E2005F5728 /* FirebaseAuthCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseAuthCombine-Community";
+		};
+		8B91F8042AA591E2005F5728 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		8B91F8062AA591E2005F5728 /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8B4E8EDA2A98D9F100D3A6F1 /* Project object */;
 }
