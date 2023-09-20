@@ -5,19 +5,19 @@
 //  Created by Kauane Santana on 05/09/23.
 //
 
-import SwiftUI
+import Combine
 import Firebase
 
-class EnvelopeListManager: ObservableObject {
-    @Published var listaEnvelope: [EnvelopeModel] = []
+class EnvelopeListManager {
+    var listaEnvelope: [EnvelopeModel] = []
     
-//    func addEnvelope(item: EnvelopeModel) {
-//            listaEnvelope.insert(item, at: 0)
-//            print(listaEnvelope)
-//        }
+    private let subject = PassthroughSubject<[EnvelopeModel], Error>()
+    var publisher: AnyPublisher<[EnvelopeModel], Error> {
+        self.subject.eraseToAnyPublisher()
+    }
+
     
-    func removeTrade(indexItem: Int){
-//        lista.remove(at: indexItem)
+    func removeEnvelope(indexItem: Int){
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else { return }
         
@@ -29,11 +29,8 @@ class EnvelopeListManager: ObservableObject {
                 print("Document successfully removed!")
             }
         }
-        fetchEnvelopes()
-    }
-
-    init() {
-        fetchEnvelopes()
+        listaEnvelope.remove(at: indexItem)
+        subject.send(listaEnvelope)
     }
     
     static func date2string(date: Date, dateFormat: String = "yyyyMMddHHmmss") -> String {
@@ -68,6 +65,7 @@ class EnvelopeListManager: ObservableObject {
                     let envelope = EnvelopeModel(id: id, name: name, budget: budget,icon: icon)
                     self.listaEnvelope.append(envelope)
                 }
+                self.subject.send(self.listaEnvelope)
             }
         }
     }
@@ -89,9 +87,12 @@ class EnvelopeListManager: ObservableObject {
             }
             
         }
+        self.listaEnvelope.insert(envelope, at: 0)
+        self.subject.send(self.listaEnvelope)
+
     }
     
-    func getEnvelopeNameById(id: String) -> String{
+    func getEnvelopeNameById(id: String) -> String {
         for envelope in listaEnvelope {
             if envelope.id == id {
                 return envelope.name
@@ -99,5 +100,9 @@ class EnvelopeListManager: ObservableObject {
         }
         
         return "Nulo"
+    }
+    
+    func updateEnvelope(envelope: EnvelopeModel){
+        #warning("TO DO- Implementar updateEnvelope")
     }
 }

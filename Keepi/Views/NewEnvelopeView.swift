@@ -11,9 +11,7 @@ struct Example_test: View {
             showNewEnvelope.toggle()
         }
         .sheet(isPresented: $showNewEnvelope){
-//            NewEnvelopeView(envelopeListManager: envelopeListManager, showNewEnvelope: $showNewEnvelope)
-//                .presentationDetents([.fraction(0.9)])
-//                .interactiveDismissDisabled()
+
         }
         .onAppear{
             showNewEnvelope = true
@@ -35,7 +33,7 @@ struct Example_test_Previews: PreviewProvider {
 
 struct NewEnvelopeView: View {
     
-    @ObservedObject var envelopeListManager: EnvelopeListManager
+    @EnvironmentObject var interactor: HomeInteractor
     
     @Binding var showNewEnvelope: Bool
     
@@ -199,9 +197,7 @@ struct NewEnvelopeView: View {
 
         let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat ?? 0, icon: iconSelected)
         print(envelope)
-        envelopeListManager.addEnvelope(envelope: envelope)
-        envelopeListManager.fetchEnvelopes()
-
+        interactor.addEnvelope(envelope: envelope)
         // Fechar a modal
         showNewEnvelope.toggle()
         

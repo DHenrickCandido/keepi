@@ -41,9 +41,7 @@ struct NewTradeView: View {
     
     @Binding var showNewTrade: Bool // toggle for Modal
     
-    @ObservedObject var tradeListManager: TradeListManager
-    @ObservedObject var envelopeListManager: EnvelopeListManager
-    
+    var interactor: HomeInteractor
     var tagManager: Tags = Tags()
     @State var selectedEnvelope: EnvelopeModel!
     
@@ -58,10 +56,9 @@ struct NewTradeView: View {
     @State var stepsIndicator: steps = .firstStep
     @State var showAlert = false
     
-    init(showNewTrade: Binding<Bool>, tradeListManager: TradeListManager, envelopeListManager: EnvelopeListManager, tagManager: Tags = Tags(), tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, selectedTags: [Tag] = [], todayDate: Date = Date()) {
-        self._showNewTrade = showNewTrade        
-        self.tradeListManager = tradeListManager
-        self.envelopeListManager = envelopeListManager
+    init(showNewTrade: Binding<Bool>, interactor: HomeInteractor, tagManager: Tags = Tags(), tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, selectedTags: [Tag] = [], todayDate: Date = Date()) {
+        self._showNewTrade = showNewTrade
+        self.interactor = interactor
         self.tagManager = tagManager
         
         self.tradeTitle = tradeTitle
@@ -70,7 +67,7 @@ struct NewTradeView: View {
         self.selectedTags = selectedTags
         self.todayDate = todayDate
         
-        self.selectedEnvelope = envelopeListManager.listaEnvelope.first
+        self.selectedEnvelope = interactor.listEnvelopes.first
         
     }
     
@@ -120,7 +117,7 @@ struct NewTradeView: View {
                 QuestionText(text: "Which envelope?")
                 ScrollView (.horizontal) {
                     HStack {
-                        ForEach(Array(envelopeListManager.listaEnvelope.enumerated()), id: \.element.id) { index, item in
+                        ForEach(Array(interactor.listEnvelopes.enumerated()), id: \.element.id) { index, item in
                             EnvelopeCard(envelope: item)
                         }
                         
@@ -153,7 +150,7 @@ struct NewTradeView: View {
             NextButton()
         }
         .onAppear{
-            selectedEnvelope = envelopeListManager.listaEnvelope.first
+            selectedEnvelope = interactor.listEnvelopes.first
         }
     }
     
@@ -296,7 +293,7 @@ struct NewTradeView: View {
                 .background(Color("darkGreenKeepi"))
                 .cornerRadius(16)
                 .onTapGesture {
-                    if envelopeListManager.listaEnvelope.isEmpty{
+                    if interactor.listEnvelopes.isEmpty{
                        showAlert = true
                     } else {
                         stepsIndicator = .secondStep
@@ -322,10 +319,7 @@ struct NewTradeView: View {
         let envelopeId = selectedEnvelope.id
         
         let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: todayDate)
-        tradeListManager.addTrade(trade: compra)
-        tradeListManager.fetchTrades()
-        
-        // Fechar a modal
+        interactor.addTrade(trade: compra)
         showNewTrade.toggle()
     }
     

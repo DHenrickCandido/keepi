@@ -13,8 +13,7 @@ import SwiftUI
 //
 
 struct ListaEnvelope: View {
-    @ObservedObject var envelopeListManager: EnvelopeListManager
-    @ObservedObject var tradeListManager: TradeListManager
+    @EnvironmentObject var interactor: HomeInteractor
 //    @State var listaFiltroStruct: ListaFiltro = ListaFiltro()
     @Binding var selectedEnvelope: Int
     @State var envelopeModelSelected: EnvelopeModel!
@@ -23,35 +22,20 @@ struct ListaEnvelope: View {
     
     var body: some View {
         HStack {
-            ForEach(Array(envelopeListManager.listaEnvelope.enumerated()), id: \.element.id) { index, item in
-                
+            ForEach(Array(interactor.listEnvelopes.enumerated()), id: \.element.id) { index, item in
+                let _ = print("aaaa LISTA ENVELOPE - \(item)")
                 
                 NavigationLink {
-                    EnvelopeFilterView(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, envelopeId: item.id)
-                    
-//                    EnvelopeFilterView(envelopeListManager: envelopeListManager, tradeListManager: tradeListManager, listTitleEnvelopeName: $listTitleEnvelopeName, envelopeId: item.id)
+                    EnvelopeFilterView(envelopeId: item.id)
+
                     
                 } label: {
                     EnvelopeCardView(icon: item.icon, name: item.name, budget: item.budget)
                     
                 }
-//                .onTapGesture {
-//                    listTitleEnvelopeName = item.name
-//                }
-                
-                
-                
-                //                Button(action: {
-                //                    envelopeModelSelected = item
-                //                    goToFilter.toggle()
-                //                    print("É nulo?")
-                //                    print(envelopeModelSelected == nil)
-                //                    print(goToFilter)
-                //
-                //                }) {
-                //                    EnvelopeCardView(icon: item.icon, name: item.name, budget: item.budget)
-                //                }
+
             }
+            let _ = print("\n\n")
         }
     }
 }

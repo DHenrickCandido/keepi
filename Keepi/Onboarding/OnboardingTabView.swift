@@ -9,21 +9,22 @@ import Foundation
 import SwiftUI
 
 struct OnboardingTabView: View {
-    @Binding var showingOnboarding: Bool
+    @Binding var notFirstTime: Bool
     var body: some View {
         ZStack {
             Color("beige")
                 .ignoresSafeArea()
             
             TabView {
-                Onboarding1View(showingOnboarding: $showingOnboarding)
-                Onboarding2View(showingOnboarding: $showingOnboarding)
-                Onboarding3View(showingOnboarding: $showingOnboarding)
-                Onboarding4View(showingOnboarding: $showingOnboarding)
+                Onboarding1View(notFirstTime: $notFirstTime)
+                Onboarding2View(notFirstTime: $notFirstTime)
+                Onboarding3View(notFirstTime: $notFirstTime)
+                Onboarding4View(notFirstTime: $notFirstTime)
             }
         }
         .tabViewStyle(PageTabViewStyle())
         .ignoresSafeArea()
         .edgesIgnoringSafeArea(.all)
+        .opacity(notFirstTime ? 0 : 1)
     }
 }

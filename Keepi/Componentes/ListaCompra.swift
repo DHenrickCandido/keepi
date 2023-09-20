@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct ListaCompra: View {
-    @ObservedObject var tradeListManager: TradeListManager
+    @EnvironmentObject var interactor: HomeInteractor
+    
     @Binding var showEditView : Bool
     @Binding var selectedTrade: Int
     
     var body: some View {
         VStack {
-            ForEach(Array(tradeListManager.lista.enumerated()), id: \.element.id) { index, item in
+            ForEach(Array(interactor.listTrades.enumerated()), id: \.element.id) { index, item in
                 Button(action: {
                     selectedTrade = index
                     
@@ -22,7 +23,9 @@ struct ListaCompra: View {
                     showEditView = true
                 }) {
                     TradeCardComponent(date: item.date, name: item.name, value: item.value, selectedTags: item.tag, envelopeName: item.envelopeId, feeling: item.feeling)
+
                 }
+
             }
         }
 

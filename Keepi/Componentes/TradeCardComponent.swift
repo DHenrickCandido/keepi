@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct TradeCardComponent: View {
-    @State var date: Date
-    @State var name: String
-    @State var value: Float
-    @State var selectedTags: [Tag]
-    @State var envelopeName: String
-    @State var feeling: Int
+    var date: Date
+    var name: String
+    var value: Float
+    var selectedTags: [Tag]
+    var envelopeName: String
+    var feeling: Int
     var body: some View {
         VStack{
             HStack(spacing: 18){
