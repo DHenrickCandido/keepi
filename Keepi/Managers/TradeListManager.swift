@@ -19,8 +19,6 @@ class TradeListManager {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else { return }
         let valor = self.lista[indexItem].value
-        print("CUUUU REMOVENDO \(lista[indexItem].name)")
-        print("CUUUU REMOVENDO \(self.lista[indexItem].value)")
 
         let refEnvelope = db.collection("Users").document(userID).collection("Envelopes").document(lista[indexItem].envelopeId)
         var envelopeBudget: Float = 0
@@ -36,7 +34,6 @@ class TradeListManager {
                 if let data = data {
                     print("data", data)
                     envelopeBudget = data["budget"] as? Float ?? 0
-                    print("CUUUUU \(envelopeBudget) + \(valor) = \(envelopeBudget + valor)")
                     refEnvelope.updateData(["budget": (envelopeBudget + valor)]) { error in
                         if let error = error {
                             print(error.localizedDescription)
@@ -45,8 +42,6 @@ class TradeListManager {
                     }
                 }
             }
-            
-            
             self.lista.remove(at: indexItem)
             self.subject.send(self.lista)
         }

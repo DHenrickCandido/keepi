@@ -12,7 +12,7 @@ struct EnvelopeFilterView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var interactor: HomeInteractor
 //    @State var listTitleEnvelopeName: String
-    
+    @State var selectedEnvelope: Int
     var envelopeId: String
 //    @State var listaFiltroStruct: ListaFiltro = ListaFiltro()
     
@@ -38,10 +38,13 @@ struct EnvelopeFilterView: View {
                             
                             Spacer()
                             
-                            Image("keepiMascote")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 120)
+//                            Image(systemName: "trash")
+//                                .font(.title)
+//                                .foregroundColor(.red)
+//                                .padding(16)
+
+
+                            
                             
                             
                         }
@@ -92,7 +95,18 @@ struct EnvelopeFilterView: View {
                                 .fontWeight(.bold)
                         }
                         .padding(.vertical, 244)
-                })
+                },
+            trailing:
+                Image(systemName: "trash")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .font(.title2)
+                .foregroundColor(.white)
+                .onTapGesture {
+                    self.presentationMode.wrappedValue.dismiss()
+                    interactor.removeEnvelope(indexItem: selectedEnvelope)
+                }
+        )
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -107,6 +121,7 @@ struct EnvelopeFilterView: View {
 
             }
             
+
         }
     }
 }
