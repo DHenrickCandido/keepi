@@ -19,6 +19,8 @@
 		5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */; };
 		5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE82AA8A14600EE90D5 /* Icons.swift */; };
 		8B49CB502AB1E0B100883808 /* HomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */; };
+		8B49CB522AB3ECD900883808 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB512AB3ECD900883808 /* ReportView.swift */; };
+		8B49CB542AB3F1B900883808 /* MostTradesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB532AB3F1B900883808 /* MostTradesView.swift */; };
 		8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */; };
 		8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */; };
 		8B4E8EEA2A98D9F200D3A6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */; };
@@ -60,6 +62,8 @@
 		5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaEnvelope.swift; sourceTree = "<group>"; };
 		5AE47BE82AA8A14600EE90D5 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
 		8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeInteractor.swift; sourceTree = "<group>"; };
+		8B49CB512AB3ECD900883808 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
+		8B49CB532AB3F1B900883808 /* MostTradesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostTradesView.swift; sourceTree = "<group>"; };
 		8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Keepi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepiApp.swift; sourceTree = "<group>"; };
 		8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -133,6 +137,8 @@
 				A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */,
 				8B91F80A2AA5A3A1005F5728 /* LoginView.swift */,
 				5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */,
+				8B49CB512AB3ECD900883808 /* ReportView.swift */,
+				8B49CB532AB3F1B900883808 /* MostTradesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -321,10 +327,12 @@
 				A745E5562A9F7B8C00240832 /* NewTradeView.swift in Sources */,
 				90DC0E0F2AB084DC00F56B0A /* SplashScreenView.swift in Sources */,
 				A73161B62AA215B4003CB8F9 /* EditTradeView.swift in Sources */,
+				8B49CB542AB3F1B900883808 /* MostTradesView.swift in Sources */,
 				5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */,
 				5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */,
 				5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */,
 				907FB3E42AA7605A000754FA /* Onboarding3View.swift in Sources */,
+				8B49CB522AB3ECD900883808 /* ReportView.swift in Sources */,
 				A76AD9332AB0D6AA00F647CA /* EditEnvelopeView.swift in Sources */,
 				8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */,
 				8BB460302AA223BE00258E7F /* NewEnvelopeView.swift in Sources */,

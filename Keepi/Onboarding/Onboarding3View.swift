@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Onboarding3View: View {
-    @Binding var showingOnboarding: Bool
+    @Binding var notFirstTime: Bool
 
     var body: some View {
         NavigationStack {
@@ -47,7 +47,8 @@ struct Onboarding3View: View {
                     HStack {
                         Spacer()
                         Button {
-                            showingOnboarding = false
+                            notFirstTime = true
+                            saveIsFirstTime(notFirstTime)
                         } label: {
                             Text("Skip")
                                 .font(.system(size: 20))
@@ -80,6 +81,6 @@ struct Onboarding3View: View {
 
 struct Onboarding3View_Previews: PreviewProvider {
     static var previews: some View {
-        Onboarding3View(showingOnboarding: .constant(false))
+        Onboarding3View(notFirstTime: .constant(false))
     }
 }

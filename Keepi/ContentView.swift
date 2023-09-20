@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var showingOnboarding: Bool = true
-//    @Binding var listTitleEnvelopeName: String
+    @AppStorage("notFirstTime") var notFirstTime: Bool = false
     
     var body: some View {
-        if showingOnboarding {
-            OnboardingTabView(showingOnboarding: $showingOnboarding)
+        let _ = print("PRINTTTTTT aaa \(loadIsFirstTime())")
 
+        if !notFirstTime {
+            OnboardingTabView(notFirstTime: $notFirstTime)
+            
         } else {
             HomeView(tradeModel: TradeModel(id: "34", name: "Comida", value: 25, tag: []))
                 .environmentObject(HomeInteractor(tradeListManager: TradeListManager(), envelopeListManager: EnvelopeListManager()))
@@ -24,9 +25,19 @@ struct ContentView: View {
     }
 }
 
+public func saveIsFirstTime(_ notFirstTime: Bool) {
+    UserDefaults.standard.set(notFirstTime, forKey: "notFirstTime")
+}
+
+func loadIsFirstTime() -> Bool {
+    return UserDefaults.standard.bool(forKey: "notFirstTime")
+}
+
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
 //        ContentView(listTitleEnvelopeName: .constant("teste"))
     }
 }
+

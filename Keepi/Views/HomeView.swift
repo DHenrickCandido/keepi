@@ -49,10 +49,16 @@ struct HomeView: View {
                             
                             Spacer()
                             
-                            Image("keepiMascote")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 120)
+                            NavigationLink{
+//                                ReportView()
+                            } label: {
+                                Image("keepiMascote")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 120)
+
+                            }
+
                         }
                         .padding(.horizontal, 16)
                     }
