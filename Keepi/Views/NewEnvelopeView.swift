@@ -191,11 +191,10 @@ struct NewEnvelopeView: View {
     
     func saveEnvelope() {
         
-        envelopeBudget = envelopeBudget.replacingOccurrences(of: ",", with: ".")
-        let valueFloat = Float(envelopeBudget)
-        let id = envelopeName.replacingOccurrences(of: " ", with: "")
+        guard let valueFloat = CRUDValidation.normalizedDecimal(envelopeBudget),
+              let id = CRUDValidation.envelopeId(from: envelopeName) else { return }
 
-        let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat ?? 0, icon: iconSelected)
+        let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat, icon: iconSelected)
         print(envelope)
         interactor.addEnvelope(envelope: envelope)
         // Fechar a modal

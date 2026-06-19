@@ -200,17 +200,15 @@ struct HomeView: View {
                     .interactiveDismissDisabled()
             }
             .sheet(isPresented: $showEditTrade){
-                let _ = print("BBB - selectedTrade (HomeView) \(selectedTrade)")
-                let _ = print("BBB - selectedTrade (HomeView) \(interactor.listTrades[selectedTrade])")
-
-                EditTradeView(
-                    showEditTrade: $showEditTrade,
-                    index: selectedTrade,
-                    trade: $interactor.listTrades[selectedTrade],
-                    selectedIndex: $selectedTrade)
-                .presentationDetents([.fraction(0.9)])
-                .interactiveDismissDisabled()
-                //                        .id("\(selectedTrade) - \(showEditTrade)")
+                if interactor.listTrades.indices.contains(selectedTrade) {
+                    EditTradeView(
+                        showEditTrade: $showEditTrade,
+                        index: selectedTrade,
+                        trade: $interactor.listTrades[selectedTrade],
+                        selectedIndex: $selectedTrade)
+                    .presentationDetents([.fraction(0.9)])
+                    .interactiveDismissDisabled()
+                }
             }
             .sheet(isPresented: $showNewEnvelope){
                 NewEnvelopeView(showNewEnvelope: $showNewEnvelope)
@@ -226,10 +224,18 @@ struct HomeView: View {
 //    }
     func anonymous() {
 
+        if Auth.auth().currentUser != nil {
+            interactor.loadData()
+            return
+        }
+
         Auth.auth().signInAnonymously { authResult, error in
             if error != nil {
                 print(error!.localizedDescription)
+                return
             }
+
+            interactor.loadData()
         }
     }
 }

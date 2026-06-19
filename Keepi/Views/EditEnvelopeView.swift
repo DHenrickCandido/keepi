@@ -36,6 +36,7 @@ struct EditEnvelopeView: View {
     @State var iconSelected: String = Icons.getIcons()[0]
     @State var envelopeName: String = ""
     @State var envelopeBudget: String = ""
+    @State private var originalEnvelopeId: String = ""
     @State private var selectedTheme = "Dark"
     
     let columns = [GridItem(), GridItem(), GridItem(), GridItem()]
@@ -161,20 +162,23 @@ struct EditEnvelopeView: View {
         }
         .padding(16)
         .onAppear{
-            iconSelected = envelopeListManager.listaEnvelope[selectedEnvelopeIndex].icon
-            envelopeName = envelopeListManager.listaEnvelope[selectedEnvelopeIndex].name
-            envelopeBudget = String(format: "%.2f", envelopeListManager.listaEnvelope[selectedEnvelopeIndex].budget)
+            guard envelopeListManager.listaEnvelope.indices.contains(selectedEnvelopeIndex) else { return }
+            let envelope = envelopeListManager.listaEnvelope[selectedEnvelopeIndex]
+            originalEnvelopeId = envelope.id
+            iconSelected = envelope.icon
+            envelopeName = envelope.name
+            envelopeBudget = String(format: "%.2f", envelope.budget)
         }
     }
     
     func saveEnvelope() {
-        let valueFloat = Float(envelopeBudget)
-        let id = envelopeName.replacingOccurrences(of: " ", with: "")
+        guard let valueFloat = CRUDValidation.normalizedDecimal(envelopeBudget),
+              !envelopeName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              !originalEnvelopeId.isEmpty else { return }
 
-        let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat ?? 0, icon: iconSelected)
+        let envelope = EnvelopeModel(id: originalEnvelopeId, name: envelopeName, budget: valueFloat, icon: iconSelected)
         print(envelope)
-//        envelopeListManager.addEnvelope(envelope: envelope) TO-DO: Update envelope
-        envelopeListManager.fetchEnvelopes()
+        envelopeListManager.updateEnvelope(envelope: envelope)
 
         // Fechar a modal
         showNewEnvelope.toggle()

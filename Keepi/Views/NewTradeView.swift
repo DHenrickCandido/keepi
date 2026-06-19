@@ -117,6 +117,8 @@ struct NewTradeView: View {
                 QuestionText(text: "Which envelope?")
                 ScrollView (.horizontal) {
                     HStack {
+                        NoEnvelopeCard()
+
                         ForEach(Array(interactor.listEnvelopes.enumerated()), id: \.element.id) { index, item in
                             EnvelopeCard(envelope: item)
                         }
@@ -150,7 +152,9 @@ struct NewTradeView: View {
             NextButton()
         }
         .onAppear{
-            selectedEnvelope = interactor.listEnvelopes.first
+            if selectedEnvelope == nil && !interactor.listEnvelopes.isEmpty {
+                selectedEnvelope = interactor.listEnvelopes.first
+            }
         }
     }
     
@@ -217,6 +221,42 @@ struct NewTradeView: View {
         }
     }
     
+    func NoEnvelopeCard() -> some View {
+        VStack {
+            Image(systemName: "tray")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(12)
+                .frame(width: 48, height: 48)
+                .foregroundColor(Color("darkGreenKeepi"))
+                .background(.white)
+                .cornerRadius(8)
+            
+            VStack {
+                Text("No envelope")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("blackKeepi"))
+                
+                Text("Attach later")
+                    .font(.subheadline)
+                    .foregroundColor(Color(UIColor.darkGray))
+            }
+        }
+        .padding(8)
+        .frame(width: 142, height: 119)
+        .background(Color("lightGrayKeepi"))
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+            .inset(by: 1)
+            .stroke(selectedEnvelope == nil ? Color("lightGreenKeepi") : Color.clear, lineWidth: 2)
+        )
+        .onTapGesture {
+            selectedEnvelope = nil
+        }
+    }
+
     func EnvelopeCard(envelope: EnvelopeModel) -> some View {
         VStack {
             Image(envelope.icon)
@@ -293,11 +333,7 @@ struct NewTradeView: View {
                 .background(Color("darkGreenKeepi"))
                 .cornerRadius(16)
                 .onTapGesture {
-                    if interactor.listEnvelopes.isEmpty{
-                       showAlert = true
-                    } else {
-                        stepsIndicator = .secondStep
-                    }
+                    stepsIndicator = .secondStep
                 }
                 .alert(isPresented: $showAlert){
                     Alert(title: Text("No envelope selected"), message: Text("Please create an envelope to proceed with your trade creation."), dismissButton: .default(Text("Got it!")))
@@ -313,12 +349,15 @@ struct NewTradeView: View {
     }
     
     func saveTrade() {
-        value = value.replacingOccurrences(of: ",", with: ".")
-        let valueFloat = Float(value)
-        let id = tradeTitle.replacingOccurrences(of: " ", with: "") + TradeListManager.date2string(date: todayDate)
-        let envelopeId = selectedEnvelope.id
+        guard let valueFloat = CRUDValidation.normalizedDecimal(value),
+              let baseId = CRUDValidation.envelopeId(from: tradeTitle) else {
+            showAlert = true
+            return
+        }
+        let id = baseId + TradeListManager.date2string(date: todayDate)
+        let envelopeId = selectedEnvelope?.id ?? ""
         
-        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: todayDate)
+        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: todayDate)
         interactor.addTrade(trade: compra)
         showNewTrade.toggle()
     }

@@ -114,6 +114,8 @@ struct EditTradeView: View {
                 QuestionText(text: "Which envelope?")
                 ScrollView (.horizontal) {
                     HStack {
+                        NoEnvelopeCard()
+
                         ForEach(Array(interactor.listEnvelopes.enumerated()), id: \.element.id) { index, item in
                             EnvelopeCard(envelope: item)
                         }
@@ -152,6 +154,7 @@ struct EditTradeView: View {
             self.selectedTags = self.trade.tag
             self.selectedFeeling = self.trade.feeling
             
+            selectedEnvelope = nil
             interactor.listEnvelopes.forEach({ envelope in
                 if envelope.id == trade.envelopeId {
                     selectedEnvelope = envelope
@@ -245,6 +248,42 @@ struct EditTradeView: View {
             }
     }
     
+    func NoEnvelopeCard() -> some View {
+        VStack {
+            Image(systemName: "tray")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(12)
+                .frame(width: 48, height: 48)
+                .foregroundColor(Color("darkGreenKeepi"))
+                .background(.white)
+                .cornerRadius(8)
+            
+            VStack {
+                Text("No envelope")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("blackKeepi"))
+                
+                Text("Attach later")
+                    .font(.subheadline)
+                    .foregroundColor(Color(UIColor.darkGray))
+            }
+        }
+        .padding(8)
+        .frame(width: 142, height: 119)
+        .background(Color("lightGrayKeepi"))
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+            .inset(by: 1)
+            .stroke(selectedEnvelope == nil ? Color("lightGreenKeepi") : Color.clear, lineWidth: 2)
+        )
+        .onTapGesture {
+            selectedEnvelope = nil
+        }
+    }
+
     func EnvelopeCard(envelope: EnvelopeModel) -> some View {
         VStack {
             Image(envelope.icon)
@@ -345,15 +384,13 @@ struct EditTradeView: View {
             return dateString
         }
         
-        value = value.replacingOccurrences(of: ",", with: ".")
-        
-        let valueFloat = Float(value)
+        guard let valueFloat = CRUDValidation.normalizedDecimal(value) else { return }
+
         let id = trade.id
         let date = trade.date
-        let envelopeId = selectedEnvelope.id
-        print("BBB TRADE PURIN \(trade)")
+        let envelopeId = selectedEnvelope?.id ?? ""
 
-        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat ?? 0, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: date)
+        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: date)
         
         interactor.updateTrade(trade: compra)
         
