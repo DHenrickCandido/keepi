@@ -158,13 +158,19 @@ struct AddEntryView: View {
 
             Spacer()
 
-            HStack(spacing: 12) {
-                secondaryButton(title: "Back") {
-                    step = .details
+            VStack(spacing: 12) {
+                secondaryButton(title: "Save and reflect later") {
+                    saveEntry(reflectionCompleted: false)
                 }
 
-                primaryButton(title: "Save") {
-                    saveEntry()
+                HStack(spacing: 12) {
+                    secondaryButton(title: "Back") {
+                        step = .details
+                    }
+
+                    primaryButton(title: "Save") {
+                        saveEntry(reflectionCompleted: true)
+                    }
                 }
             }
         }
@@ -302,7 +308,7 @@ struct AddEntryView: View {
         step = .context
     }
 
-    private func saveEntry() {
+    private func saveEntry(reflectionCompleted: Bool) {
         guard let value = CRUDValidation.normalizedDecimal(amount),
               let baseId = CRUDValidation.envelopeId(from: title) else {
             alertMessage = "Enter an amount and title before saving."
@@ -318,7 +324,8 @@ struct AddEntryView: View {
             tag: [],
             envelopeId: selectedEnvelope?.id ?? "",
             feeling: selectedFeeling,
-            date: date
+            date: date,
+            reflectionCompleted: reflectionCompleted
         )
 
         interactor.addTrade(trade: entry)

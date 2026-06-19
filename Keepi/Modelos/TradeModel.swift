@@ -16,12 +16,26 @@ class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
     @Published var date: Date
     @Published var tag: [Tag]
     @Published var feeling: Int // Int de 0 a 4 - vai definir o icon
+    @Published var reflectionCompleted: Bool
+    @Published var worthIt: Bool?
+    @Published var note: String
     
     var description: String {
         return "id: \(id), name: \(name), value: \(value), envelopeId: \(envelopeId)"
     }
     
-    init(id: String, name: String, value: Float, tag: [Tag], envelopeId: String = "", feeling: Int = 0, date: Date = Date()){
+    init(
+        id: String,
+        name: String,
+        value: Float,
+        tag: [Tag],
+        envelopeId: String = "",
+        feeling: Int = 0,
+        date: Date = Date(),
+        reflectionCompleted: Bool = true,
+        worthIt: Bool? = nil,
+        note: String = ""
+    ) {
         self.id = id
         self.name = name
         self.value = value
@@ -29,6 +43,9 @@ class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
         self.envelopeId = envelopeId
         self.date = date
         self.feeling = feeling
+        self.reflectionCompleted = reflectionCompleted
+        self.worthIt = worthIt
+        self.note = note
     }
 }
 

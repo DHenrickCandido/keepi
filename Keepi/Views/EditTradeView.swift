@@ -390,7 +390,18 @@ struct EditTradeView: View {
         let date = trade.date
         let envelopeId = selectedEnvelope?.id ?? ""
 
-        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: date)
+        let compra = TradeModel(
+            id: id,
+            name: tradeTitle,
+            value: valueFloat,
+            tag: selectedTags,
+            envelopeId: envelopeId,
+            feeling: selectedFeeling,
+            date: date,
+            reflectionCompleted: trade.reflectionCompleted,
+            worthIt: trade.worthIt,
+            note: trade.note
+        )
         
         interactor.updateTrade(trade: compra)
         

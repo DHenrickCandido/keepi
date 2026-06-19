@@ -235,22 +235,46 @@ class TradeListManager {
         let listTagNames = data["tags"] as? [String] ?? []
         let tags = Tags.getTags(listNames: listTagNames)
         let date = (data["date"] as? Timestamp)?.dateValue() ?? Date()
+        let reflectionCompleted = data["reflectionCompleted"] as? Bool ?? true
+        let worthIt = data["worthIt"] as? Bool
+        let note = data["note"] as? String ?? ""
 
         guard !id.isEmpty else { return nil }
-        return TradeModel(id: id, name: name, value: value, tag: tags, envelopeId: envelopeId, feeling: feeling, date: date)
+        return TradeModel(
+            id: id,
+            name: name,
+            value: value,
+            tag: tags,
+            envelopeId: envelopeId,
+            feeling: feeling,
+            date: date,
+            reflectionCompleted: reflectionCompleted,
+            worthIt: worthIt,
+            note: note
+        )
     }
 
     static func makeTradeData(from trade: TradeModel) -> [String: Any] {
         let listTagNames = trade.tag.map { $0.name }
-        return [
+        var data: [String: Any] = [
             "name": trade.name,
             "value": trade.value,
             "id": trade.id,
             "tags": listTagNames,
             "envelopeId": trade.envelopeId,
             "date": trade.date,
-            "feeling": trade.feeling
+            "feeling": trade.feeling,
+            "reflectionCompleted": trade.reflectionCompleted,
+            "note": trade.note
         ]
+
+        if let worthIt = trade.worthIt {
+            data["worthIt"] = worthIt
+        } else {
+            data["worthIt"] = NSNull()
+        }
+
+        return data
     }
 }
 

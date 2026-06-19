@@ -29,15 +29,10 @@ struct MainTabView: View {
                     Label("Add", systemImage: "plus.circle.fill")
                 }
 
-            PlaceholderTabView(
-                title: "Reflect",
-                subtitle: "Mindful review",
-                detail: "Prompts, incomplete entries, and weekly reflections.",
-                systemImage: "sparkles"
-            )
-            .tabItem {
-                Label("Reflect", systemImage: "sparkles")
-            }
+            ReflectView()
+                .tabItem {
+                    Label("Reflect", systemImage: "sparkles")
+                }
 
             PlaceholderTabView(
                 title: "Insights",
