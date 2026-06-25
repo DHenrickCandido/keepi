@@ -55,6 +55,7 @@ struct NewTradeView: View {
     
     @State var stepsIndicator: steps = .firstStep
     @State var showAlert = false
+    @State private var alertMessage = "Enter a valid title and amount before continuing."
     
     init(showNewTrade: Binding<Bool>, interactor: HomeInteractor, tagManager: Tags = Tags(), tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, selectedTags: [Tag] = [], todayDate: Date = Date()) {
         self._showNewTrade = showNewTrade
@@ -83,6 +84,9 @@ struct NewTradeView: View {
         
         }
         .padding(16)
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Entry incomplete"), message: Text(alertMessage), dismissButton: .default(Text("Got it!")))
+        }
     }
     
     func FirstStep() -> some View {
@@ -316,7 +320,8 @@ struct NewTradeView: View {
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .onTapGesture {
-            print("TO-DO")
+            alertMessage = "Create envelopes from the Today or Entries envelope list before attaching one here."
+            showAlert = true
         }
     }
     
@@ -333,10 +338,14 @@ struct NewTradeView: View {
                 .background(Color("darkGreenKeepi"))
                 .cornerRadius(16)
                 .onTapGesture {
+                    guard CRUDValidation.normalizedDecimal(value) != nil,
+                          CRUDValidation.envelopeId(from: tradeTitle) != nil else {
+                        alertMessage = "Enter a valid title and amount before continuing."
+                        showAlert = true
+                        return
+                    }
+
                     stepsIndicator = .secondStep
-                }
-                .alert(isPresented: $showAlert){
-                    Alert(title: Text("No envelope selected"), message: Text("Please create an envelope to proceed with your trade creation."), dismissButton: .default(Text("Got it!")))
                 }
             
         }
@@ -358,8 +367,17 @@ struct NewTradeView: View {
         let envelopeId = selectedEnvelope?.id ?? ""
         
         let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: todayDate)
-        interactor.addTrade(trade: compra)
-        showNewTrade.toggle()
+        interactor.addTrade(trade: compra) { error in
+            DispatchQueue.main.async {
+                if let error {
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                    return
+                }
+
+                showNewTrade.toggle()
+            }
+        }
     }
     
     func AddTradeButton() -> some View {

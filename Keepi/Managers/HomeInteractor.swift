@@ -64,13 +64,21 @@ class HomeInteractor: ObservableObject {
             return
         }
 
-        let envelope = listEnvelopes[indexItem]
-        guard CRUDValidation.canDeleteEnvelope(envelopeId: envelope.id, trades: listTrades) else {
+        removeEnvelope(envelopeId: listEnvelopes[indexItem].id)
+    }
+
+    func removeEnvelope(envelopeId: String) {
+        guard listEnvelopes.contains(where: { $0.id == envelopeId }) else {
+            errorMessage = "Selected envelope no longer exists."
+            return
+        }
+
+        guard CRUDValidation.canDeleteEnvelope(envelopeId: envelopeId, trades: listTrades) else {
             errorMessage = "Move or delete entries before removing this envelope."
             return
         }
 
-        envelopeListManager.removeEnvelope(indexItem: indexItem)
+        envelopeListManager.removeEnvelope(envelopeId: envelopeId)
     }
 
     func updateTrade(trade: TradeModel) {
@@ -81,8 +89,13 @@ class HomeInteractor: ObservableObject {
         envelopeListManager.updateEnvelope(envelope: envelope)
     }
 
-    func addTrade(trade: TradeModel) {
-        tradeListManager.addTrade(trade: trade)
+    func addTrade(trade: TradeModel, completion: ((Error?) -> Void)? = nil) {
+        tradeListManager.addTrade(trade: trade) { error in
+            if let error {
+                self.errorMessage = error.localizedDescription
+            }
+            completion?(error)
+        }
     }
 
     func addEnvelope(envelope: EnvelopeModel) {

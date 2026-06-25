@@ -23,19 +23,15 @@ struct ListaEnvelope: View {
     var body: some View {
         HStack {
             ForEach(Array(interactor.listEnvelopes.enumerated()), id: \.element.id) { index, item in
-                let _ = print("aaaa LISTA ENVELOPE - \(item)")
-                
                 NavigationLink {
-                    EnvelopeFilterView(selectedEnvelope: selectedEnvelope, envelopeId: item.id)
-
-                    
+                    EnvelopeFilterView(selectedEnvelope: index, envelopeId: item.id)
                 } label: {
                     EnvelopeCardView(icon: item.icon, name: item.name, budget: item.budget)
-                    
                 }
-
+                .simultaneousGesture(TapGesture().onEnded {
+                    selectedEnvelope = index
+                })
             }
-            let _ = print("\n\n")
         }
     }
 }

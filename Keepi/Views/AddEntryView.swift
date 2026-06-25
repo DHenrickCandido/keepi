@@ -7,6 +7,8 @@ struct AddEntryView: View {
     @State private var title = ""
     @State private var selectedEnvelope: EnvelopeModel?
     @State private var selectedFeeling = 2
+    @State private var selectedTags: [Tag] = []
+    @State private var selectedPresetTitle: String?
     @State private var step: AddEntryStep = .details
     @State private var showAlert = false
     @State private var alertMessage = ""
@@ -76,6 +78,8 @@ struct AddEntryView: View {
 
     private var detailsStep: some View {
         VStack(alignment: .leading, spacing: 24) {
+            presetSection
+
             VStack(alignment: .leading, spacing: 8) {
                 Text("Amount")
                     .font(.headline)
@@ -174,6 +178,55 @@ struct AddEntryView: View {
                 }
             }
         }
+    }
+
+    private var presetSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Presets")
+                .font(.headline)
+                .fontWeight(.bold)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(EntryPreset.defaults) { preset in
+                        presetCard(preset)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+        }
+    }
+
+    private func presetCard(_ preset: EntryPreset) -> some View {
+        Button {
+            applyPreset(preset)
+        } label: {
+            VStack(spacing: 8) {
+                Image(systemName: preset.systemImage)
+                    .font(.title2)
+                    .foregroundColor(Color("darkGreenKeepi"))
+                    .frame(width: 44, height: 44)
+                    .background(.white)
+                    .clipShape(Circle())
+
+                Text(preset.title)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("blackKeepi"))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .padding(12)
+            .frame(width: 118, height: 104)
+            .background(Color("lightGrayKeepi"))
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .inset(by: 1)
+                    .stroke(selectedPresetTitle == preset.title ? Color("lightGreenKeepi") : Color.clear, lineWidth: 2)
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     private var noEnvelopeCard: some View {
@@ -292,6 +345,20 @@ struct AddEntryView: View {
         }
     }
 
+    private func applyPreset(_ preset: EntryPreset) {
+        title = preset.title
+        selectedPresetTitle = preset.title
+        selectedEnvelope = matchingEnvelope(for: preset)
+        selectedTags = Tags.getTags(listNames: [preset.motivationName])
+    }
+
+    private func matchingEnvelope(for preset: EntryPreset) -> EnvelopeModel? {
+        interactor.listEnvelopes.first { envelope in
+            let searchableText = "\(envelope.name) \(envelope.id)".lowercased()
+            return preset.envelopeKeywords.contains { searchableText.contains($0.lowercased()) }
+        }
+    }
+
     private func continueToContext() {
         guard CRUDValidation.normalizedDecimal(amount) != nil else {
             alertMessage = "Enter a valid amount greater than zero."
@@ -321,15 +388,25 @@ struct AddEntryView: View {
             id: baseId + TradeListManager.date2string(date: date),
             name: title.trimmingCharacters(in: .whitespacesAndNewlines),
             value: value,
-            tag: [],
+            tag: selectedTags,
             envelopeId: selectedEnvelope?.id ?? "",
             feeling: selectedFeeling,
             date: date,
             reflectionCompleted: reflectionCompleted
         )
 
-        interactor.addTrade(trade: entry)
-        resetForm()
+        interactor.addTrade(trade: entry) { error in
+            DispatchQueue.main.async {
+                if let error {
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                    return
+                }
+
+                // Firestore writes are asynchronous, so keep the form intact until the save really succeeds.
+                resetForm()
+            }
+        }
     }
 
     private func resetForm() {
@@ -337,6 +414,8 @@ struct AddEntryView: View {
         title = ""
         selectedEnvelope = nil
         selectedFeeling = 2
+        selectedTags = []
+        selectedPresetTitle = nil
         step = .details
     }
 }
@@ -344,6 +423,26 @@ struct AddEntryView: View {
 private enum AddEntryStep {
     case details
     case context
+}
+
+private struct EntryPreset: Identifiable {
+    let title: String
+    let systemImage: String
+    let envelopeKeywords: [String]
+    let motivationName: String
+
+    var id: String { title }
+
+    static let defaults: [EntryPreset] = [
+        EntryPreset(title: "Coffee", systemImage: "cup.and.saucer.fill", envelopeKeywords: ["coffee", "food", "cafe", "meal"], motivationName: "I wanted it"),
+        EntryPreset(title: "Lunch", systemImage: "fork.knife", envelopeKeywords: ["lunch", "food", "meal", "restaurant"], motivationName: "I needed it"),
+        EntryPreset(title: "Groceries", systemImage: "cart.fill", envelopeKeywords: ["groceries", "grocery", "market", "food"], motivationName: "I needed it"),
+        EntryPreset(title: "Delivery", systemImage: "takeoutbag.and.cup.and.straw.fill", envelopeKeywords: ["delivery", "ifood", "food", "restaurant"], motivationName: "I didn't think much about"),
+        EntryPreset(title: "Transport", systemImage: "bus.fill", envelopeKeywords: ["transport", "transportation", "uber", "bus", "car"], motivationName: "I needed it"),
+        EntryPreset(title: "Bill", systemImage: "doc.text.fill", envelopeKeywords: ["bill", "bills", "home", "utilities"], motivationName: "I needed it"),
+        EntryPreset(title: "Gift", systemImage: "gift.fill", envelopeKeywords: ["gift", "gifts", "friends"], motivationName: "I was with friends"),
+        EntryPreset(title: "Fun", systemImage: "sparkles", envelopeKeywords: ["fun", "entertainment", "leisure", "hobby"], motivationName: "I wanted it")
+    ]
 }
 
 struct AddEntryView_Previews: PreviewProvider {

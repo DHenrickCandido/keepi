@@ -84,7 +84,6 @@ struct NewEnvelopeView: View {
                         IconEnvelopeOption(img:img, active: isActive)
                             .onTapGesture {
                                 iconSelected = img
-                                print(iconSelected)
                             }
                         
                     }
@@ -195,7 +194,6 @@ struct NewEnvelopeView: View {
               let id = CRUDValidation.envelopeId(from: envelopeName) else { return }
 
         let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat, icon: iconSelected)
-        print(envelope)
         interactor.addEnvelope(envelope: envelope)
         // Fechar a modal
         showNewEnvelope.toggle()

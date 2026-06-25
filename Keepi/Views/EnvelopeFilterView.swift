@@ -80,10 +80,6 @@ struct EnvelopeFilterView: View {
             
             
         .ignoresSafeArea()
-        .onTapGesture {
-            print("cheguei")
-        }
-        
         .navigationBarItems(leading:
                     Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
@@ -104,7 +100,7 @@ struct EnvelopeFilterView: View {
                 .foregroundColor(.white)
                 .onTapGesture {
                     self.presentationMode.wrappedValue.dismiss()
-                    interactor.removeEnvelope(indexItem: selectedEnvelope)
+                    interactor.removeEnvelope(envelopeId: envelopeId)
                 }
         )
         .navigationBarTitleDisplayMode(.inline)

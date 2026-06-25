@@ -22,24 +22,23 @@ class EnvelopeListManager {
             return
         }
 
+        removeEnvelope(envelopeId: listaEnvelope[indexItem].id)
+    }
+
+    func removeEnvelope(envelopeId: String) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
             print("Cannot remove envelope without an authenticated user.")
             return
         }
 
-        let envelope = listaEnvelope[indexItem]
-        db.collection("Users").document(userID).collection("Envelopes").document(envelope.id).delete { error in
+        db.collection("Users").document(userID).collection("Envelopes").document(envelopeId).delete { error in
             if let error {
                 print("Error removing envelope: \(error.localizedDescription)")
                 return
             }
 
-            if self.listaEnvelope.indices.contains(indexItem), self.listaEnvelope[indexItem].id == envelope.id {
-                self.listaEnvelope.remove(at: indexItem)
-            } else if let index = self.listaEnvelope.firstIndex(of: envelope) {
-                self.listaEnvelope.remove(at: index)
-            }
+            self.listaEnvelope.removeAll { $0.id == envelopeId }
             self.subject.send(self.listaEnvelope)
         }
     }

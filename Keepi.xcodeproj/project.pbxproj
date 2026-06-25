@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,6 +29,15 @@
 		8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */; };
 		8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */; };
 		8B68B0EA2AA6020600B32296 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8B68B0E92AA6020600B32296 /* GoogleService-Info.plist */; };
+		8B83EEDF2FE5D23A00A9F84E /* CRUDValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83EEDE2FE5D23A00A9F84E /* CRUDValidation.swift */; };
+		8B83EEE32FE5D67500A9F84E /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83EEE22FE5D67500A9F84E /* MainTabView.swift */; };
+		8B83EEE52FE5D7BC00A9F84E /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83EEE42FE5D7BC00A9F84E /* TodayView.swift */; };
+		8B83EEE72FE5DB5A00A9F84E /* AddEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83EEE62FE5DB5A00A9F84E /* AddEntryView.swift */; };
+		8B83EEE92FE5DD4300A9F84E /* ReflectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83EEE82FE5DD4300A9F84E /* ReflectView.swift */; };
+		8B83EEEC2FE60EE600A9F84E /* DailyWidgetDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83EEEB2FE60EE600A9F84E /* DailyWidgetDataStore.swift */; };
+		8B83EEF52FE610BC00A9F84E /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83EEF42FE610BC00A9F84E /* WidgetKit.framework */; };
+		8B83EEF72FE610BC00A9F84E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83EEF62FE610BC00A9F84E /* SwiftUI.framework */; };
+		8B83EF082FE610BE00A9F84E /* keepiWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8B83EEF22FE610BC00A9F84E /* keepiWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8B91F8012AA591E2005F5728 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8002AA591E2005F5728 /* FirebaseAuth */; };
 		8B91F8032AA591E2005F5728 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8022AA591E2005F5728 /* FirebaseAuthCombine-Community */; };
 		8B91F8052AA591E2005F5728 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8042AA591E2005F5728 /* FirebaseFirestore */; };
@@ -48,6 +57,30 @@
 		A745E5562A9F7B8C00240832 /* NewTradeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5552A9F7B8C00240832 /* NewTradeView.swift */; };
 		A76AD9332AB0D6AA00F647CA /* EditEnvelopeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8B83EF062FE610BE00A9F84E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B4E8EDA2A98D9F100D3A6F1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8B83EEF12FE610BC00A9F84E;
+			remoteInfo = keepiWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8B83EF0D2FE610BE00A9F84E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				8B83EF082FE610BE00A9F84E /* keepiWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5A3A48872A9F7A4F0094F751 /* TradeCardComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeCardComponent.swift; sourceTree = "<group>"; };
@@ -73,6 +106,17 @@
 		8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeCardView.swift; sourceTree = "<group>"; };
 		8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEnvelopeButtonView.swift; sourceTree = "<group>"; };
 		8B68B0E92AA6020600B32296 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		8B83EEDE2FE5D23A00A9F84E /* CRUDValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRUDValidation.swift; sourceTree = "<group>"; };
+		8B83EEE12FE5D23B00A9F84E /* CRUDValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRUDValidationTests.swift; sourceTree = "<group>"; };
+		8B83EEE22FE5D67500A9F84E /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		8B83EEE42FE5D7BC00A9F84E /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		8B83EEE62FE5DB5A00A9F84E /* AddEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryView.swift; sourceTree = "<group>"; };
+		8B83EEE82FE5DD4300A9F84E /* ReflectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectView.swift; sourceTree = "<group>"; };
+		8B83EEEB2FE60EE600A9F84E /* DailyWidgetDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWidgetDataStore.swift; sourceTree = "<group>"; };
+		8B83EEED2FE60FA100A9F84E /* Keepi.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Keepi.entitlements; sourceTree = "<group>"; };
+		8B83EEF22FE610BC00A9F84E /* keepiWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = keepiWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B83EEF42FE610BC00A9F84E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		8B83EEF62FE610BC00A9F84E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		8B91F80A2AA5A3A1005F5728 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEnvelopeView.swift; sourceTree = "<group>"; };
 		907FB3DD2AA74EBD000754FA /* Onboarding1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding1View.swift; sourceTree = "<group>"; };
@@ -89,6 +133,20 @@
 		A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEnvelopeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8B83EF092FE610BE00A9F84E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 8B83EEF12FE610BC00A9F84E /* keepiWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		8B83EEF82FE610BC00A9F84E /* KeepiWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (8B83EF092FE610BE00A9F84E /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = KeepiWidget; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		8B4E8EDF2A98D9F100D3A6F1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -98,6 +156,15 @@
 				8B91F8032AA591E2005F5728 /* FirebaseAuthCombine-Community in Frameworks */,
 				8B91F8052AA591E2005F5728 /* FirebaseFirestore in Frameworks */,
 				8B91F8072AA591E2005F5728 /* FirebaseFirestoreSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8B83EEEF2FE610BC00A9F84E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B83EEF72FE610BC00A9F84E /* SwiftUI.framework in Frameworks */,
+				8B83EEF52FE610BC00A9F84E /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +206,10 @@
 				5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */,
 				8B49CB512AB3ECD900883808 /* ReportView.swift */,
 				8B49CB532AB3F1B900883808 /* MostTradesView.swift */,
+				8B83EEE22FE5D67500A9F84E /* MainTabView.swift */,
+				8B83EEE42FE5D7BC00A9F84E /* TodayView.swift */,
+				8B83EEE62FE5DB5A00A9F84E /* AddEntryView.swift */,
+				8B83EEE82FE5DD4300A9F84E /* ReflectView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -149,6 +220,7 @@
 				5A92C7402A9E2E7C00F9C29A /* TradeListManager.swift */,
 				5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */,
 				8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */,
+				8B83EEDE2FE5D23A00A9F84E /* CRUDValidation.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -157,7 +229,10 @@
 			isa = PBXGroup;
 			children = (
 				8B4E8EE42A98D9F100D3A6F1 /* Keepi */,
+				8B83EEF82FE610BC00A9F84E /* KeepiWidget */,
+				8B83EEF32FE610BC00A9F84E /* Frameworks */,
 				8B4E8EE32A98D9F100D3A6F1 /* Products */,
+				8B83EEE02FE5D23A00A9F84E /* KeepiTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -165,6 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */,
+				8B83EEF22FE610BC00A9F84E /* keepiWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -184,6 +260,8 @@
 				8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */,
 				8B68B0E92AA6020600B32296 /* GoogleService-Info.plist */,
 				8B4E8EEB2A98D9F200D3A6F1 /* Preview Content */,
+				8B83EEEA2FE60EE600A9F84E /* Shared */,
+				8B83EEED2FE60FA100A9F84E /* Keepi.entitlements */,
 			);
 			path = Keepi;
 			sourceTree = "<group>";
@@ -194,6 +272,31 @@
 				8B4E8EEC2A98D9F200D3A6F1 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8B83EEE02FE5D23A00A9F84E /* KeepiTests */ = {
+			isa = PBXGroup;
+			children = (
+				8B83EEE12FE5D23B00A9F84E /* CRUDValidationTests.swift */,
+			);
+			path = KeepiTests;
+			sourceTree = "<group>";
+		};
+		8B83EEEA2FE60EE600A9F84E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				8B83EEEB2FE60EE600A9F84E /* DailyWidgetDataStore.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		8B83EEF32FE610BC00A9F84E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8B83EEF42FE610BC00A9F84E /* WidgetKit.framework */,
+				8B83EEF62FE610BC00A9F84E /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		907FB3DC2AA74E1D000754FA /* Onboarding */ = {
@@ -237,10 +340,12 @@
 				8B4E8EDE2A98D9F100D3A6F1 /* Sources */,
 				8B4E8EDF2A98D9F100D3A6F1 /* Frameworks */,
 				8B4E8EE02A98D9F100D3A6F1 /* Resources */,
+				8B83EF0D2FE610BE00A9F84E /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8B83EF072FE610BE00A9F84E /* PBXTargetDependency */,
 			);
 			name = Keepi;
 			packageProductDependencies = (
@@ -253,6 +358,28 @@
 			productReference = 8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */;
 			productType = "com.apple.product-type.application";
 		};
+		8B83EEF12FE610BC00A9F84E /* keepiWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8B83EF0A2FE610BE00A9F84E /* Build configuration list for PBXNativeTarget "keepiWidgetExtension" */;
+			buildPhases = (
+				8B83EEEE2FE610BC00A9F84E /* Sources */,
+				8B83EEEF2FE610BC00A9F84E /* Frameworks */,
+				8B83EEF02FE610BC00A9F84E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				8B83EEF82FE610BC00A9F84E /* KeepiWidget */,
+			);
+			name = keepiWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = keepiWidgetExtension;
+			productReference = 8B83EEF22FE610BC00A9F84E /* keepiWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -260,11 +387,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1430;
+				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					8B4E8EE12A98D9F100D3A6F1 = {
 						CreatedOnToolsVersion = 14.3;
+					};
+					8B83EEF12FE610BC00A9F84E = {
+						CreatedOnToolsVersion = 27.0;
 					};
 				};
 			};
@@ -285,6 +415,7 @@
 			projectRoot = "";
 			targets = (
 				8B4E8EE12A98D9F100D3A6F1 /* Keepi */,
+				8B83EEF12FE610BC00A9F84E /* keepiWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -300,6 +431,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8B83EEF02FE610BC00A9F84E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -309,28 +447,34 @@
 			files = (
 				907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
+				8B83EEEC2FE60EE600A9F84E /* DailyWidgetDataStore.swift in Sources */,
 				5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */,
 				5AE47BE22AA759ED00EE90D5 /* EnvelopeModel.swift in Sources */,
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
 				5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */,
 				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
+				8B83EEE52FE5D7BC00A9F84E /* TodayView.swift in Sources */,
 				907FB3E22AA75C0B000754FA /* OnboardingTabView.swift in Sources */,
 				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
 				8B49CB502AB1E0B100883808 /* HomeInteractor.swift in Sources */,
+				8B83EEE72FE5DB5A00A9F84E /* AddEntryView.swift in Sources */,
 				907FB3DE2AA74EBD000754FA /* Onboarding1View.swift in Sources */,
 				5A8739EE2AA0C235008127A3 /* NewTradeButton.swift in Sources */,
 				90DC0E0D2AB084BD00F56B0A /* View+.swift in Sources */,
 				A745E5542A9E354300240832 /* Tags.swift in Sources */,
 				A745E5522A9E32CC00240832 /* Feeling.swift in Sources */,
+				8B83EEE32FE5D67500A9F84E /* MainTabView.swift in Sources */,
 				8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */,
 				A745E5562A9F7B8C00240832 /* NewTradeView.swift in Sources */,
 				90DC0E0F2AB084DC00F56B0A /* SplashScreenView.swift in Sources */,
 				A73161B62AA215B4003CB8F9 /* EditTradeView.swift in Sources */,
+				8B83EEDF2FE5D23A00A9F84E /* CRUDValidation.swift in Sources */,
 				8B49CB542AB3F1B900883808 /* MostTradesView.swift in Sources */,
 				5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */,
 				5A3A48882A9F7A4F0094F751 /* TradeCardComponent.swift in Sources */,
 				5A92C7412A9E2E7C00F9C29A /* TradeListManager.swift in Sources */,
+				8B83EEE92FE5DD4300A9F84E /* ReflectView.swift in Sources */,
 				907FB3E42AA7605A000754FA /* Onboarding3View.swift in Sources */,
 				8B49CB522AB3ECD900883808 /* ReportView.swift in Sources */,
 				A76AD9332AB0D6AA00F647CA /* EditEnvelopeView.swift in Sources */,
@@ -345,7 +489,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8B83EEEE2FE610BC00A9F84E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8B83EF072FE610BE00A9F84E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8B83EEF12FE610BC00A9F84E /* keepiWidgetExtension */;
+			targetProxy = 8B83EF062FE610BE00A9F84E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		8B4E8EEE2A98D9F200D3A6F1 /* Debug */ = {
@@ -520,6 +679,77 @@
 			};
 			name = Release;
 		};
+		8B83EF0B2FE610BE00A9F84E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JZNPKB7CRS;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = keepiWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = keepiWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = candidohdiego.Keepi.keepiWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8B83EF0C2FE610BE00A9F84E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JZNPKB7CRS;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = keepiWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = keepiWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = candidohdiego.Keepi.keepiWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -537,6 +767,15 @@
 			buildConfigurations = (
 				8B4E8EF12A98D9F200D3A6F1 /* Debug */,
 				8B4E8EF22A98D9F200D3A6F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8B83EF0A2FE610BE00A9F84E /* Build configuration list for PBXNativeTarget "keepiWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8B83EF0B2FE610BE00A9F84E /* Debug */,
+				8B83EF0C2FE610BE00A9F84E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -60,6 +60,7 @@ class TradeListManager {
             } else if let index = self.lista.firstIndex(where: { $0.id == trade.id }) {
                 self.lista.remove(at: index)
             }
+            self.sortTradesNewestFirst()
             self.subject.send(self.lista)
         })
     }
@@ -90,14 +91,17 @@ class TradeListManager {
             self.lista = snapshot.documents.compactMap { document in
                 Self.makeTrade(from: document)
             }
+            self.sortTradesNewestFirst()
             self.subject.send(self.lista)
         }
     }
 
-    func addTrade(trade: TradeModel) {
+    func addTrade(trade: TradeModel, completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("Cannot add trade without an authenticated user.")
+            let error = NSError(domain: "Keepi", code: 401, userInfo: [NSLocalizedDescriptionKey: "Cannot add entry without an authenticated user."])
+            print(error.localizedDescription)
+            completion?(error)
             return
         }
 
@@ -130,12 +134,15 @@ class TradeListManager {
         }, completion: { _, error in
             if let error {
                 print("Error adding trade: \(error.localizedDescription)")
+                completion?(error)
                 return
             }
 
             self.lista.removeAll { $0.id == trade.id }
-            self.lista.insert(trade, at: 0)
+            self.lista.append(trade)
+            self.sortTradesNewestFirst()
             self.subject.send(self.lista)
+            completion?(nil)
         })
     }
 
@@ -221,8 +228,15 @@ class TradeListManager {
             if let index = self.lista.firstIndex(where: { $0.id == trade.id }) {
                 self.lista[index] = trade
             }
+            self.sortTradesNewestFirst()
             self.subject.send(self.lista)
         })
+    }
+
+    private func sortTradesNewestFirst() {
+        lista.sort { lhs, rhs in
+            lhs.date > rhs.date
+        }
     }
 
     private static func makeTrade(from document: QueryDocumentSnapshot) -> TradeModel? {

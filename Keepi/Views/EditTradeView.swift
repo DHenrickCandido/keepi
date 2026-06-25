@@ -46,6 +46,8 @@ struct EditTradeView: View {
     @State var selectedTags: [Tag] = []
     @State var selectedEnvelope: EnvelopeModel!
     @State var stepsIndicator: steps = .firstStep
+    @State private var showAlert = false
+    @State private var alertMessage = "Enter a valid title and amount before continuing."
     @Binding var selectedIndex: Int
 
     init(showEditTrade: Binding<Bool>, index: Int, trade: Binding<TradeModel>, selectedIndex: Binding<Int>){
@@ -60,15 +62,10 @@ struct EditTradeView: View {
         self.selectedTags = self.trade.tag
         self.selectedFeeling = self.trade.feeling
         
-        
-        
-        print("AAA - Called init \(index)")
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 40){
-            let _ = print("AAA - Evaluate \(index)")
-            
             if(stepsIndicator == .firstStep){
                 FirstStep()
                     
@@ -78,6 +75,9 @@ struct EditTradeView: View {
         
         }
         .padding(16)
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Entry incomplete"), message: Text(alertMessage), dismissButton: .default(Text("Got it!")))
+        }
  
     }
 
@@ -160,10 +160,6 @@ struct EditTradeView: View {
                     selectedEnvelope = envelope
                 }
             })
-        }
-        .onDisappear(){
-//            selectedIndex = 0
-            print("AAA - called disappear")
         }
     }
     
@@ -343,7 +339,8 @@ struct EditTradeView: View {
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .onTapGesture {
-            print("TO-DO")
+            alertMessage = "Create envelopes from the Today or Entries envelope list before attaching one here."
+            showAlert = true
         }
     }
     
@@ -362,6 +359,13 @@ struct EditTradeView: View {
                 .background(Color("darkGreenKeepi"))
                 .cornerRadius(16)
                 .onTapGesture {
+                    guard CRUDValidation.normalizedDecimal(value) != nil,
+                          CRUDValidation.envelopeId(from: tradeTitle) != nil else {
+                        alertMessage = "Enter a valid title and amount before continuing."
+                        showAlert = true
+                        return
+                    }
+
                     stepsIndicator = .secondStep
                 }
             
@@ -384,7 +388,12 @@ struct EditTradeView: View {
             return dateString
         }
         
-        guard let valueFloat = CRUDValidation.normalizedDecimal(value) else { return }
+        guard let valueFloat = CRUDValidation.normalizedDecimal(value),
+              CRUDValidation.envelopeId(from: tradeTitle) != nil else {
+            alertMessage = "Enter a valid title and amount before saving."
+            showAlert = true
+            return
+        }
 
         let id = trade.id
         let date = trade.date

@@ -12,7 +12,7 @@ struct MostTradesView: View {
     @EnvironmentObject var interactor: HomeInteractor
     
     var body: some View {
-        var totalValueSpent: Float = totalValueSpend(list: interactor.listTrades)
+        let totalValueSpent = totalValueSpend(list: interactor.listTrades)
         
         
         VStack{
@@ -21,21 +21,24 @@ struct MostTradesView: View {
                 .fontWeight(.bold)
                 .foregroundColor(.black)
             
-            ForEach(valueSpentByEnvelope(list: interactor.listTrades).sorted(by: { $0.key < $1.key }), id: \.key) { envelopeID, value in
-                HStack(){
-                    Text("\(envelopeID)")
-//                        .frame(maxWidth: 100, alignment: .leading) // Alinhe o texto à esquerda
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-                        .frame(width: 150, alignment: .leading)
+            if totalValueSpent <= 0 {
+                Text("Add entries to see spending patterns.")
+                    .font(.subheadline)
+                    .foregroundColor(Color(.systemGray))
+            } else {
+                ForEach(valueSpentByEnvelope(list: interactor.listTrades).sorted(by: { $0.key < $1.key }), id: \.key) { envelopeID, value in
+                    HStack(){
+                        Text("\(envelopeID.isEmpty ? "No envelope" : envelopeID)")
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                            .frame(width: 150, alignment: .leading)
 
-                    Rectangle()
-                        .fill(Color("graph3")) // Seleciona a cor com base no índice atual
-                        .frame(width: CGFloat(value / totalValueSpent) * 200, height: 20, alignment: .leading) // Ajuste a altura e outros estilos conforme necessário
-                        .cornerRadius(10) // Adjust the corner radius to your desired value
-//                        .frame(alignment: .leading)
+                        Rectangle()
+                            .fill(Color("graph3"))
+                            .frame(width: CGFloat(value / totalValueSpent) * 200, height: 20, alignment: .leading)
+                            .cornerRadius(10)
+                    }
                 }
-                
             }
             
             

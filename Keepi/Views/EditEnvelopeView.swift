@@ -58,7 +58,7 @@ struct EditEnvelopeView: View {
                     
                 }
                 
-                Text("New envelope")
+                Text("Edit envelope")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
@@ -80,7 +80,6 @@ struct EditEnvelopeView: View {
                         IconEnvelopeOption(img:img, active: isActive)
                             .onTapGesture {
                                 iconSelected = img
-                                print(iconSelected)
                             }
                         
                     }
@@ -157,6 +156,9 @@ struct EditEnvelopeView: View {
                     .frame(width: 150, height: 54)
                     .background(Color("darkGreenKeepi"))
                     .cornerRadius(16)
+                    .onTapGesture {
+                        saveEnvelope()
+                    }
                 
             }
         }
@@ -177,7 +179,6 @@ struct EditEnvelopeView: View {
               !originalEnvelopeId.isEmpty else { return }
 
         let envelope = EnvelopeModel(id: originalEnvelopeId, name: envelopeName, budget: valueFloat, icon: iconSelected)
-        print(envelope)
         envelopeListManager.updateEnvelope(envelope: envelope)
 
         // Fechar a modal

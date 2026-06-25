@@ -24,6 +24,17 @@ struct CRUDValidationTests {
         #expect(CRUDValidation.canDeleteEnvelope(envelopeId: "travel", trades: [trade]) == true)
     }
 
+    @Test func entriesWithoutEnvelopeDoNotBlockEnvelopeDeletion() {
+        let trade = TradeModel(id: "1", name: "Tea", value: 10, tag: [], envelopeId: "")
+        #expect(CRUDValidation.canDeleteEnvelope(envelopeId: "food", trades: [trade]) == true)
+    }
+
+    @Test func tradeDataPreservesEmptyEnvelopeId() {
+        let trade = TradeModel(id: "1", name: "Tea", value: 10, tag: [], envelopeId: "")
+        let data = TradeListManager.makeTradeData(from: trade)
+        #expect(data["envelopeId"] as? String == "")
+    }
+
     @Test func firestoreParserHandlesCommonNumericTypes() {
         #expect(FirestoreValueParser.floatValue(from: Float(1.25)) == 1.25)
         #expect(FirestoreValueParser.floatValue(from: Double(2.5)) == 2.5)

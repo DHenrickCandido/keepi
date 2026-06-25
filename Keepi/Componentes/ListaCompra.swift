@@ -12,23 +12,32 @@ struct ListaCompra: View {
     
     @Binding var showEditView : Bool
     @Binding var selectedTrade: Int
+
+    private var orderedTrades: [(index: Int, trade: TradeModel)] {
+        interactor.listTrades
+            .enumerated()
+            .map { (index: $0.offset, trade: $0.element) }
+            .sorted { $0.trade.date > $1.trade.date }
+    }
     
     var body: some View {
         VStack {
-            ForEach(Array(interactor.listTrades.enumerated()), id: \.element.id) { index, item in
+            ForEach(orderedTrades, id: \.trade.id) { item in
                 Button(action: {
-                    selectedTrade = index
-                    
-                    print("AAA - selectedTrade \(selectedTrade)")
+                    selectedTrade = item.index
                     showEditView = true
                 }) {
-                    TradeCardComponent(date: item.date, name: item.name, value: item.value, selectedTags: item.tag, envelopeName: interactor.getEnvelopeNameById(id: item.envelopeId), feeling: item.feeling)
-
+                    TradeCardComponent(
+                        date: item.trade.date,
+                        name: item.trade.name,
+                        value: item.trade.value,
+                        selectedTags: item.trade.tag,
+                        envelopeName: interactor.getEnvelopeNameById(id: item.trade.envelopeId),
+                        feeling: item.trade.feeling
+                    )
                 }
-
             }
         }
-
     }
 }
 

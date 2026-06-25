@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ReportView: View {
     @Environment(\.presentationMode) var presentationMode
-//    @EnvironmentObject var interactor: HomeInteractor
+    @EnvironmentObject var interactor: HomeInteractor
     
     var body: some View {
         ZStack{
@@ -58,7 +58,7 @@ struct ReportView: View {
             
             ScrollView{
                 MostTradesView()
-                    .environmentObject(HomeInteractor(tradeListManager: TradeListManager(), envelopeListManager: EnvelopeListManager()))
+                    .environmentObject(interactor)
             }
             .padding(.top, 154)
         }
@@ -68,10 +68,6 @@ struct ReportView: View {
         
         
     .ignoresSafeArea()
-    .onTapGesture {
-        print("cheguei")
-    }
-    
     .navigationBarItems(leading:
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()

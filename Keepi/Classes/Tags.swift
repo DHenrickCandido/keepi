@@ -23,9 +23,7 @@ struct Tags {
     static func getTags(listNames: [String]) -> [Tag] {
         var tagsList: [Tag] = []
         for name in listNames {
-            print(name)
             for tag in getTags() {
-                print(tag)
                 if name == tag.name{
                     tagsList.append(tag)
                 }
