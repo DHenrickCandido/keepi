@@ -1,34 +1,10 @@
 import SwiftUI
 import Combine
 
-struct Example_test: View {
-    
-    @State private var showNewEnvelope: Bool = false
-    
-    
-    var body: some View {
-        Button("click me") {
-            showNewEnvelope.toggle()
-        }
-        .sheet(isPresented: $showNewEnvelope){
-
-        }
-        .onAppear{
-            showNewEnvelope = true
-        }
-    }
-}
-
 func QuestionText(text: String) -> some View {
     Text(text)
         .font(.headline)
         .bold()
-}
-
-struct Example_test_Previews: PreviewProvider {
-    static var previews: some View {
-        Example_test()
-    }
 }
 
 struct NewEnvelopeView: View {
@@ -41,6 +17,8 @@ struct NewEnvelopeView: View {
     @State var envelopeName: String = ""
     @State var envelopeBudget: String = ""
     @State private var selectedTheme = "Dark"
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     let columns = [GridItem(), GridItem(), GridItem(), GridItem()]
     
@@ -186,19 +164,34 @@ struct NewEnvelopeView: View {
                 clickable = true
             }
         }
+        .alert("Envelope incomplete", isPresented: $showAlert) {
+            Button("Got it", role: .cancel) { }
+        } message: {
+            Text(alertMessage)
+        }
     }
     
     func saveEnvelope() {
         
         guard let valueFloat = CRUDValidation.normalizedDecimal(envelopeBudget),
-              let id = CRUDValidation.envelopeId(from: envelopeName) else { return }
+              let id = CRUDValidation.envelopeId(from: envelopeName) else {
+            alertMessage = "Add a valid envelope name and budget greater than zero."
+            showAlert = true
+            return
+        }
 
         let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat, icon: iconSelected)
-        interactor.addEnvelope(envelope: envelope)
-        // Fechar a modal
-        showNewEnvelope.toggle()
-        
-        
+        interactor.addEnvelope(envelope: envelope) { error in
+            DispatchQueue.main.async {
+                if let error {
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                    return
+                }
+
+                showNewEnvelope.toggle()
+            }
+        }
     }
 
 
@@ -231,4 +224,3 @@ struct NewEnvelopeView: View {
             
     }
 }
-

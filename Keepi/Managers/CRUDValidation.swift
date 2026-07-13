@@ -18,3 +18,14 @@ enum CRUDValidation {
         return !trades.contains { $0.envelopeId == envelopeId }
     }
 }
+
+enum KeepiFormat {
+    static func currency(_ value: Float) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = .current
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        return formatter.string(from: NSNumber(value: value)) ?? String(format: "$%.2f", value)
+    }
+}

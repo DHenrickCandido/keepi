@@ -252,6 +252,7 @@ class TradeListManager {
         let reflectionCompleted = data["reflectionCompleted"] as? Bool ?? true
         let worthIt = data["worthIt"] as? Bool
         let note = data["note"] as? String ?? ""
+        let journalEntry = data["journalEntry"] as? String ?? ""
 
         guard !id.isEmpty else { return nil }
         return TradeModel(
@@ -264,7 +265,8 @@ class TradeListManager {
             date: date,
             reflectionCompleted: reflectionCompleted,
             worthIt: worthIt,
-            note: note
+            note: note,
+            journalEntry: journalEntry
         )
     }
 
@@ -279,7 +281,8 @@ class TradeListManager {
             "date": trade.date,
             "feeling": trade.feeling,
             "reflectionCompleted": trade.reflectionCompleted,
-            "note": trade.note
+            "note": trade.note,
+            "journalEntry": trade.journalEntry
         ]
 
         if let worthIt = trade.worthIt {

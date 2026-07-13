@@ -33,7 +33,8 @@ struct ListaCompra: View {
                         value: item.trade.value,
                         selectedTags: item.trade.tag,
                         envelopeName: interactor.getEnvelopeNameById(id: item.trade.envelopeId),
-                        feeling: item.trade.feeling
+                        feeling: item.trade.feeling,
+                        journalEntry: item.trade.journalEntry
                     )
                 }
             }

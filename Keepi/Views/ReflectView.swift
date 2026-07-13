@@ -7,7 +7,7 @@ struct ReflectView: View {
     @State private var selectedFeeling = 2
     @State private var selectedTags: [Tag] = []
     @State private var worthIt = true
-    @State private var note = ""
+    @State private var journalEntry = ""
 
     private var pendingEntries: [TradeModel] {
         interactor.listTrades
@@ -28,9 +28,35 @@ struct ReflectView: View {
             ZStack {
                 Color("lightGrayKeepi")
                     .ignoresSafeArea()
+              VStack {
+                  ZStack(alignment: .leading) {
+                      Rectangle()
+                          .frame(height: 240)
+                          .foregroundColor(Color("darkGreenKeepi"))
+                          .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
+
+                      HStack(alignment: .top) {
+                          Image("keepi")
+                              .resizable()
+                              .aspectRatio(contentMode: .fit)
+                              .frame(height: 40)
+
+                          Spacer()
+
+                          Image("keepiMascote")
+                              .resizable()
+                              .aspectRatio(contentMode: .fit)
+                              .frame(height: 120)
+                      }
+                      .padding(.horizontal, 16)
+                  }
+
+                  Spacer()
+              }
+              .ignoresSafeArea()
 
                 VStack(spacing: 24) {
-                    header
+
 
                     if let entry = currentEntry {
                         reflectionForm(for: entry)
@@ -38,7 +64,7 @@ struct ReflectView: View {
                         emptyState
                     }
                 }
-                .padding(16)
+                .padding(.horizontal, 12)
             }
             .navigationBarHidden(true)
             .onAppear {
@@ -102,13 +128,13 @@ struct ReflectView: View {
                     feelingSection
                     motivationSection
                     worthItSection
-                    noteSection
+                    journalSection
                 }
                 .padding(.bottom, 12)
             }
 
             HStack(spacing: 12) {
-                secondaryButton(title: "Skip") {
+                secondaryButton(title: "Skip for now") {
                     moveToNextEntry()
                 }
 
@@ -135,7 +161,7 @@ struct ReflectView: View {
 
                 Spacer()
 
-                Text(String(format: "$%.2f", entry.value))
+                Text(KeepiFormat.currency(entry.value))
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(Color("darkGreenKeepi"))
@@ -154,7 +180,7 @@ struct ReflectView: View {
 
     private var feelingSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Feeling")
+            Text("How do you feel about it now?")
                 .font(.headline)
                 .fontWeight(.bold)
 
@@ -187,7 +213,7 @@ struct ReflectView: View {
 
     private var motivationSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Motivation")
+            Text("What drove this purchase?")
                 .font(.headline)
                 .fontWeight(.bold)
 
@@ -201,7 +227,7 @@ struct ReflectView: View {
 
     private var worthItSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Worth it?")
+            Text("Would you make this purchase again?")
                 .font(.headline)
                 .fontWeight(.bold)
 
@@ -217,13 +243,13 @@ struct ReflectView: View {
         }
     }
 
-    private var noteSection: some View {
+    private var journalSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Note")
+            Text("Journal")
                 .font(.headline)
                 .fontWeight(.bold)
 
-            TextField("Optional note", text: $note, axis: .vertical)
+            TextField("What do you want to remember about this purchase?", text: $journalEntry, axis: .vertical)
                 .lineLimit(3...6)
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -246,6 +272,11 @@ struct ReflectView: View {
                 .font(.headline)
                 .fontWeight(.bold)
                 .foregroundColor(Color("blackKeepi"))
+
+            Text("Entries you save for later will appear here.")
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+                .foregroundColor(Color(.systemGray))
 
             Spacer()
         }
@@ -295,14 +326,14 @@ struct ReflectView: View {
             selectedFeeling = 2
             selectedTags = []
             worthIt = true
-            note = ""
+            journalEntry = ""
             return
         }
 
         selectedFeeling = entry.feeling
         selectedTags = entry.tag
         worthIt = entry.worthIt ?? true
-        note = entry.note
+        journalEntry = entry.journalEntry.isEmpty ? entry.note : entry.journalEntry
     }
 
     private func saveReflection(for entry: TradeModel) {
@@ -316,10 +347,12 @@ struct ReflectView: View {
             date: entry.date,
             reflectionCompleted: true,
             worthIt: worthIt,
-            note: note.trimmingCharacters(in: .whitespacesAndNewlines)
+            note: entry.note,
+            journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
 
         interactor.updateTrade(trade: updatedEntry)
+        moveToNextEntry()
     }
 
     private func moveToNextEntry() {

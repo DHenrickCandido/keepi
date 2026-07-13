@@ -14,6 +14,8 @@ struct TradeCardComponent: View {
     var selectedTags: [Tag]
     var envelopeName: String
     var feeling: Int
+    var journalEntry: String = ""
+
     var body: some View {
         VStack{
             HStack(spacing: 18){
@@ -46,20 +48,11 @@ struct TradeCardComponent: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
                     HStack(spacing: 24){
-                        HStack{
-                            //img aqui
-                            ZStack{
-                                Text("$")
-                                    .font(.footnote)
-                                    .foregroundColor(Color("darkGreenKeepi"))
-                            }
-                            
-                            
-                            Text(String(format: "%.2f", value))
-                                .font(.footnote)
-
-                        }
-                        .frame(width: 80, alignment: .leading)
+                        Text(KeepiFormat.currency(value))
+                            .font(.footnote)
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color("darkGreenKeepi"))
+                            .frame(width: 96, alignment: .leading)
 
                         
                         HStack(spacing: 4){
@@ -93,6 +86,14 @@ struct TradeCardComponent: View {
                     }
                     .font(.footnote)
                     .frame(maxWidth: .infinity, alignment: .leading)
+
+                    if !journalEntry.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        Text(journalEntry)
+                            .font(.footnote)
+                            .foregroundColor(Color(.systemGray))
+                            .lineLimit(2)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

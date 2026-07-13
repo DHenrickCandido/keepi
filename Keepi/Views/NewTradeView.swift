@@ -1,37 +1,6 @@
 import SwiftUI
 import Combine
 
-/*
-    TO-DO: Add envelo
-*/
-
-struct Example: View {
-    
-    @State private var showNewTrade: Bool = false
-    
-    
-    var body: some View {
-        Button("click me") {
-            showNewTrade.toggle()
-        }
-        .sheet(isPresented: $showNewTrade){
-//            NewTradeView(showNewTrade: $showNewTrade)
-//                .presentationDetents([.fraction(0.9)])
-//                .interactiveDismissDisabled()
-                
-        }
-        .onAppear{
-            showNewTrade = true
-        }
-    }
-}
-
-struct Example_Previews: PreviewProvider {
-    static var previews: some View {
-        Example()
-    }
-}
-
 enum steps {
     case firstStep
     case secondStep
@@ -51,10 +20,12 @@ struct NewTradeView: View {
     @State var value: String = ""
     @State var selectedFeeling: Int = 2
     @State var selectedTags: [Tag] = []
+    @State var journalEntry: String = ""
     var todayDate = Date()
     
     @State var stepsIndicator: steps = .firstStep
     @State var showAlert = false
+    @State private var showNewEnvelope = false
     @State private var alertMessage = "Enter a valid title and amount before continuing."
     
     init(showNewTrade: Binding<Bool>, interactor: HomeInteractor, tagManager: Tags = Tags(), tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, selectedTags: [Tag] = [], todayDate: Date = Date()) {
@@ -86,6 +57,12 @@ struct NewTradeView: View {
         .padding(16)
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Entry incomplete"), message: Text(alertMessage), dismissButton: .default(Text("Got it!")))
+        }
+        .sheet(isPresented: $showNewEnvelope) {
+            NewEnvelopeView(showNewEnvelope: $showNewEnvelope)
+                .environmentObject(interactor)
+                .presentationDetents([.fraction(0.9)])
+                .interactiveDismissDisabled()
         }
     }
     
@@ -218,6 +195,18 @@ struct NewTradeView: View {
                 QuestionText(text: "What's your main motivation?")
                 TagCloudView(selectedTags: $selectedTags)
             }
+
+            VStack(alignment: .leading) {
+                QuestionText(text: "Journal")
+                TextField("What do you want to remember about this purchase?", text: $journalEntry, axis: .vertical)
+                    .lineLimit(3...6)
+                    .font(.callout)
+                    .foregroundColor(.black)
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .background(Color("lightGrayKeepi"))
+                    .cornerRadius(16)
+            }
             
             Spacer()
             
@@ -277,7 +266,7 @@ struct NewTradeView: View {
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
                 
-                Text("$ \(envelope.budget.formatted(.number.precision(.fractionLength(2))))")
+                Text(KeepiFormat.currency(envelope.budget))
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
             }
@@ -320,8 +309,7 @@ struct NewTradeView: View {
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .onTapGesture {
-            alertMessage = "Create envelopes from the Today or Entries envelope list before attaching one here."
-            showAlert = true
+            showNewEnvelope = true
         }
     }
     
@@ -366,7 +354,16 @@ struct NewTradeView: View {
         let id = baseId + TradeListManager.date2string(date: todayDate)
         let envelopeId = selectedEnvelope?.id ?? ""
         
-        let compra = TradeModel(id: id, name: tradeTitle, value: valueFloat, tag: selectedTags, envelopeId: envelopeId, feeling: selectedFeeling, date: todayDate)
+        let compra = TradeModel(
+            id: id,
+            name: tradeTitle,
+            value: valueFloat,
+            tag: selectedTags,
+            envelopeId: envelopeId,
+            feeling: selectedFeeling,
+            date: todayDate,
+            journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
+        )
         interactor.addTrade(trade: compra) { error in
             DispatchQueue.main.async {
                 if let error {
@@ -535,5 +532,3 @@ struct TagCloudView: View {
         }
     }
 }
-
-

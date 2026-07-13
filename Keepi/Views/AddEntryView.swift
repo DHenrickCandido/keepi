@@ -8,33 +8,68 @@ struct AddEntryView: View {
     @State private var selectedEnvelope: EnvelopeModel?
     @State private var selectedFeeling = 2
     @State private var selectedTags: [Tag] = []
+    @State private var journalEntry = ""
     @State private var selectedPresetTitle: String?
     @State private var step: AddEntryStep = .details
     @State private var showAlert = false
+    @State private var showNewEnvelope = false
     @State private var alertMessage = ""
 
     var body: some View {
         NavigationView {
             ZStack {
+
                 Color("lightGrayKeepi")
                     .ignoresSafeArea()
+              VStack {
+                  ZStack(alignment: .leading) {
+                      Rectangle()
+                          .frame(height: 240)
+                          .foregroundColor(Color("darkGreenKeepi"))
+                          .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
+
+                      HStack(alignment: .top) {
+                          Image("keepi")
+                              .resizable()
+                              .aspectRatio(contentMode: .fit)
+                              .frame(height: 40)
+
+                          Spacer()
+
+                          Image("keepiMascote")
+                              .resizable()
+                              .aspectRatio(contentMode: .fit)
+                              .frame(height: 120)
+                      }
+                      .padding(.horizontal, 16)
+                  }
+
+                  Spacer()
+              }
+              .ignoresSafeArea()
 
                 VStack(spacing: 24) {
-                    header
-
+                  Spacer()
+                      .frame(height: 46)
                     if step == .details {
                         detailsStep
                     } else {
                         contextStep
                     }
                 }
-                .padding(16)
+                .padding(.horizontal,12)
             }
             .navigationBarHidden(true)
             .alert("Entry incomplete", isPresented: $showAlert) {
                 Button("Got it", role: .cancel) { }
             } message: {
                 Text(alertMessage)
+            }
+            .sheet(isPresented: $showNewEnvelope) {
+                NewEnvelopeView(showNewEnvelope: $showNewEnvelope)
+                    .environmentObject(interactor)
+                    .presentationDetents([.fraction(0.9)])
+                    .interactiveDismissDisabled()
             }
         }
     }
@@ -73,7 +108,7 @@ struct AddEntryView: View {
             }
             .padding(16)
         }
-        .frame(height: 180)
+        .ignoresSafeArea()
     }
 
     private var detailsStep: some View {
@@ -114,8 +149,14 @@ struct AddEntryView: View {
 
             Spacer()
 
-            primaryButton(title: "Continue") {
-                continueToContext()
+            VStack(spacing: 12) {
+                secondaryButton(title: "Save now, reflect later") {
+                    saveFromDetails()
+                }
+
+                primaryButton(title: "Continue") {
+                    continueToContext()
+                }
             }
         }
     }
@@ -134,6 +175,8 @@ struct AddEntryView: View {
                         ForEach(interactor.listEnvelopes) { envelope in
                             envelopeCard(envelope)
                         }
+
+                        addEnvelopeCard
                     }
                     .padding(.vertical, 4)
                 }
@@ -158,6 +201,32 @@ struct AddEntryView: View {
                 .background(.white)
                 .cornerRadius(16)
                 .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Motivation")
+                    .font(.headline)
+                    .fontWeight(.bold)
+
+                TagCloudView(selectedTags: $selectedTags)
+                    .padding(16)
+                    .background(.white)
+                    .cornerRadius(16)
+                    .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Journal")
+                    .font(.headline)
+                    .fontWeight(.bold)
+
+                TextField("What do you want to remember about this purchase?", text: $journalEntry, axis: .vertical)
+                    .lineLimit(3...6)
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .background(.white)
+                    .cornerRadius(16)
+                    .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
             }
 
             Spacer()
@@ -288,7 +357,7 @@ struct AddEntryView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
 
-                    Text("$ \(envelope.budget.formatted(.number.precision(.fractionLength(2))))")
+                    Text(KeepiFormat.currency(envelope.budget))
                         .font(.subheadline)
                         .foregroundColor(Color(.darkGray))
                 }
@@ -302,6 +371,32 @@ struct AddEntryView: View {
                     .inset(by: 1)
                     .stroke(selectedEnvelope == envelope ? Color("lightGreenKeepi") : Color.clear, lineWidth: 2)
             )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var addEnvelopeCard: some View {
+        Button {
+            showNewEnvelope = true
+        } label: {
+            VStack(spacing: 8) {
+                Image(systemName: "plus.app.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(8)
+                    .frame(width: 48, height: 48)
+                    .foregroundColor(Color("darkGreenKeepi"))
+
+                Text("Add\nenvelope")
+                    .multilineTextAlignment(.center)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color("darkGreenKeepi"))
+            }
+            .padding(8)
+            .frame(width: 142, height: 119)
+            .background(Color("lightGrayKeepi"))
+            .cornerRadius(16)
         }
         .buttonStyle(.plain)
     }
@@ -375,6 +470,10 @@ struct AddEntryView: View {
         step = .context
     }
 
+    private func saveFromDetails() {
+        saveEntry(reflectionCompleted: false)
+    }
+
     private func saveEntry(reflectionCompleted: Bool) {
         guard let value = CRUDValidation.normalizedDecimal(amount),
               let baseId = CRUDValidation.envelopeId(from: title) else {
@@ -392,7 +491,8 @@ struct AddEntryView: View {
             envelopeId: selectedEnvelope?.id ?? "",
             feeling: selectedFeeling,
             date: date,
-            reflectionCompleted: reflectionCompleted
+            reflectionCompleted: reflectionCompleted,
+            journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
 
         interactor.addTrade(trade: entry) { error in
@@ -415,6 +515,7 @@ struct AddEntryView: View {
         selectedEnvelope = nil
         selectedFeeling = 2
         selectedTags = []
+        journalEntry = ""
         selectedPresetTitle = nil
         step = .details
     }

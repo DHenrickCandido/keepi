@@ -19,6 +19,7 @@ class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
     @Published var reflectionCompleted: Bool
     @Published var worthIt: Bool?
     @Published var note: String
+    @Published var journalEntry: String
     
     var description: String {
         return "id: \(id), name: \(name), value: \(value), envelopeId: \(envelopeId)"
@@ -34,7 +35,8 @@ class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
         date: Date = Date(),
         reflectionCompleted: Bool = true,
         worthIt: Bool? = nil,
-        note: String = ""
+        note: String = "",
+        journalEntry: String = ""
     ) {
         self.id = id
         self.name = name
@@ -46,7 +48,7 @@ class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
         self.reflectionCompleted = reflectionCompleted
         self.worthIt = worthIt
         self.note = note
+        self.journalEntry = journalEntry
     }
 }
-
 

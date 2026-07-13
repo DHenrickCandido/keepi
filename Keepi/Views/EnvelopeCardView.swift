@@ -11,8 +11,33 @@ struct EnvelopeCardView: View {
     var icon: String
     var name: String
     var budget: Float
+
+    private var statusText: String {
+        if budget < 0 {
+            return "Over budget"
+        }
+
+        if budget <= 25 {
+            return "Low balance"
+        }
+
+        return "Remaining"
+    }
+
+    private var statusColor: Color {
+        if budget < 0 {
+            return Color("red")
+        }
+
+        if budget <= 25 {
+            return Color("yellow")
+        }
+
+        return Color("darkGreenKeepi")
+    }
+
     var body: some View {
-        VStack{
+        VStack(spacing: 8) {
             Image(icon)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -20,14 +45,22 @@ struct EnvelopeCardView: View {
                 .frame(width: 48, height: 48)
                 .background(.white)
                 .cornerRadius(8)
-            VStack{
+            VStack(spacing: 2) {
                 Text(name)
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
-                Text("$ \(budget.formatted(.number.precision(.fractionLength(2))))")
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+
+                Text(KeepiFormat.currency(budget))
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
+
+                Text(statusText)
+                    .font(.caption2)
+                    .fontWeight(.bold)
+                    .foregroundColor(statusColor)
             }
         }
         .padding(8)

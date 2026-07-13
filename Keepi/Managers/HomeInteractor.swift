@@ -98,8 +98,13 @@ class HomeInteractor: ObservableObject {
         }
     }
 
-    func addEnvelope(envelope: EnvelopeModel) {
-        envelopeListManager.addEnvelope(envelope: envelope)
+    func addEnvelope(envelope: EnvelopeModel, completion: ((Error?) -> Void)? = nil) {
+        envelopeListManager.addEnvelope(envelope: envelope) { error in
+            if let error {
+                self.errorMessage = error.localizedDescription
+            }
+            completion?(error)
+        }
     }
 
     func getEnvelopeNameById(id: String) -> String {

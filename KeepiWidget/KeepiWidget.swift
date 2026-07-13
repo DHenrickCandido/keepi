@@ -5,6 +5,7 @@ struct KeepiDailyEntry: TimelineEntry {
     let date: Date
     let totalSpent: Float
     let entryCount: Int
+    let pendingReflectionCount: Int
     let entries: [KeepiWidgetEntry]
 }
 
@@ -21,6 +22,7 @@ struct KeepiDailyProvider: TimelineProvider {
             date: Date(),
             totalSpent: 42.50,
             entryCount: 3,
+            pendingReflectionCount: 1,
             entries: [
                 KeepiWidgetEntry(id: "1", title: "Coffee", value: 5.50, date: Date()),
                 KeepiWidgetEntry(id: "2", title: "Lunch", value: 22.00, date: Date()),
@@ -45,6 +47,7 @@ struct KeepiDailyProvider: TimelineProvider {
             date: Date(),
             totalSpent: defaults.float(forKey: "dailyWidget.totalSpent"),
             entryCount: defaults.integer(forKey: "dailyWidget.entryCount"),
+            pendingReflectionCount: defaults.integer(forKey: "dailyWidget.pendingReflectionCount"),
             entries: loadEntries(from: defaults)
         )
     }
@@ -70,7 +73,7 @@ struct KeepiWidgetEntryView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(String(format: "$%.2f", entry.totalSpent))
+                    Text(WidgetFormat.currency(entry.totalSpent))
                         .font(.title3)
                         .fontWeight(.bold)
                         .foregroundColor(Color(red: 0.18, green: 0.38, blue: 0.26))
@@ -80,6 +83,13 @@ struct KeepiWidgetEntryView: View {
                     Text("\(entry.entryCount) today")
                         .font(.caption)
                         .foregroundColor(.secondary)
+
+                    if entry.pendingReflectionCount > 0 {
+                        Text("\(entry.pendingReflectionCount) to reflect")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color(red: 0.18, green: 0.38, blue: 0.26))
+                    }
                 }
 
                 Spacer()
@@ -116,7 +126,7 @@ struct KeepiWidgetEntryView: View {
 
                             Spacer(minLength: 4)
 
-                            Text(String(format: "$%.2f", item.value))
+                            Text(WidgetFormat.currency(item.value))
                                 .font(.caption2)
                                 .fontWeight(.bold)
                                 .foregroundColor(Color(red: 0.18, green: 0.38, blue: 0.26))
@@ -140,6 +150,17 @@ struct KeepiWidgetEntryView: View {
     }
 }
 
+private enum WidgetFormat {
+    static func currency(_ value: Float) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = .current
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        return formatter.string(from: NSNumber(value: value)) ?? String(format: "$%.2f", value)
+    }
+}
+
 struct keepiWidget: Widget {
     let kind = "KeepiDailyWidget"
 
@@ -160,6 +181,7 @@ struct keepiWidget: Widget {
         date: .now,
         totalSpent: 42.50,
         entryCount: 3,
+        pendingReflectionCount: 1,
         entries: [
             KeepiWidgetEntry(id: "1", title: "Coffee", value: 5.50, date: .now),
             KeepiWidgetEntry(id: "2", title: "Lunch", value: 22.00, date: .now),

@@ -73,10 +73,12 @@ class EnvelopeListManager {
         }
     }
 
-    func addEnvelope(envelope: EnvelopeModel) {
+    func addEnvelope(envelope: EnvelopeModel, completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("Cannot add envelope without an authenticated user.")
+            let error = NSError(domain: "Keepi", code: 401, userInfo: [NSLocalizedDescriptionKey: "Cannot add envelope without an authenticated user."])
+            print(error.localizedDescription)
+            completion?(error)
             return
         }
 
@@ -100,11 +102,13 @@ class EnvelopeListManager {
         }, completion: { _, error in
             if let error {
                 print("Error adding envelope: \(error.localizedDescription)")
+                completion?(error)
                 return
             }
 
             self.listaEnvelope.insert(envelope, at: 0)
             self.subject.send(self.listaEnvelope)
+            completion?(nil)
         })
     }
 
@@ -115,7 +119,7 @@ class EnvelopeListManager {
             return envelope.name
         }
 
-        return "Nulo"
+        return "Deleted envelope"
     }
 
     func updateEnvelope(envelope: EnvelopeModel) {

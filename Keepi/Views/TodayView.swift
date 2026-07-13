@@ -163,7 +163,7 @@ struct TodayView: View {
             }
 
             HStack(spacing: 12) {
-                summaryMetric(title: "Spent today", value: String(format: "$%.2f", totalSpentToday))
+                summaryMetric(title: "Spent today", value: KeepiFormat.currency(totalSpentToday))
                 summaryMetric(title: "Entries", value: "\(todayEntries.count)")
             }
         }
@@ -185,6 +185,23 @@ struct TodayView: View {
                 .font(.headline)
                 .fontWeight(.bold)
                 .foregroundColor(Color("blackKeepi"))
+
+            Text("Add one now, then decide whether to reflect right away or later.")
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+                .foregroundColor(Color(.systemGray))
+
+            Button {
+                showNewTrade = true
+            } label: {
+                Text("Add today's first entry")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .background(Color("darkGreenKeepi"))
+                    .cornerRadius(16)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 24)
@@ -228,7 +245,8 @@ struct TodayView: View {
                             value: entry.value,
                             selectedTags: entry.tag,
                             envelopeName: interactor.getEnvelopeNameById(id: entry.envelopeId),
-                            feeling: entry.feeling
+                            feeling: entry.feeling,
+                            journalEntry: entry.journalEntry
                         )
                     }
                     .buttonStyle(.plain)

@@ -1,33 +1,11 @@
 //
-//  ExampleEdit.swift
+//  EditTradeView.swift
 //  Keepi
 //
 //  Created by Andrea Oquendo on 01/09/23.
 //
 
 import SwiftUI
-
-struct ExampleEdit: View {
-    @State private var showEditTrade: Bool = false
-
-    @State var compra = TradeModel(id: "34", name: "Hey", value: 23, tag: Tags.getTags())
-    
-    var body: some View {
-        Button("click me") {
-            showEditTrade.toggle()
-        }
-        .sheet(isPresented: $showEditTrade){
-            
-//            EditTradeView(showEditTrade: $showEditTrade, trade: $compra)
-//                .presentationDetents([.fraction(0.9)])
-//                .interactiveDismissDisabled()
-                
-        }
-        .onAppear{
-            showEditTrade = true
-        }
-    }
-}
 
 struct EditTradeView: View {
     
@@ -45,8 +23,10 @@ struct EditTradeView: View {
     @State var selectedFeeling: Int = 2
     @State var selectedTags: [Tag] = []
     @State var selectedEnvelope: EnvelopeModel!
+    @State var journalEntry: String = ""
     @State var stepsIndicator: steps = .firstStep
     @State private var showAlert = false
+    @State private var showNewEnvelope = false
     @State private var alertMessage = "Enter a valid title and amount before continuing."
     @Binding var selectedIndex: Int
 
@@ -61,6 +41,7 @@ struct EditTradeView: View {
         self.value = String(format: "%.2f", self.trade.value)
         self.selectedTags = self.trade.tag
         self.selectedFeeling = self.trade.feeling
+        self.journalEntry = self.trade.journalEntry
         
     }
     
@@ -77,6 +58,12 @@ struct EditTradeView: View {
         .padding(16)
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Entry incomplete"), message: Text(alertMessage), dismissButton: .default(Text("Got it!")))
+        }
+        .sheet(isPresented: $showNewEnvelope) {
+            NewEnvelopeView(showNewEnvelope: $showNewEnvelope)
+                .environmentObject(interactor)
+                .presentationDetents([.fraction(0.9)])
+                .interactiveDismissDisabled()
         }
  
     }
@@ -153,6 +140,7 @@ struct EditTradeView: View {
             self.value = String(format: "%.2f", self.trade.value)
             self.selectedTags = self.trade.tag
             self.selectedFeeling = self.trade.feeling
+            self.journalEntry = self.trade.journalEntry
             
             selectedEnvelope = nil
             interactor.listEnvelopes.forEach({ envelope in
@@ -218,6 +206,18 @@ struct EditTradeView: View {
             VStack(alignment: .leading){
                 QuestionText(text: "What's your main motivation?")
                 TagCloudView(selectedTags: $selectedTags)
+            }
+
+            VStack(alignment: .leading) {
+                QuestionText(text: "Journal")
+                TextField("What do you want to remember about this purchase?", text: $journalEntry, axis: .vertical)
+                    .lineLimit(3...6)
+                    .font(.callout)
+                    .foregroundColor(.black)
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .background(Color("lightGrayKeepi"))
+                    .cornerRadius(16)
             }
             
             Spacer()
@@ -296,7 +296,7 @@ struct EditTradeView: View {
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
                 
-                Text("$ \(envelope.budget.formatted(.number.precision(.fractionLength(2))))")
+                Text(KeepiFormat.currency(envelope.budget))
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
             }
@@ -339,8 +339,7 @@ struct EditTradeView: View {
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .onTapGesture {
-            alertMessage = "Create envelopes from the Today or Entries envelope list before attaching one here."
-            showAlert = true
+            showNewEnvelope = true
         }
     }
     
@@ -409,7 +408,8 @@ struct EditTradeView: View {
             date: date,
             reflectionCompleted: trade.reflectionCompleted,
             worthIt: trade.worthIt,
-            note: trade.note
+            note: trade.note,
+            journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
         
         interactor.updateTrade(trade: compra)

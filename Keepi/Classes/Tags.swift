@@ -15,7 +15,9 @@ struct Tags {
             Tag(id: 3, name: "I was with friends"),
             Tag(id: 4, name: "It was on sale"),
             Tag(id: 5, name: "I didn't think much about"),
-            Tag(id: 6, name: "Other")
+            Tag(id: 6, name: "Other"),
+            Tag(id: 7, name: "It was planned"),
+            Tag(id: 8, name: "It was impulsive")
         ]
         return allTags
     }

@@ -1,31 +1,6 @@
 import SwiftUI
 import Combine
 
-struct ExampleEditEnvelope_test: View {
-    
-    @State private var showNewEnvelope: Bool = false
-    
-    var body: some View {
-        Button("click me") {
-            showNewEnvelope.toggle()
-        }
-        .sheet(isPresented: $showNewEnvelope){
-//            NewEnvelopeView(envelopeListManager: envelopeListManager, showNewEnvelope: $showNewEnvelope)
-//                .presentationDetents([.fraction(0.9)])
-//                .interactiveDismissDisabled()
-        }
-        .onAppear{
-            showNewEnvelope = true
-        }
-    }
-}
-
-struct ExampleEditEnvelope_test_Previews: PreviewProvider {
-    static var previews: some View {
-        Example_test()
-    }
-}
-
 struct EditEnvelopeView: View {
     
     var envelopeListManager: EnvelopeListManager
@@ -123,7 +98,7 @@ struct EditEnvelopeView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color("lightGrayKeepi"))
                     .cornerRadius(16)
-                    .keyboardType(.default)
+                    .keyboardType(.decimalPad)
                     .onReceive(Just(envelopeBudget)) { newValue in
                         let filtered = newValue.filter { "0123456789,.".contains($0) }
                         if filtered != newValue {
@@ -212,5 +187,3 @@ struct EditEnvelopeView: View {
             
     }
 }
-
-
