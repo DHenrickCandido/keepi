@@ -14,7 +14,6 @@ struct CSVImportFlow: View {
     enum ImportStep {
         case parsing
         case mapping
-        case preview
         case importing
     }
     
@@ -31,20 +30,10 @@ struct CSVImportFlow: View {
                         ProgressView("Parsing CSV...")
                             .onAppear(perform: parseFile)
                     case .mapping:
-                        if let firstRow = parsedData.first {
-                            CSVColumnMappingView(
-                                headers: Array(firstRow.keys),
-                                onMap: { dateCol, descCol, amountCol, dateFormat in
-                                    mapData(dateCol: dateCol, descCol: descCol, amountCol: amountCol, dateFormat: dateFormat)
-                                },
-                                onCancel: { dismiss() }
-                            )
-                        }
-                    case .preview:
-                        CSVPreviewView(
-                            transactions: $mappedTransactions,
-                            onConfirm: importTransactions,
-                            onCancel: { step = .mapping }
+                        CSVColumnMappingView(
+                            parsedData: parsedData,
+                            onImport: importTransactions,
+                            onCancel: { dismiss() }
                         )
                     case .importing:
                         ProgressView("Importing entries into Review Inbox...")
@@ -86,49 +75,14 @@ struct CSVImportFlow: View {
         }
     }
     
-    private func mapData(dateCol: String, descCol: String, amountCol: String, dateFormat: String) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = dateFormat
-        
-        var transactions: [TransactionModel] = []
-        
-        for row in parsedData {
-            guard let dateString = row[dateCol],
-                  let date = formatter.date(from: dateString),
-                  let desc = row[descCol], !desc.isEmpty,
-                  let amountString = row[amountCol] else { continue }
-            
-            let normalizedAmount = amountString.replacingOccurrences(of: ",", with: ".")
-                .replacingOccurrences(of: "[^0-9.-]", with: "", options: .regularExpression)
-            
-            guard let amount = Double(normalizedAmount) else { continue }
-            let decimalAmount = Decimal(abs(amount))
-            let type: TransactionType = amount < 0 ? .expense : .income
-            
-            let model = TransactionModel(
-                id: TradeIdentity.make(),
-                name: desc,
-                value: decimalAmount,
-                date: date,
-                type: type,
-                isReviewed: false
-            )
-            transactions.append(model)
-        }
-        
-        if transactions.isEmpty {
-            self.errorMessage = "No rows could be mapped successfully. Check your column choices and date format."
-        } else {
-            self.mappedTransactions = transactions
-            self.step = .preview
-        }
-    }
+
     
-    private func importTransactions() {
+    private func importTransactions(transactions: [TransactionModel]) {
+        self.mappedTransactions = transactions
         step = .importing
         
         // Save recursively to avoid overwhelming Firebase/Combine
-        var itemsToSave = mappedTransactions
+        var itemsToSave = transactions
         
         func saveNext() {
             guard !itemsToSave.isEmpty else {
@@ -149,98 +103,150 @@ struct CSVImportFlow: View {
 }
 
 struct CSVColumnMappingView: View {
-    let headers: [String]
-    let onMap: (String, String, String, String) -> Void
+    let parsedData: [[String: String]]
+    let onImport: ([TransactionModel]) -> Void
     let onCancel: () -> Void
     
     @State private var selectedDate = ""
-    @State private var selectedDesc = ""
+    @State private var selectedTitle = ""
     @State private var selectedAmount = ""
+    @State private var selectedCategory = ""
+    @State private var selectedDescription = ""
     @State private var dateFormat = "dd/MM/yyyy"
     
     let dateFormats = ["dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd"]
     
-    var body: some View {
-        Form {
-            Section(header: Text("Map Columns")) {
-                Picker("Date Column", selection: $selectedDate) {
-                    Text("Select...").tag("")
-                    ForEach(headers, id: \.self) { Text($0).tag($0) }
-                }
-                
-                Picker("Date Format", selection: $dateFormat) {
-                    ForEach(dateFormats, id: \.self) { Text($0).tag($0) }
-                }
-                
-                Picker("Description Column", selection: $selectedDesc) {
-                    Text("Select...").tag("")
-                    ForEach(headers, id: \.self) { Text($0).tag($0) }
-                }
-                
-                Picker("Amount Column", selection: $selectedAmount) {
-                    Text("Select...").tag("")
-                    ForEach(headers, id: \.self) { Text($0).tag($0) }
-                }
-            }
-            
-            Section {
-                Button("Preview Import") {
-                    onMap(selectedDate, selectedDesc, selectedAmount, dateFormat)
-                }
-                .disabled(selectedDate.isEmpty || selectedDesc.isEmpty || selectedAmount.isEmpty)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .foregroundColor(selectedDate.isEmpty || selectedDesc.isEmpty || selectedAmount.isEmpty ? .gray : .white)
-                .padding()
-                .background(selectedDate.isEmpty || selectedDesc.isEmpty || selectedAmount.isEmpty ? Color(UIColor.systemGray5) : Color("darkGreenKeepi"))
-                .cornerRadius(10)
-            }
+    var headers: [String] {
+        if let keys = parsedData.first?.keys {
+            return Array(keys)
         }
-        .onAppear {
-            if let first = headers.first { selectedDate = first }
-            if headers.count > 1 { selectedDesc = headers[1] }
-            if headers.count > 2 { selectedAmount = headers[2] }
-        }
+        return []
     }
-}
-
-struct CSVPreviewView: View {
-    @Binding var transactions: [TransactionModel]
-    let onConfirm: () -> Void
-    let onCancel: () -> Void
+    
+    var mappedTransactions: [TransactionModel] {
+        guard !selectedDate.isEmpty, !selectedTitle.isEmpty, !selectedAmount.isEmpty else { return [] }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = dateFormat
+        
+        var transactions: [TransactionModel] = []
+        
+        for row in parsedData {
+            guard let dateString = row[selectedDate],
+                  let date = formatter.date(from: dateString),
+                  let title = row[selectedTitle], !title.isEmpty,
+                  let amountString = row[selectedAmount] else { continue }
+            
+            let normalizedAmount = amountString.replacingOccurrences(of: ",", with: ".")
+                .replacingOccurrences(of: "[^0-9.-]", with: "", options: .regularExpression)
+            
+            guard let amount = Double(normalizedAmount) else { continue }
+            let decimalAmount = Decimal(abs(amount))
+            let type: TransactionType = amount < 0 ? .expense : .income
+            
+            let category = selectedCategory.isEmpty ? "" : (row[selectedCategory] ?? "")
+            let desc = selectedDescription.isEmpty ? "" : (row[selectedDescription] ?? "")
+            
+            let model = TransactionModel(
+                id: TradeIdentity.make(),
+                name: title,
+                value: decimalAmount,
+                date: date,
+                type: type,
+                isReviewed: false,
+                note: category,
+                journalEntry: desc
+            )
+            transactions.append(model)
+        }
+        return transactions
+    }
     
     var body: some View {
-        VStack {
-            List {
-                Section(header: Text("Preview (\(transactions.count) entries)")) {
-                    ForEach(transactions) { t in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(t.name).font(.headline)
-                                Text(t.date, style: .date).font(.caption).foregroundColor(.gray)
+        VStack(spacing: 0) {
+            Form {
+                Section(header: Text("Map your columns").font(.headline)) {
+                    mappingPicker(title: "Transaction title", selection: $selectedTitle)
+                    mappingPicker(title: "Date", selection: $selectedDate)
+                    
+                    Picker("Date Format", selection: $dateFormat) {
+                        ForEach(dateFormats, id: \.self) { Text($0).tag($0) }
+                    }
+                    
+                    mappingPicker(title: "Amount", selection: $selectedAmount)
+                    mappingPicker(title: "Category", selection: $selectedCategory, optional: true)
+                    mappingPicker(title: "Description", selection: $selectedDescription, optional: true)
+                }
+                
+                let previewItems = mappedTransactions
+                if !previewItems.isEmpty {
+                    Section(header: Text("Preview (\(previewItems.count) entries)")) {
+                        ForEach(previewItems.prefix(5)) { t in
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(t.name).font(.headline)
+                                    Text(t.date, style: .date).font(.caption).foregroundColor(.gray)
+                                }
+                                Spacer()
+                                Text(KeepiFormat.currency(t.value))
+                                    .foregroundColor(t.type == .expense ? .red : .green)
                             }
-                            Spacer()
-                            Text(KeepiFormat.currency(t.value))
-                                .foregroundColor(t.type == .expense ? .red : .green)
+                        }
+                        if previewItems.count > 5 {
+                            Text("... and \(previewItems.count - 5) more")
+                                .foregroundColor(.gray)
+                                .font(.caption)
                         }
                     }
-                    .onDelete(perform: delete)
                 }
             }
             
-            Button("Import \(transactions.count) Entries") {
-                onConfirm()
+            let previewItems = mappedTransactions
+            Button("Import \(previewItems.count) Entries") {
+                onImport(previewItems)
             }
+            .disabled(previewItems.isEmpty)
             .font(.headline)
             .foregroundColor(.white)
             .padding()
             .frame(maxWidth: .infinity)
-            .background(Color("darkGreenKeepi"))
+            .background(previewItems.isEmpty ? Color.gray : Color("darkGreenKeepi"))
             .cornerRadius(10)
             .padding()
         }
+        .onAppear {
+            if let first = headers.first { selectedDate = first }
+            if headers.count > 1 { selectedTitle = headers[1] }
+            if headers.count > 2 { selectedAmount = headers[2] }
+        }
     }
     
-    private func delete(at offsets: IndexSet) {
-        transactions.remove(atOffsets: offsets)
+    @ViewBuilder
+    private func mappingPicker(title: String, selection: Binding<String>, optional: Bool = false) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title).font(.caption).foregroundColor(.gray)
+            Picker(title, selection: selection) {
+                if optional {
+                    Text("None").tag("")
+                } else {
+                    Text("Select...").tag("")
+                }
+                ForEach(headers.filter { header in
+                    // Prevent same column mapped to multiple required fields
+                    let isUsedElsewhere = (!optional && header != selection.wrappedValue) && 
+                        (header == selectedDate || header == selectedTitle || header == selectedAmount)
+                    return !isUsedElsewhere
+                }, id: \.self) { 
+                    Text($0).tag($0)
+                }
+            }
+            .pickerStyle(.menu)
+            .labelsHidden()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(8)
+            .background(Color(UIColor.systemGray6))
+            .cornerRadius(8)
+        }
+        .padding(.vertical, 4)
     }
 }
