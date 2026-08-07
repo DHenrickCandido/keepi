@@ -32,10 +32,10 @@ class TransactionListManager {
         let transaction = lista[indexItem]
         let transactionRef = db.collection("Users").document(userID).collection("Trades").document(transaction.id)
 
-        db.runTransaction({ transaction, errorPointer in
+        db.runTransaction({ dbTransaction, errorPointer in
             let transactionSnapshot: DocumentSnapshot
             do {
-                transactionSnapshot = try transaction.getDocument(transactionRef)
+                transactionSnapshot = try dbTransaction.getDocument(transactionRef)
             } catch let error as NSError {
                 errorPointer?.pointee = error
                 return nil
@@ -54,7 +54,7 @@ class TransactionListManager {
                 let envelopeSnapshot: DocumentSnapshot
 
                 do {
-                    envelopeSnapshot = try transaction.getDocument(envelopeRef)
+                    envelopeSnapshot = try dbTransaction.getDocument(envelopeRef)
                 } catch let error as NSError {
                     errorPointer?.pointee = error
                     return nil
@@ -62,11 +62,11 @@ class TransactionListManager {
 
                 if envelopeSnapshot.exists {
                     let envelopeBudget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    transaction.updateData(["budget": Money.firestoreNumber(envelopeBudget + storedValue)], forDocument: envelopeRef)
+                    dbTransaction.updateData(["budget": Money.firestoreNumber(envelopeBudget + storedValue)], forDocument: envelopeRef)
                 }
             }
 
-            transaction.deleteDocument(transactionRef)
+            dbTransaction.deleteDocument(transactionRef)
             return nil
         }, completion: { _, error in
             if let error {
@@ -130,10 +130,10 @@ class TransactionListManager {
         let transactionRef = db.collection("Users").document(userID).collection("Trades").document(transaction.id)
         let transactionData = Self.makeTransactionData(from: transaction)
 
-        db.runTransaction({ transaction, errorPointer in
+        db.runTransaction({ dbTransaction, errorPointer in
             let existingTrade: DocumentSnapshot
             do {
-                existingTrade = try transaction.getDocument(transactionRef)
+                existingTrade = try dbTransaction.getDocument(transactionRef)
             } catch let error as NSError {
                 errorPointer?.pointee = error
                 return nil
@@ -149,7 +149,7 @@ class TransactionListManager {
                 let envelopeSnapshot: DocumentSnapshot
 
                 do {
-                    envelopeSnapshot = try transaction.getDocument(envelopeRef)
+                    envelopeSnapshot = try dbTransaction.getDocument(envelopeRef)
                 } catch let error as NSError {
                     errorPointer?.pointee = error
                     return nil
@@ -161,10 +161,10 @@ class TransactionListManager {
                 }
 
                 let envelopeBudget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                transaction.updateData(["budget": Money.firestoreNumber(envelopeBudget - transaction.value)], forDocument: envelopeRef)
+                dbTransaction.updateData(["budget": Money.firestoreNumber(envelopeBudget - transaction.value)], forDocument: envelopeRef)
             }
 
-            transaction.setData(transactionData, forDocument: transactionRef)
+            dbTransaction.setData(transactionData, forDocument: transactionRef)
             return nil
         }, completion: { _, error in
             if let error {
@@ -192,11 +192,11 @@ class TransactionListManager {
         let transactionRef = db.collection("Users").document(userID).collection("Trades").document(transaction.id)
         let transactionData = Self.makeTransactionData(from: transaction)
 
-        db.runTransaction({ transaction, errorPointer in
+        db.runTransaction({ dbTransaction, errorPointer in
             let transactionSnapshot: DocumentSnapshot
 
             do {
-                transactionSnapshot = try transaction.getDocument(transactionRef)
+                transactionSnapshot = try dbTransaction.getDocument(transactionRef)
             } catch let error as NSError {
                 errorPointer?.pointee = error
                 return nil
@@ -218,10 +218,10 @@ class TransactionListManager {
 
             do {
                 if let oldEnvelopeRef {
-                    oldEnvelopeSnapshot = try transaction.getDocument(oldEnvelopeRef)
+                    oldEnvelopeSnapshot = try dbTransaction.getDocument(oldEnvelopeRef)
                 }
                 if let newEnvelopeRef, newEnvelopeId != oldEnvelopeId {
-                    newEnvelopeSnapshot = try transaction.getDocument(newEnvelopeRef)
+                    newEnvelopeSnapshot = try dbTransaction.getDocument(newEnvelopeRef)
                 } else if newEnvelopeId == oldEnvelopeId {
                     newEnvelopeSnapshot = oldEnvelopeSnapshot
                 }
@@ -238,21 +238,21 @@ class TransactionListManager {
             if oldEnvelopeId == newEnvelopeId {
                 if let envelopeRef = newEnvelopeRef, let envelopeSnapshot = newEnvelopeSnapshot {
                     let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    transaction.updateData(["budget": Money.firestoreNumber(budget + oldValue - transaction.value)], forDocument: envelopeRef)
+                    dbTransaction.updateData(["budget": Money.firestoreNumber(budget + oldValue - transaction.value)], forDocument: envelopeRef)
                 }
             } else {
                 if let envelopeRef = oldEnvelopeRef, let envelopeSnapshot = oldEnvelopeSnapshot {
                     let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    transaction.updateData(["budget": Money.firestoreNumber(budget + oldValue)], forDocument: envelopeRef)
+                    dbTransaction.updateData(["budget": Money.firestoreNumber(budget + oldValue)], forDocument: envelopeRef)
                 }
 
                 if let envelopeRef = newEnvelopeRef, let envelopeSnapshot = newEnvelopeSnapshot {
                     let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    transaction.updateData(["budget": Money.firestoreNumber(budget - transaction.value)], forDocument: envelopeRef)
+                    dbTransaction.updateData(["budget": Money.firestoreNumber(budget - transaction.value)], forDocument: envelopeRef)
                 }
             }
 
-            transaction.updateData(transactionData, forDocument: transactionRef)
+            dbTransaction.updateData(transactionData, forDocument: transactionRef)
             return nil
         }, completion: { _, error in
             if let error {

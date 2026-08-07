@@ -16,12 +16,23 @@ struct EditTransactionView: View {
     
         
     
+    @Binding var selectedIndex: Int
+    @State var selectedEnvelope: EnvelopeModel!
+    
     // Elements of the transaction
     @State var tradeTitle: String = ""
     @State var value: String = ""
     @State var selectedFeeling: Int = 2
     @State var transactionType: TransactionType = .expense
     @State var isPlanned: Bool = false
+    @State var todayDate: Date = Date()
+    @State var stepsIndicator: steps = .firstStep
+    @State var showAlert = false
+    @State var alertMessage = ""
+    @State var showNewEnvelope = false
+    @State var showDeleteConfirmation = false
+    @State var journalEntry = ""
+    @State var isSaving = false
     init(showEditTransaction: Binding<Bool>, index: Int, trade: Binding<TransactionModel>, selectedIndex: Binding<Int>) {
         self._showEditTransaction = showEditTransaction
         
@@ -247,7 +258,7 @@ struct EditTransactionView: View {
             //Fim como voce se sentiu?
             VStack(alignment: .leading){
                 QuestionText(text: "What's your main motivation?")
-                TagCloudView(text: $journalEntry, axis: .vertical)
+                TextField("Type your journal entry...", text: $journalEntry, axis: .vertical)
                     .lineLimit(3...6)
                     .font(.callout)
                     .foregroundColor(.black)
@@ -467,7 +478,7 @@ struct EditTransactionView: View {
         )
         
         isSaving = true
-        interactor.updateTransaction(trade: compra) { error in
+        interactor.updateTransaction(transaction: compra) { error in
             DispatchQueue.main.async {
                 isSaving = false
                 if let error {

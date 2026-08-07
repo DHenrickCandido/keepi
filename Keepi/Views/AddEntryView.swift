@@ -7,7 +7,28 @@ struct AddEntryView: View {
     @State private var title = ""
     @State private var selectedEnvelope: EnvelopeModel?
     @State private var selectedFeeling = 2
-    @State private var corners: [.bottomLeft, .bottomRight])
+    @State private var transactionType: TransactionType = .expense
+    @State private var isPlanned: Bool = false
+    @State private var journalEntry = ""
+    @State private var selectedPresetTitle: String?
+    @State private var step: AddEntryStep = .details
+    @State private var showAlert = false
+    @State private var showNewEnvelope = false
+    @State private var alertMessage = ""
+    @State private var isSaving = false
+
+    var body: some View {
+        NavigationView {
+            ZStack {
+
+                Color("lightGrayKeepi")
+                    .ignoresSafeArea()
+              VStack {
+                  ZStack(alignment: .leading) {
+                      Rectangle()
+                          .frame(height: 240)
+                          .foregroundColor(Color("darkGreenKeepi"))
+                          .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
 
                       HStack(alignment: .top) {
                           Image("keepi")
@@ -189,11 +210,33 @@ struct AddEntryView: View {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Motivation")
+                Text("Was it planned?")
                     .font(.headline)
                     .fontWeight(.bold)
 
-                TagCloudView(radius: 8, y: 4)
+                HStack(spacing: 12) {
+                    Button(action: { isPlanned = true }) {
+                        Text("Yes")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(isPlanned ? .white : Color("darkGreenKeepi"))
+                            .frame(maxWidth: .infinity, minHeight: 52)
+                            .background(isPlanned ? Color("darkGreenKeepi") : .white)
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                    }
+
+                    Button(action: { isPlanned = false }) {
+                        Text("No")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(!isPlanned ? .white : Color("darkGreenKeepi"))
+                            .frame(maxWidth: .infinity, minHeight: 52)
+                            .background(!isPlanned ? Color("darkGreenKeepi") : .white)
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                    }
+                }
             }
 
             VStack(alignment: .leading, spacing: 8) {
@@ -432,7 +475,7 @@ struct AddEntryView: View {
         title = preset.title
         selectedPresetTitle = preset.title
         selectedEnvelope = matchingEnvelope(for: preset)
-        selectedTags = Tags.getTags(listNames: [preset.motivationName])
+        isPlanned = preset.isPlanned
     }
 
     private func matchingEnvelope(for preset: EntryPreset) -> EnvelopeModel? {
@@ -473,18 +516,20 @@ struct AddEntryView: View {
 
         let date = Date()
         let entry = TransactionModel(
-            id: TradeIdentity.make(),
+            id: UUID().uuidString,
             name: title.trimmingCharacters(in: .whitespacesAndNewlines),
             value: value,
             envelopeId: selectedEnvelope?.id ?? "",
             feeling: selectedFeeling,
             date: date,
             reflectionCompleted: reflectionCompleted,
+            isPlanned: isPlanned,
+            type: transactionType,
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
 
         isSaving = true
-        interactor.addTransaction(trade: entry) { error in
+        interactor.addTransaction(transaction: entry) { error in
             DispatchQueue.main.async {
                 isSaving = false
                 if let error {
@@ -504,7 +549,9 @@ struct AddEntryView: View {
         title = ""
         selectedEnvelope = nil
         selectedFeeling = 2
-                journalEntry = ""
+        isPlanned = false
+        transactionType = .expense
+        journalEntry = ""
         selectedPresetTitle = nil
         step = .details
     }
@@ -519,19 +566,19 @@ private struct EntryPreset: Identifiable {
     let title: String
     let systemImage: String
     let envelopeKeywords: [String]
-    let motivationName: String
+    let isPlanned: Bool
 
     var id: String { title }
 
     static let defaults: [EntryPreset] = [
-        EntryPreset(title: "Coffee", systemImage: "cup.and.saucer.fill", envelopeKeywords: ["coffee", "food", "cafe", "meal"], motivationName: "I wanted it"),
-        EntryPreset(title: "Lunch", systemImage: "fork.knife", envelopeKeywords: ["lunch", "food", "meal", "restaurant"], motivationName: "I needed it"),
-        EntryPreset(title: "Groceries", systemImage: "cart.fill", envelopeKeywords: ["groceries", "grocery", "market", "food"], motivationName: "I needed it"),
-        EntryPreset(title: "Delivery", systemImage: "takeoutbag.and.cup.and.straw.fill", envelopeKeywords: ["delivery", "ifood", "food", "restaurant"], motivationName: "I didn't think much about"),
-        EntryPreset(title: "Transport", systemImage: "bus.fill", envelopeKeywords: ["transport", "transportation", "uber", "bus", "car"], motivationName: "I needed it"),
-        EntryPreset(title: "Bill", systemImage: "doc.text.fill", envelopeKeywords: ["bill", "bills", "home", "utilities"], motivationName: "I needed it"),
-        EntryPreset(title: "Gift", systemImage: "gift.fill", envelopeKeywords: ["gift", "gifts", "friends"], motivationName: "I was with friends"),
-        EntryPreset(title: "Fun", systemImage: "sparkles", envelopeKeywords: ["fun", "entertainment", "leisure", "hobby"], motivationName: "I wanted it")
+        EntryPreset(title: "Coffee", systemImage: "cup.and.saucer.fill", envelopeKeywords: ["coffee", "food", "cafe", "meal"], isPlanned: false),
+        EntryPreset(title: "Lunch", systemImage: "fork.knife", envelopeKeywords: ["lunch", "food", "meal", "restaurant"], isPlanned: true),
+        EntryPreset(title: "Groceries", systemImage: "cart.fill", envelopeKeywords: ["groceries", "grocery", "market", "food"], isPlanned: true),
+        EntryPreset(title: "Delivery", systemImage: "takeoutbag.and.cup.and.straw.fill", envelopeKeywords: ["delivery", "ifood", "food", "restaurant"], isPlanned: false),
+        EntryPreset(title: "Transport", systemImage: "bus.fill", envelopeKeywords: ["transport", "transportation", "uber", "bus", "car"], isPlanned: true),
+        EntryPreset(title: "Bill", systemImage: "doc.text.fill", envelopeKeywords: ["bill", "bills", "home", "utilities"], isPlanned: true),
+        EntryPreset(title: "Gift", systemImage: "gift.fill", envelopeKeywords: ["gift", "gifts", "friends"], isPlanned: true),
+        EntryPreset(title: "Fun", systemImage: "sparkles", envelopeKeywords: ["fun", "entertainment", "leisure", "hobby"], isPlanned: false)
     ]
 }
 

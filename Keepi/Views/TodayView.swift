@@ -137,7 +137,7 @@ struct TodayView: View {
             .sheet(isPresented: $showEditTrade) {
                 if interactor.listTransactions.indices.contains(selectedTrade) {
                     EditTransactionView(
-                        showEditTrade: $showEditTrade,
+                        showEditTransaction: $showEditTrade,
                         index: selectedTrade,
                         trade: $interactor.listTransactions[selectedTrade],
                         selectedIndex: $selectedTrade

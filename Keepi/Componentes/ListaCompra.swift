@@ -16,7 +16,7 @@ struct ListaCompra: View {
     private var orderedTrades: [(index: Int, transaction: TransactionModel)] {
         interactor.listTransactions
             .enumerated()
-            .map { (index: $0.offset, trade: $0.element) }
+            .map { (index: $0.offset, transaction: $0.element) }
             .sorted { $0.transaction.date > $1.transaction.date }
     }
     

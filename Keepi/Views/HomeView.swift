@@ -9,17 +9,32 @@ import SwiftUI
 import FirebaseAuth
 
 struct HomeView: View {
-    @StateObject var tradeModel: TransactionModel
+    @StateObject var transactionModel: TransactionModel
     @EnvironmentObject var interactor: HomeInteractor
     
-    @State private var showNewTrade: Bool = false
-    @State private var showEditTrade: Bool = false
-    @State var selectedTrade: Int = 0
+    @State private var showNewTransaction: Bool = false
+    @State private var showEditTransaction: Bool = false
+    @State var selectedTransaction: Int = 0
     
     @State private var showNewEnvelope: Bool = false
     @State private var selectedEnvelope: Int = 0
     
-    @State var compra = TransactionModel(id: "34", name: "Hey", value: 23, perform: { _ in
+    @State var compra = TransactionModel(id: "34", name: "Hey", value: 23)
+    
+//    @Binding var listTitleEnvelopeName: String
+    
+    var userName: String = "Jujuba"
+    var body: some View {
+        NavigationView{
+            ZStack {
+                
+                //Header (logo + mascote)
+                VStack {
+                    ZStack (alignment: .leading) {
+                        Rectangle()
+                            .frame(height: 240)
+                            .foregroundColor(Color("darkGreenKeepi"))
+                            .onChange(of: showEditTransaction, perform: { _ in
                                 
                             }) // NAO TIRA ISSO
                             .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
@@ -102,7 +117,7 @@ struct HomeView: View {
                     VStack {
                         //Inicio cabecalho trocas
                         HStack {
-                            Text("Last trades")
+                            Text("Last transactions")
                                 .font(.title2)
                                 .fontWeight(.semibold)
                             
@@ -110,14 +125,14 @@ struct HomeView: View {
                             
                             //Inicio botao novas trocas
                             Button {
-                                showNewTrade.toggle()
+                                showNewTransaction.toggle()
                             } label: {
                                 HStack (spacing: 8) {
                                     Image(systemName: "plus.app.fill")
                                         .font(.title)
                                         .foregroundColor(Color("lightGreenKeepi"))
                                     
-                                    Text("New trade")
+                                    Text("New transaction")
                                         .font(.headline)
                                         .fontWeight(.bold)
                                         .foregroundColor(.white)
@@ -154,7 +169,7 @@ struct HomeView: View {
                             ScrollView (showsIndicators: false){
                                 VStack {
                                     
-                                    ListaCompra(showEditView: $showEditTrade, selectedTrade: $selectedTrade)
+                                    ListaCompra(showEditView: $showEditTransaction, selectedTrade: $selectedTransaction)
                                 }
                             }
                             
@@ -179,18 +194,18 @@ struct HomeView: View {
 //                envelopeListManager.fetchEnvelopes()
 //            })
 
-            .sheet(isPresented: $showNewTrade){
-                NewTransactionView(showNewTrade: $showNewTrade, interactor: interactor)
+            .sheet(isPresented: $showNewTransaction){
+                NewTransactionView(showNewTrade: $showNewTransaction, interactor: interactor)
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
             }
-            .sheet(isPresented: $showEditTrade){
-                if interactor.listTransactions.indices.contains(selectedTrade) {
+            .sheet(isPresented: $showEditTransaction){
+                if interactor.listTransactions.indices.contains(selectedTransaction) {
                     EditTransactionView(
-                        showEditTrade: $showEditTrade,
-                        index: selectedTrade,
-                        trade: $interactor.listTransactions[selectedTrade],
-                        selectedIndex: $selectedTrade)
+                        showEditTransaction: $showEditTransaction,
+                        index: selectedTransaction,
+                        trade: $interactor.listTransactions[selectedTransaction],
+                        selectedIndex: $selectedTransaction)
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
                 }
@@ -246,7 +261,7 @@ extension View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(tradeModel: TransactionModel(id: "3", name: "iFood", value: 25, ))
+        HomeView(transactionModel: TransactionModel(id: "3", name: "iFood", value: 25))
                     
     }
 }

@@ -6,7 +6,6 @@ struct ReflectView: View {
     @State private var selectedPendingIndex = 0
     @State private var selectedFeeling = 2
     @State private var worthIt = true
-            isPlanned = false
     @State private var isPlanned = false
     @State private var journalEntry = ""
     @State private var isSaving = false
@@ -374,7 +373,7 @@ struct ReflectView: View {
         )
 
         isSaving = true
-        interactor.updateTrade(transaction: updatedEntry) { error in
+        interactor.updateTransaction(transaction: updatedEntry) { error in
             DispatchQueue.main.async {
                 isSaving = false
                 if let error {
@@ -396,6 +395,6 @@ struct ReflectView: View {
 struct ReflectView_Previews: PreviewProvider {
     static var previews: some View {
         ReflectView()
-            .environmentObject(HomeInteractor(tradeListManager: TransactionListManager(), envelopeListManager: EnvelopeListManager()))
+            .environmentObject(HomeInteractor(transactionListManager: TransactionListManager(), envelopeListManager: EnvelopeListManager()))
     }
 }

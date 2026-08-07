@@ -44,7 +44,7 @@ class HomeInteractor: ObservableObject {
     }
 
     func loadData() {
-        transactionListManager.fetchTrades { error in
+        transactionListManager.fetchTransactions { error in
             if let error {
                 self.errorMessage = error.localizedDescription
             }
@@ -103,7 +103,7 @@ class HomeInteractor: ObservableObject {
     }
 
     func updateTransaction(transaction: TransactionModel, completion: ((Error?) -> Void)? = nil) {
-        transactionListManager.updateTransaction(trade: trade) { error in
+        transactionListManager.updateTransaction(transaction: transaction) { error in
             if let error {
                 self.errorMessage = error.localizedDescription
             }
@@ -121,7 +121,7 @@ class HomeInteractor: ObservableObject {
     }
 
     func addTransaction(transaction: TransactionModel, completion: ((Error?) -> Void)? = nil) {
-        transactionListManager.addTransaction(trade: trade) { error in
+        transactionListManager.addTransaction(transaction: transaction) { error in
             if let error {
                 self.errorMessage = error.localizedDescription
             }

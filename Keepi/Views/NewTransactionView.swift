@@ -20,6 +20,13 @@ struct NewTransactionView: View {
     @State var selectedFeeling: Int = 2
     @State var transactionType: TransactionType = .expense
     @State var isPlanned: Bool = false
+    @State var todayDate: Date = Date()
+    @State var stepsIndicator: steps = .firstStep
+    @State var showAlert = false
+    @State var alertMessage = ""
+    @State var showNewEnvelope = false
+    @State var journalEntry = ""
+    @State var isSaving = false
     init(showNewTrade: Binding<Bool>, interactor: HomeInteractor, tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, todayDate: Date = Date()) {
         self._showNewTrade = showNewTrade
         self.interactor = interactor
@@ -224,7 +231,7 @@ struct NewTransactionView: View {
             //Fim como voce se sentiu?
             VStack(alignment: .leading){
                 QuestionText(text: "What's your main motivation?")
-                TagCloudView(text: $journalEntry, axis: .vertical)
+                TextField("Type your journal entry...", text: $journalEntry, axis: .vertical)
                     .lineLimit(3...6)
                     .font(.callout)
                     .foregroundColor(.black)
@@ -392,7 +399,7 @@ struct NewTransactionView: View {
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
         isSaving = true
-        interactor.addTransaction(trade: compra) { error in
+        interactor.addTransaction(transaction: compra) { error in
             DispatchQueue.main.async {
                 isSaving = false
                 if let error {
