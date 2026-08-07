@@ -16,6 +16,15 @@ class HomeInteractor: ObservableObject {
     private let aggregationService: EntryAggregationService
 
     @Published var listTransactions: [TransactionModel] = []
+    
+    var reviewInbox: [TransactionModel] {
+        listTransactions.filter { !$0.isReviewed }
+    }
+    
+    var reviewedTransactions: [TransactionModel] {
+        listTransactions.filter { $0.isReviewed }
+    }
+    
     @Published var listEnvelopes: [Envelope] = []
     @Published var errorMessage: String?
 
@@ -145,15 +154,15 @@ class HomeInteractor: ObservableObject {
     }
 
     func spent(forEnvelopeId id: String, period: EntryPeriod = .month(Date())) -> Decimal {
-        aggregationService.total(entries: listTransactions, envelopeID: id, period: period)
+        aggregationService.total(entries: reviewedTransactions, envelopeID: id, period: period)
     }
 
     func entryCount(forEnvelopeId id: String, period: EntryPeriod = .month(Date())) -> Int {
-        aggregationService.entries(from: listTransactions, envelopeID: id, period: period).count
+        aggregationService.entries(from: reviewedTransactions, envelopeID: id, period: period).count
     }
 
     func entries(forEnvelopeId id: String, period: EntryPeriod = .month(Date())) -> [TransactionModel] {
-        aggregationService.entries(from: listTransactions, envelopeID: id, period: period).sorted { $0.date > $1.date }
+        aggregationService.entries(from: reviewedTransactions, envelopeID: id, period: period).sorted { $0.date > $1.date }
     }
 
     func deleteAccountData(completion: @escaping (Error?) -> Void) {

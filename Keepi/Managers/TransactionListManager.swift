@@ -170,6 +170,7 @@ class TransactionListManager {
         let isPlanned = data["isPlanned"] as? Bool
         let note = data["note"] as? String ?? ""
         let journalEntry = data["journalEntry"] as? String ?? ""
+        let isReviewed = data["isReviewed"] as? Bool ?? true
 
         guard !id.isEmpty else { return nil }
         return TransactionModel(
@@ -183,6 +184,7 @@ class TransactionListManager {
             worthIt: worthIt,
             isPlanned: isPlanned,
             type: type,
+            isReviewed: isReviewed,
             note: note,
             journalEntry: journalEntry
         )
@@ -198,6 +200,7 @@ class TransactionListManager {
             "feeling": transaction.feeling,
             "reflectionCompleted": transaction.reflectionCompleted,
             "type": transaction.type.rawValue,
+            "isReviewed": transaction.isReviewed,
             "note": transaction.note,
             "journalEntry": transaction.journalEntry
         ]

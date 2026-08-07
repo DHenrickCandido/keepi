@@ -17,6 +17,8 @@
 		5AE47D022AA75B2900EE90E3 /* PremiumFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D012AA75B2900EE90E3 /* PremiumFeature.swift */; };
 		5AE47D042AA75B2900EE90E4 /* PremiumAccessProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D032AA75B2900EE90E4 /* PremiumAccessProviding.swift */; };
 		5AE47D062AA75B2900EE90E5 /* StoreKitPremiumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D052AA75B2900EE90E5 /* StoreKitPremiumManager.swift */; };
+		5AE47D122AA75B2900EE90E1 /* CSVParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D112AA75B2900EE90E1 /* CSVParser.swift */; };
+		5AE47D142AA75B2900EE90E2 /* CSVImportFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D132AA75B2900EE90E2 /* CSVImportFlow.swift */; };
 		5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */; };
 		5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */; };
 		5AE47BF62AA75B2900EE90E2 /* EnvelopeDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BF52AA75B2900EE90E2 /* EnvelopeDetailSheet.swift */; };
@@ -105,6 +107,8 @@
 		5AE47D012AA75B2900EE90E3 /* PremiumFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumFeature.swift; sourceTree = "<group>"; };
 		5AE47D032AA75B2900EE90E4 /* PremiumAccessProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumAccessProviding.swift; sourceTree = "<group>"; };
 		5AE47D052AA75B2900EE90E5 /* StoreKitPremiumManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitPremiumManager.swift; sourceTree = "<group>"; };
+		5AE47D112AA75B2900EE90E1 /* CSVParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVParser.swift; sourceTree = "<group>"; };
+		5AE47D132AA75B2900EE90E2 /* CSVImportFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keepi/Views/CSVImportFlow.swift; sourceTree = "<group>"; };
 		5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeListManager.swift; sourceTree = "<group>"; };
 		5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryAggregationService.swift; sourceTree = "<group>"; };
 		5AE47BF52AA75B2900EE90E2 /* EnvelopeDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeDetailSheet.swift; sourceTree = "<group>"; };
@@ -250,6 +254,7 @@
 				8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */,
 				5AE47D032AA75B2900EE90E4 /* PremiumAccessProviding.swift */,
 				5AE47D052AA75B2900EE90E5 /* StoreKitPremiumManager.swift */,
+				5AE47D112AA75B2900EE90E1 /* CSVParser.swift */,
 				8B83EEDE2FE5D23A00A9F84E /* CRUDValidation.swift */,
 			);
 			path = Managers;
@@ -520,6 +525,8 @@
 				5AE47D022AA75B2900EE90E3 /* PremiumFeature.swift in Sources */,
 				5AE47D042AA75B2900EE90E4 /* PremiumAccessProviding.swift in Sources */,
 				5AE47D062AA75B2900EE90E5 /* StoreKitPremiumManager.swift in Sources */,
+				5AE47D122AA75B2900EE90E1 /* CSVParser.swift in Sources */,
+				5AE47D142AA75B2900EE90E2 /* CSVImportFlow.swift in Sources */,
 				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
 				8B83EEE52FE5D7BC00A9F84E /* TodayView.swift in Sources */,

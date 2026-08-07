@@ -446,6 +446,10 @@ struct SettingsView: View {
     @State private var isDeleting = false
     @State private var deletionError = ""
     @State private var showDeletionError = false
+    @State private var showFileImporter = false
+    @State private var selectedCSV: URL?
+    
+    @EnvironmentObject private var premiumManager: StoreKitPremiumManager
 
     private let privacyPolicyURL = URL(string: "https://github.com/DHenrickCandido/keepi/blob/main/PRIVACY.md")!
     private let supportURL = URL(string: "mailto:candidohdiego@gmail.com?subject=Keepi%20Support")!
@@ -453,6 +457,24 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
+                Section("Premium Features") {
+                    Button {
+                        if premiumManager.canUse(.csvImport) {
+                            showFileImporter = true
+                        }
+                    } label: {
+                        HStack {
+                            Label("Import CSV", systemImage: "arrow.down.doc")
+                            Spacer()
+                            if !premiumManager.canUse(.csvImport) {
+                                Image(systemName: "lock.fill")
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                    }
+                    .foregroundColor(.primary)
+                }
+                
                 Section("Privacy") {
                     NavigationLink("How Keepi uses your data") {
                         PrivacyDetailsView()
@@ -504,6 +526,23 @@ struct SettingsView: View {
                 Button("OK", role: .cancel) { }
             } message: {
                 Text(deletionError)
+            }
+            .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.commaSeparatedText]) { result in
+                switch result {
+                case .success(let url):
+                    self.selectedCSV = url
+                case .failure(let error):
+                    print("Failed to select file: \(error)")
+                }
+            }
+            .sheet(isPresented: Binding<Bool>(
+                get: { self.selectedCSV != nil },
+                set: { if !$0 { self.selectedCSV = nil } }
+            )) {
+                if let url = selectedCSV {
+                    CSVImportFlow(fileURL: url)
+                        .environmentObject(interactor)
+                }
             }
         }
     }

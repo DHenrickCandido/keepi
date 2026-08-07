@@ -24,6 +24,7 @@ class TransactionModel: Identifiable, ObservableObject, CustomStringConvertible 
     @Published var worthIt: Bool?
     @Published var isPlanned: Bool?
     @Published var type: TransactionType
+    @Published var isReviewed: Bool
     @Published var note: String
     @Published var journalEntry: String
     
@@ -42,6 +43,7 @@ class TransactionModel: Identifiable, ObservableObject, CustomStringConvertible 
         worthIt: Bool? = nil,
         isPlanned: Bool? = nil,
         type: TransactionType = .expense,
+        isReviewed: Bool = true,
         note: String = "",
         journalEntry: String = ""
     ) {
@@ -55,6 +57,7 @@ class TransactionModel: Identifiable, ObservableObject, CustomStringConvertible 
         self.worthIt = worthIt
         self.isPlanned = isPlanned
         self.type = type
+        self.isReviewed = isReviewed
         self.note = note
         self.journalEntry = journalEntry
     }
