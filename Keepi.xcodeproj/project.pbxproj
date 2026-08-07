@@ -13,7 +13,7 @@
 		5A8739EE2AA0C235008127A3 /* NewTradeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */; };
 		5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */; };
 		5A92C7412A9E2E7C00F9C29A /* TransactionListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */; };
-		5AE47BE22AA759ED00EE90D5 /* EnvelopeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */; };
+		5AE47BE22AA759ED00EE90D5 /* Envelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE12AA759ED00EE90D5 /* Envelope.swift */; };
 		5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */; };
 		5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */; };
 		5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE82AA8A14600EE90D5 /* Icons.swift */; };
@@ -95,7 +95,7 @@
 		5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTradeButton.swift; sourceTree = "<group>"; };
 		5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaCompra.swift; sourceTree = "<group>"; };
 		5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListManager.swift; sourceTree = "<group>"; };
-		5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeModel.swift; sourceTree = "<group>"; };
+		5AE47BE12AA759ED00EE90D5 /* Envelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Envelope.swift; sourceTree = "<group>"; };
 		5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeListManager.swift; sourceTree = "<group>"; };
 		5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaEnvelope.swift; sourceTree = "<group>"; };
 		5AE47BE82AA8A14600EE90D5 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
@@ -199,7 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				5A5BAF8E2A98EFAD00CBF7E3 /* TransactionModel.swift */,
-				5AE47BE12AA759ED00EE90D5 /* EnvelopeModel.swift */,
+				5AE47BE12AA759ED00EE90D5 /* Envelope.swift */,
 			);
 			path = Modelos;
 			sourceTree = "<group>";
@@ -495,7 +495,7 @@
 				907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */,
 				8B83EEEC2FE60EE600A9F84E /* DailyWidgetDataStore.swift in Sources */,
 				5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */,
-				5AE47BE22AA759ED00EE90D5 /* EnvelopeModel.swift in Sources */,
+				5AE47BE22AA759ED00EE90D5 /* Envelope.swift in Sources */,
 				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
 				8B83EEE52FE5D7BC00A9F84E /* TodayView.swift in Sources */,

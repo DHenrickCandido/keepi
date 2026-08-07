@@ -89,7 +89,7 @@ struct EditEnvelopeView: View {
             
             //inicio Quanto quer gastar?
             VStack (alignment: .leading){
-                Text("How much do you want to spend?")
+                Text("Monthly budget (optional)")
                     .font(.headline)
                     .fontWeight(.bold)
                 
@@ -147,7 +147,7 @@ struct EditEnvelopeView: View {
             originalEnvelopeId = envelope.id
             iconSelected = envelope.icon
             envelopeName = envelope.name
-            envelopeBudget = KeepiFormat.editableAmount(envelope.budget)
+            envelopeBudget = envelope.monthlyBudget != nil ? KeepiFormat.editableAmount(envelope.monthlyBudget!) : ""
         }
         .alert("Couldn't save envelope", isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
@@ -158,11 +158,26 @@ struct EditEnvelopeView: View {
     
     func saveEnvelope() {
         guard !isSaving else { return }
-        guard let valueFloat = CRUDValidation.normalizedDecimal(envelopeBudget),
-              !envelopeName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+        
+        let valueFloat: Decimal?
+        if envelopeBudget.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            valueFloat = nil
+        } else if let parsed = CRUDValidation.normalizedDecimal(envelopeBudget) {
+            valueFloat = parsed
+        } else {
+            alertMessage = "Add a valid budget or leave it blank."
+            showAlert = true
+            return
+        }
+        
+        guard !envelopeName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               !originalEnvelopeId.isEmpty else { return }
 
-        let envelope = EnvelopeModel(id: originalEnvelopeId, name: envelopeName, budget: valueFloat, icon: iconSelected)
+        // We preserve createdAt if it existed, otherwise use now.
+        let originalEnvelope = envelopeListManager.listaEnvelope.first { $0.id == originalEnvelopeId }
+        let createdAt = originalEnvelope?.createdAt ?? Date()
+        
+        let envelope = Envelope(id: originalEnvelopeId, name: envelopeName, icon: iconSelected, monthlyBudget: valueFloat, createdAt: createdAt, updatedAt: Date())
         isSaving = true
         envelopeListManager.updateEnvelope(envelope: envelope) { error in
             DispatchQueue.main.async {

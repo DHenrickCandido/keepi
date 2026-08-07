@@ -15,7 +15,7 @@ class HomeInteractor: ObservableObject {
     private let envelopeListManager: EnvelopeListManager
 
     @Published var listTransactions: [TransactionModel] = []
-    @Published var listEnvelopes: [EnvelopeModel] = []
+    @Published var listEnvelopes: [Envelope] = []
     @Published var errorMessage: String?
 
     private var cancellables: [AnyCancellable] = []
@@ -111,7 +111,7 @@ class HomeInteractor: ObservableObject {
         }
     }
 
-    func updateEnvelope(envelope: EnvelopeModel, completion: ((Error?) -> Void)? = nil) {
+    func updateEnvelope(envelope: Envelope, completion: ((Error?) -> Void)? = nil) {
         envelopeListManager.updateEnvelope(envelope: envelope) { error in
             if let error {
                 self.errorMessage = error.localizedDescription
@@ -129,7 +129,7 @@ class HomeInteractor: ObservableObject {
         }
     }
 
-    func addEnvelope(envelope: EnvelopeModel, completion: ((Error?) -> Void)? = nil) {
+    func addEnvelope(envelope: Envelope, completion: ((Error?) -> Void)? = nil) {
         envelopeListManager.addEnvelope(envelope: envelope) { error in
             if let error {
                 self.errorMessage = error.localizedDescription
@@ -140,6 +140,12 @@ class HomeInteractor: ObservableObject {
 
     func getEnvelopeNameById(id: String) -> String {
         envelopeListManager.getEnvelopeNameById(id: id)
+    }
+
+    func spent(forEnvelopeId id: String) -> Decimal {
+        listTransactions
+            .filter { $0.envelopeId == id }
+            .reduce(0) { $0 + $1.value }
     }
 
     func deleteAccountData(completion: @escaping (Error?) -> Void) {

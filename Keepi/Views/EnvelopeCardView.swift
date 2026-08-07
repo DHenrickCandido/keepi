@@ -10,29 +10,35 @@ import SwiftUI
 struct EnvelopeCardView: View {
     var icon: String
     var name: String
-    var budget: Decimal
+    var monthlyBudget: Decimal?
+    var spent: Decimal
+
+    private var remaining: Decimal? {
+        if let monthlyBudget = monthlyBudget {
+            return monthlyBudget - spent
+        }
+        return nil
+    }
 
     private var statusText: String {
-        if budget < 0 {
+        guard let remaining = remaining else { return "Spent" }
+        if remaining < 0 {
             return "Over budget"
         }
-
-        if budget <= 25 {
+        if remaining <= 25 {
             return "Low balance"
         }
-
         return "Remaining"
     }
 
     private var statusColor: Color {
-        if budget < 0 {
+        guard let remaining = remaining else { return Color(.systemGray) }
+        if remaining < 0 {
             return Color("red")
         }
-
-        if budget <= 25 {
+        if remaining <= 25 {
             return Color("yellow")
         }
-
         return Color("darkGreenKeepi")
     }
 
@@ -53,7 +59,7 @@ struct EnvelopeCardView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
 
-                Text(KeepiFormat.currency(budget))
+                Text(KeepiFormat.currency(remaining ?? spent))
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
 
@@ -73,6 +79,6 @@ struct EnvelopeCardView: View {
 
 struct EnvelopeCardView_Previews: PreviewProvider {
     static var previews: some View {
-        EnvelopeCardView(icon: "birthday.cake.fill", name: "iFood", budget: 200.0)
+        EnvelopeCardView(icon: "birthday.cake.fill", name: "iFood", monthlyBudget: 200.0, spent: 50.0)
     }
 }

@@ -32,43 +32,7 @@ class TransactionListManager {
         let transaction = lista[indexItem]
         let transactionRef = db.collection("Users").document(userID).collection("Trades").document(transaction.id)
 
-        db.runTransaction({ dbTransaction, errorPointer in
-            let transactionSnapshot: DocumentSnapshot
-            do {
-                transactionSnapshot = try dbTransaction.getDocument(transactionRef)
-            } catch let error as NSError {
-                errorPointer?.pointee = error
-                return nil
-            }
-
-            guard transactionSnapshot.exists else {
-                errorPointer?.pointee = Self.error(code: 404, message: "Selected entry no longer exists.")
-                return nil
-            }
-
-            let storedEnvelopeId = transactionSnapshot.data()?["envelopeId"] as? String ?? ""
-            let storedValue = FirestoreValueParser.decimalValue(from: transactionSnapshot.data()?["value"])
-
-            if !storedEnvelopeId.isEmpty {
-                let envelopeRef = db.collection("Users").document(userID).collection("Envelopes").document(storedEnvelopeId)
-                let envelopeSnapshot: DocumentSnapshot
-
-                do {
-                    envelopeSnapshot = try dbTransaction.getDocument(envelopeRef)
-                } catch let error as NSError {
-                    errorPointer?.pointee = error
-                    return nil
-                }
-
-                if envelopeSnapshot.exists {
-                    let envelopeBudget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    dbTransaction.updateData(["budget": Money.firestoreNumber(envelopeBudget + storedValue)], forDocument: envelopeRef)
-                }
-            }
-
-            dbTransaction.deleteDocument(transactionRef)
-            return nil
-        }, completion: { _, error in
+        transactionRef.delete { error in
             if let error {
                 print("Error removing trade: \(error.localizedDescription)")
                 completion?(error)
@@ -83,7 +47,7 @@ class TransactionListManager {
             self.sortTradesNewestFirst()
             self.subject.send(self.lista)
             completion?(nil)
-        })
+        }
     }
 
     static func date2string(date: Date, dateFormat: String = "yyyyMMddHHmmss") -> String {
@@ -130,55 +94,30 @@ class TransactionListManager {
         let transactionRef = db.collection("Users").document(userID).collection("Trades").document(transaction.id)
         let transactionData = Self.makeTransactionData(from: transaction)
 
-        db.runTransaction({ dbTransaction, errorPointer in
-            let existingTrade: DocumentSnapshot
-            do {
-                existingTrade = try dbTransaction.getDocument(transactionRef)
-            } catch let error as NSError {
-                errorPointer?.pointee = error
-                return nil
-            }
-
-            guard !existingTrade.exists else {
-                errorPointer?.pointee = Self.error(code: 409, message: "This entry was already saved.")
-                return nil
-            }
-
-            if !transaction.envelopeId.isEmpty {
-                let envelopeRef = db.collection("Users").document(userID).collection("Envelopes").document(transaction.envelopeId)
-                let envelopeSnapshot: DocumentSnapshot
-
-                do {
-                    envelopeSnapshot = try dbTransaction.getDocument(envelopeRef)
-                } catch let error as NSError {
-                    errorPointer?.pointee = error
-                    return nil
-                }
-
-                guard envelopeSnapshot.exists else {
-                    errorPointer?.pointee = Self.error(code: 404, message: "Selected envelope does not exist.")
-                    return nil
-                }
-
-                let envelopeBudget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                dbTransaction.updateData(["budget": Money.firestoreNumber(envelopeBudget - transaction.value)], forDocument: envelopeRef)
-            }
-
-            dbTransaction.setData(transactionData, forDocument: transactionRef)
-            return nil
-        }, completion: { _, error in
+        transactionRef.getDocument { snapshot, error in
             if let error {
-                print("Error adding trade: \(error.localizedDescription)")
                 completion?(error)
                 return
             }
+            if let snapshot, snapshot.exists {
+                completion?(Self.error(code: 409, message: "This entry was already saved."))
+                return
+            }
+            
+            transactionRef.setData(transactionData) { error in
+                if let error {
+                    print("Error adding trade: \(error.localizedDescription)")
+                    completion?(error)
+                    return
+                }
 
-            self.lista.removeAll { $0.id == transaction.id }
-            self.lista.append(transaction)
-            self.sortTradesNewestFirst()
-            self.subject.send(self.lista)
-            completion?(nil)
-        })
+                self.lista.removeAll { $0.id == transaction.id }
+                self.lista.append(transaction)
+                self.sortTradesNewestFirst()
+                self.subject.send(self.lista)
+                completion?(nil)
+            }
+        }
     }
 
     func updateTransaction(transaction: TransactionModel, completion: ((Error?) -> Void)? = nil) {
@@ -187,74 +126,11 @@ class TransactionListManager {
             completion?(Self.error(code: 401, message: "Cannot update an entry without an authenticated user."))
             return
         }
-
-        let envelopesCollection = db.collection("Users").document(userID).collection("Envelopes")
+        
         let transactionRef = db.collection("Users").document(userID).collection("Trades").document(transaction.id)
         let transactionData = Self.makeTransactionData(from: transaction)
 
-        db.runTransaction({ dbTransaction, errorPointer in
-            let transactionSnapshot: DocumentSnapshot
-
-            do {
-                transactionSnapshot = try dbTransaction.getDocument(transactionRef)
-            } catch let error as NSError {
-                errorPointer?.pointee = error
-                return nil
-            }
-
-            guard transactionSnapshot.exists else {
-                errorPointer?.pointee = Self.error(code: 404, message: "Entry does not exist.")
-                return nil
-            }
-
-            let oldEnvelopeId = transactionSnapshot.data()?["envelopeId"] as? String ?? ""
-            let newEnvelopeId = transaction.envelopeId
-            let oldValue = FirestoreValueParser.decimalValue(from: transactionSnapshot.data()?["value"])
-
-            let oldEnvelopeRef = oldEnvelopeId.isEmpty ? nil : envelopesCollection.document(oldEnvelopeId)
-            let newEnvelopeRef = newEnvelopeId.isEmpty ? nil : envelopesCollection.document(newEnvelopeId)
-            var oldEnvelopeSnapshot: DocumentSnapshot?
-            var newEnvelopeSnapshot: DocumentSnapshot?
-
-            do {
-                if let oldEnvelopeRef {
-                    oldEnvelopeSnapshot = try dbTransaction.getDocument(oldEnvelopeRef)
-                }
-                if let newEnvelopeRef, newEnvelopeId != oldEnvelopeId {
-                    newEnvelopeSnapshot = try dbTransaction.getDocument(newEnvelopeRef)
-                } else if newEnvelopeId == oldEnvelopeId {
-                    newEnvelopeSnapshot = oldEnvelopeSnapshot
-                }
-            } catch let error as NSError {
-                errorPointer?.pointee = error
-                return nil
-            }
-
-            if newEnvelopeRef != nil, newEnvelopeSnapshot?.exists != true {
-                errorPointer?.pointee = Self.error(code: 404, message: "Selected envelope does not exist.")
-                return nil
-            }
-
-            if oldEnvelopeId == newEnvelopeId {
-                if let envelopeRef = newEnvelopeRef, let envelopeSnapshot = newEnvelopeSnapshot {
-                    let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    dbTransaction.updateData(["budget": Money.firestoreNumber(budget + oldValue - transaction.value)], forDocument: envelopeRef)
-                }
-            } else {
-                if let envelopeRef = oldEnvelopeRef, let envelopeSnapshot = oldEnvelopeSnapshot {
-                    let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    dbTransaction.updateData(["budget": Money.firestoreNumber(budget + oldValue)], forDocument: envelopeRef)
-                }
-
-                if let envelopeRef = newEnvelopeRef, let envelopeSnapshot = newEnvelopeSnapshot {
-                    let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    dbTransaction.updateData(["budget": Money.firestoreNumber(budget - transaction.value)], forDocument: envelopeRef)
-                }
-            }
-
-            dbTransaction.updateData(transactionData, forDocument: transactionRef)
-            return nil
-        }, completion: { _, error in
+        transactionRef.updateData(transactionData) { error in
             if let error {
                 print("Error updating trade: \(error.localizedDescription)")
                 completion?(error)
@@ -267,7 +143,7 @@ class TransactionListManager {
             self.sortTradesNewestFirst()
             self.subject.send(self.lista)
             completion?(nil)
-        })
+        }
     }
 
     private func sortTradesNewestFirst() {

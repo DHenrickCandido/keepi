@@ -16,7 +16,7 @@ struct ListaEnvelope: View {
     @EnvironmentObject var interactor: HomeInteractor
 //    @State var listaFiltroStruct: ListaFiltro = ListaFiltro()
     @Binding var selectedEnvelope: Int
-    @State var envelopeModelSelected: EnvelopeModel!
+    @State var envelopeModelSelected: Envelope!
     
 //    @Binding var listTitleEnvelopeName: String
     
@@ -26,7 +26,12 @@ struct ListaEnvelope: View {
                 NavigationLink {
                     EnvelopeFilterView(selectedEnvelope: index, envelopeId: item.id)
                 } label: {
-                    EnvelopeCardView(icon: item.icon, name: item.name, budget: item.budget)
+                    EnvelopeCardView(
+                        icon: item.icon, 
+                        name: item.name, 
+                        monthlyBudget: item.monthlyBudget,
+                        spent: interactor.spent(forEnvelopeId: item.id)
+                    )
                 }
                 .simultaneousGesture(TapGesture().onEnded {
                     selectedEnvelope = index

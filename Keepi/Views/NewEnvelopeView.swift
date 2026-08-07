@@ -95,7 +95,7 @@ struct NewEnvelopeView: View {
             
             //inicio Quanto quer gastar?
             VStack (alignment: .leading){
-                Text("How much do you want to spend?")
+                Text("Monthly budget (optional)")
                     .font(.headline)
                     .fontWeight(.bold)
                 
@@ -141,7 +141,7 @@ struct NewEnvelopeView: View {
                     .background(clickable && !isSaving ? Color("darkGreenKeepi"):.gray)
                     .cornerRadius(16)
                     .onTapGesture {
-                        if envelopeName != "" && envelopeBudget != "" && !isSaving {
+                        if envelopeName != "" && !isSaving {
                             saveEnvelope()
                         }
                         
@@ -153,15 +153,7 @@ struct NewEnvelopeView: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .onChange(of: envelopeName){newValue in
-            if newValue == "" || envelopeBudget == ""{
-                clickable = false
-            }
-            else {
-                clickable = true
-            }
-        }
-        .onChange(of: envelopeBudget){newValue in
-            if newValue == "" || envelopeName == ""{
+            if newValue == "" {
                 clickable = false
             }
             else {
@@ -177,14 +169,25 @@ struct NewEnvelopeView: View {
     
     func saveEnvelope() {
         guard !isSaving else { return }
-        guard let valueFloat = CRUDValidation.normalizedDecimal(envelopeBudget),
-              let id = CRUDValidation.envelopeId(from: envelopeName) else {
-            alertMessage = "Add a valid envelope name and budget greater than zero."
+        
+        let valueFloat: Decimal?
+        if envelopeBudget.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            valueFloat = nil
+        } else if let parsed = CRUDValidation.normalizedDecimal(envelopeBudget) {
+            valueFloat = parsed
+        } else {
+            alertMessage = "Add a valid budget or leave it blank."
             showAlert = true
             return
         }
 
-        let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat, icon: iconSelected)
+        guard let id = CRUDValidation.envelopeId(from: envelopeName) else {
+            alertMessage = "Add a valid envelope name."
+            showAlert = true
+            return
+        }
+
+        let envelope = Envelope(id: id, name: envelopeName, icon: iconSelected, monthlyBudget: valueFloat, createdAt: Date(), updatedAt: Date())
         isSaving = true
         interactor.addEnvelope(envelope: envelope) { error in
             DispatchQueue.main.async {

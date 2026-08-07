@@ -17,7 +17,7 @@ struct EditTransactionView: View {
         
     
     @Binding var selectedIndex: Int
-    @State var selectedEnvelope: EnvelopeModel!
+    @State var selectedEnvelope: Envelope!
     
     // Elements of the transaction
     @State var tradeTitle: String = ""
@@ -343,7 +343,7 @@ struct EditTransactionView: View {
         }
     }
 
-    func EnvelopeCard(envelope: EnvelopeModel) -> some View {
+    func EnvelopeCard(envelope: Envelope) -> some View {
         VStack {
             Image(envelope.icon)
                 .resizable()
@@ -359,7 +359,7 @@ struct EditTransactionView: View {
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
                 
-                Text(KeepiFormat.currency(envelope.budget))
+                Text(KeepiFormat.currency(envelope.monthlyBudget ?? interactor.spent(forEnvelopeId: envelope.id)))
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
             }

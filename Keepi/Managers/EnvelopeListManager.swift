@@ -10,10 +10,10 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class EnvelopeListManager {
-    var listaEnvelope: [EnvelopeModel] = []
+    var listaEnvelope: [Envelope] = []
 
-    private let subject = PassthroughSubject<[EnvelopeModel], Error>()
-    var publisher: AnyPublisher<[EnvelopeModel], Error> {
+    private let subject = PassthroughSubject<[Envelope], Error>()
+    var publisher: AnyPublisher<[Envelope], Error> {
         self.subject.eraseToAnyPublisher()
     }
 
@@ -77,7 +77,7 @@ class EnvelopeListManager {
         }
     }
 
-    func addEnvelope(envelope: EnvelopeModel, completion: ((Error?) -> Void)? = nil) {
+    func addEnvelope(envelope: Envelope, completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
             let error = NSError(domain: "Keepi", code: 401, userInfo: [NSLocalizedDescriptionKey: "Cannot add envelope without an authenticated user."])
@@ -126,7 +126,7 @@ class EnvelopeListManager {
         return "Deleted envelope"
     }
 
-    func updateEnvelope(envelope: EnvelopeModel, completion: ((Error?) -> Void)? = nil) {
+    func updateEnvelope(envelope: Envelope, completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
             completion?(NSError(domain: "Keepi", code: 401, userInfo: [NSLocalizedDescriptionKey: "Cannot update an envelope without an authenticated user."]))
@@ -151,23 +151,46 @@ class EnvelopeListManager {
         }
     }
 
-    private static func makeEnvelope(from document: QueryDocumentSnapshot) -> EnvelopeModel? {
+    private static func makeEnvelope(from document: QueryDocumentSnapshot) -> Envelope? {
         let data = document.data()
         let id = data["id"] as? String ?? document.documentID
         let name = data["name"] as? String ?? ""
-        let budget = FirestoreValueParser.decimalValue(from: data["budget"])
         let icon = data["icon"] as? String ?? ""
+        
+        let monthlyBudget: Decimal?
+        if let budgetData = data["monthlyBudget"] {
+            monthlyBudget = FirestoreValueParser.decimalValue(from: budgetData)
+        } else if let legacyBudgetData = data["budget"] {
+            monthlyBudget = FirestoreValueParser.decimalValue(from: legacyBudgetData)
+        } else {
+            monthlyBudget = nil
+        }
+        
+        let createdAt = (data["createdAt"] as? Timestamp)?.dateValue() ?? Date()
+        let updatedAt = (data["updatedAt"] as? Timestamp)?.dateValue() ?? Date()
 
         guard !id.isEmpty else { return nil }
-        return EnvelopeModel(id: id, name: name, budget: budget, icon: icon)
+        return Envelope(id: id, name: name, icon: icon, monthlyBudget: monthlyBudget, createdAt: createdAt, updatedAt: updatedAt)
     }
 
-    static func makeEnvelopeData(from envelope: EnvelopeModel) -> [String: Any] {
-        [
+    static func makeEnvelopeData(from envelope: Envelope) -> [String: Any] {
+        var data: [String: Any] = [
             "name": envelope.name,
-            "budget": Money.firestoreNumber(envelope.budget),
             "id": envelope.id,
-            "icon": envelope.icon
+            "icon": envelope.icon,
+            "createdAt": envelope.createdAt,
+            "updatedAt": envelope.updatedAt
         ]
+        
+        if let monthlyBudget = envelope.monthlyBudget {
+            data["monthlyBudget"] = Money.firestoreNumber(monthlyBudget)
+            // Save to legacy field as well for backward compatibility just in case
+            data["budget"] = Money.firestoreNumber(monthlyBudget)
+        } else {
+            data["monthlyBudget"] = NSNull()
+            data["budget"] = NSNull()
+        }
+        
+        return data
     }
 }

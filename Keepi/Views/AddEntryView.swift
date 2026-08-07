@@ -5,7 +5,7 @@ struct AddEntryView: View {
 
     @State private var amount = ""
     @State private var title = ""
-    @State private var selectedEnvelope: EnvelopeModel?
+    @State private var selectedEnvelope: Envelope?
     @State private var selectedFeeling = 2
     @State private var transactionType: TransactionType = .expense
     @State private var isPlanned: Bool = false
@@ -360,7 +360,7 @@ struct AddEntryView: View {
         .buttonStyle(.plain)
     }
 
-    private func envelopeCard(_ envelope: EnvelopeModel) -> some View {
+    private func envelopeCard(_ envelope: Envelope) -> some View {
         Button {
             selectedEnvelope = envelope
         } label: {
@@ -381,7 +381,7 @@ struct AddEntryView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
 
-                    Text(KeepiFormat.currency(envelope.budget))
+                    Text(KeepiFormat.currency(envelope.monthlyBudget ?? interactor.spent(forEnvelopeId: envelope.id)))
                         .font(.subheadline)
                         .foregroundColor(Color(.darkGray))
                 }
@@ -478,7 +478,7 @@ struct AddEntryView: View {
         isPlanned = preset.isPlanned
     }
 
-    private func matchingEnvelope(for preset: EntryPreset) -> EnvelopeModel? {
+    private func matchingEnvelope(for preset: EntryPreset) -> Envelope? {
         interactor.listEnvelopes.first { envelope in
             let searchableText = "\(envelope.name) \(envelope.id)".lowercased()
             return preset.envelopeKeywords.contains { searchableText.contains($0.lowercased()) }
