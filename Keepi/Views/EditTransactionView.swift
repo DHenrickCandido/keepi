@@ -330,7 +330,7 @@ struct EditTransactionView: View {
             }
         }
         .padding(8)
-        .frame(width: 142, height: 119)
+        .frame(width: 142, height: 130)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .overlay(
@@ -362,10 +362,20 @@ struct EditTransactionView: View {
                 Text(KeepiFormat.currency(interactor.spent(forEnvelopeId: envelope.id)))
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
+                
+                Text("this month")
+                    .font(.caption2)
+                    .foregroundColor(Color(UIColor.darkGray))
+                    
+                if let budget = envelope.monthlyBudget, budget > 0 {
+                    Text("Budget \(KeepiFormat.currency(budget))")
+                        .font(.caption2)
+                        .foregroundColor(Color(UIColor.gray))
+                }
             }
         }
         .padding(8)
-        .frame(width: 142, height: 119)
+        .frame(width: 142, height: 130)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .overlay(
@@ -398,7 +408,7 @@ struct EditTransactionView: View {
             }
         }
         .padding(8)
-        .frame(width: 142, height: 119)
+        .frame(width: 142, height: 130)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .onTapGesture {
