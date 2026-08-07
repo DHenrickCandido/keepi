@@ -30,7 +30,8 @@ struct ListaEnvelope: View {
                         icon: item.icon, 
                         name: item.name, 
                         monthlyBudget: item.monthlyBudget,
-                        spent: interactor.spent(forEnvelopeId: item.id)
+                        spent: interactor.spent(forEnvelopeId: item.id),
+                        entryCount: interactor.entryCount(forEnvelopeId: item.id)
                     )
                 }
                 .simultaneousGesture(TapGesture().onEnded {

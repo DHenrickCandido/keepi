@@ -12,7 +12,7 @@ import FirebaseFirestore
 
 class HomeInteractor: ObservableObject {
     private let transactionListManager: TransactionListManager
-    private let envelopeListManager: EnvelopeListManager
+    let envelopeListManager: EnvelopeListManager
     private let aggregationService: EntryAggregationService
 
     @Published var listTransactions: [TransactionModel] = []
@@ -146,6 +146,14 @@ class HomeInteractor: ObservableObject {
 
     func spent(forEnvelopeId id: String, period: EntryPeriod = .month(Date())) -> Decimal {
         aggregationService.total(entries: listTransactions, envelopeID: id, period: period)
+    }
+
+    func entryCount(forEnvelopeId id: String, period: EntryPeriod = .month(Date())) -> Int {
+        aggregationService.entries(from: listTransactions, envelopeID: id, period: period).count
+    }
+
+    func entries(forEnvelopeId id: String, period: EntryPeriod = .month(Date())) -> [TransactionModel] {
+        aggregationService.entries(from: listTransactions, envelopeID: id, period: period).sorted { $0.date > $1.date }
     }
 
     func deleteAccountData(completion: @escaping (Error?) -> Void) {

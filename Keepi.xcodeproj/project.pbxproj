@@ -16,6 +16,8 @@
 		5AE47BE22AA759ED00EE90D5 /* Envelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE12AA759ED00EE90D5 /* Envelope.swift */; };
 		5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */; };
 		5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */; };
+		5AE47BF62AA75B2900EE90E2 /* EnvelopeDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BF52AA75B2900EE90E2 /* EnvelopeDetailSheet.swift */; };
+		5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */; };
 		5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */; };
 		5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE82AA8A14600EE90D5 /* Icons.swift */; };
 		8B49CB502AB1E0B100883808 /* HomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */; };
@@ -98,6 +100,8 @@
 		5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListManager.swift; sourceTree = "<group>"; };
 		5AE47BE12AA759ED00EE90D5 /* Envelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Envelope.swift; sourceTree = "<group>"; };
 		5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeListManager.swift; sourceTree = "<group>"; };
+		5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryAggregationService.swift; sourceTree = "<group>"; };
+		5AE47BF52AA75B2900EE90E2 /* EnvelopeDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeDetailSheet.swift; sourceTree = "<group>"; };
 		5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryAggregationService.swift; sourceTree = "<group>"; };
 		5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaEnvelope.swift; sourceTree = "<group>"; };
 		5AE47BE82AA8A14600EE90D5 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
@@ -212,6 +216,7 @@
 				8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
 				8B598DC12A9F7AD500FDA36D /* HomeView.swift */,
 				8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */,
+				5AE47BF52AA75B2900EE90E2 /* EnvelopeDetailSheet.swift */,
 				A745E5552A9F7B8C00240832 /* NewTransactionView.swift */,
 				A73161B52AA215B4003CB8F9 /* EditTransactionView.swift */,
 				8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */,
@@ -233,6 +238,7 @@
 			children = (
 				5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */,
 				5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */,
+				5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */,
 				5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */,
 				8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */,
 				8B83EEDE2FE5D23A00A9F84E /* CRUDValidation.swift */,
@@ -498,6 +504,8 @@
 				907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */,
 				8B83EEEC2FE60EE600A9F84E /* DailyWidgetDataStore.swift in Sources */,
 				5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */,
+				5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */,
+				5AE47BF62AA75B2900EE90E2 /* EnvelopeDetailSheet.swift in Sources */,
 				5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */,
 				5AE47BE22AA759ED00EE90D5 /* Envelope.swift in Sources */,
 				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,

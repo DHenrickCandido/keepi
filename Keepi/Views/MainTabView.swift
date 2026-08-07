@@ -124,6 +124,8 @@ private struct EntriesTabView: View {
     @State private var selectedTrade = 0
     @State private var searchText = ""
     @State private var selectedFilter: EntryFilter = .all
+    @State private var showNewEnvelope = false
+    @State private var selectedEnvelopeId: String? = nil
 
     private var filteredEntries: [TransactionModel] {
         interactor.listTransactions.filter { entry in
@@ -158,10 +160,12 @@ private struct EntriesTabView: View {
                     .ignoresSafeArea()
 
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Entries")
+                    Text("Envelopes & Entries")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(Color("blackKeepi"))
+
+                    envelopesSection
 
                     searchField
                     filterChips
@@ -183,7 +187,10 @@ private struct EntriesTabView: View {
                                             value: entry.value,
                                             envelopeName: interactor.getEnvelopeNameById(id: entry.envelopeId),
                                             feeling: entry.feeling,
-                                            journalEntry: entry.journalEntry
+                                            journalEntry: entry.journalEntry,
+                                            onEnvelopeTap: {
+                                                selectedEnvelopeId = entry.envelopeId
+                                            }
                                         )
                                     }
                                     .buttonStyle(.plain)
@@ -209,6 +216,47 @@ private struct EntriesTabView: View {
                     .interactiveDismissDisabled()
                 }
             }
+            .sheet(isPresented: Binding(
+                get: { selectedEnvelopeId != nil },
+                set: { if !$0 { selectedEnvelopeId = nil } }
+            )) {
+                EnvelopeDetailSheet(envelopeId: $selectedEnvelopeId)
+                    .environmentObject(interactor)
+            }
+            .sheet(isPresented: $showNewEnvelope) {
+                NewEnvelopeView(showNewEnvelope: $showNewEnvelope)
+                    .environmentObject(interactor)
+                    .presentationDetents([.fraction(0.9)])
+                    .interactiveDismissDisabled()
+            }
+        }
+    }
+
+    private var envelopesSection: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(interactor.listEnvelopes) { envelope in
+                    Button {
+                        selectedEnvelopeId = envelope.id
+                    } label: {
+                        EnvelopeCardView(
+                            icon: envelope.icon,
+                            name: envelope.name,
+                            monthlyBudget: envelope.monthlyBudget,
+                            spent: interactor.spent(forEnvelopeId: envelope.id),
+                            entryCount: interactor.entryCount(forEnvelopeId: envelope.id)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+                
+                Button {
+                    showNewEnvelope = true
+                } label: {
+                    NewEnvelopeButtonView()
+                }
+            }
+            .padding(.vertical, 4)
         }
     }
 

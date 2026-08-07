@@ -7,6 +7,7 @@ struct TransactionCardComponent: View {
     var envelopeName: String
     var feeling: Int
     var journalEntry: String = ""
+    var onEnvelopeTap: (() -> Void)? = nil
     
     var body: some View {
         HStack(spacing: 16) {
@@ -32,9 +33,28 @@ struct TransactionCardComponent: View {
                         .fontWeight(.bold)
                         .foregroundColor(Color("blackKeepi"))
                     
-                    Text(envelopeName)
-                        .font(.subheadline)
-                        .foregroundColor(Color(.systemGray))
+                    if let onEnvelopeTap = onEnvelopeTap {
+                        Button(action: onEnvelopeTap) {
+                            Text(envelopeName)
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color("darkGreenKeepi"))
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color("lightGreenKeepi").opacity(0.2))
+                                .cornerRadius(8)
+                        }
+                        .buttonStyle(.borderless)
+                    } else {
+                        Text(envelopeName)
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("darkGreenKeepi"))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color("lightGreenKeepi").opacity(0.2))
+                            .cornerRadius(8)
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 

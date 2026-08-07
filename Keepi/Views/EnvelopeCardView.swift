@@ -12,6 +12,7 @@ struct EnvelopeCardView: View {
     var name: String
     var monthlyBudget: Decimal?
     var spent: Decimal
+    var entryCount: Int
 
     private var percentUsed: Int? {
         guard let budget = monthlyBudget, budget > 0 else { return nil }
@@ -47,21 +48,21 @@ struct EnvelopeCardView: View {
                     .font(.caption)
                     .foregroundColor(Color(UIColor.darkGray))
 
+                Text("\(entryCount) \(entryCount == 1 ? "entry" : "entries")")
+                    .font(.caption)
+                    .foregroundColor(Color("darkGreenKeepi"))
+                    .padding(.top, 2)
+                    .padding(.bottom, 2)
+
                 if let budget = monthlyBudget, let percent = percentUsed {
-                    Text("Budget: \(KeepiFormat.currency(budget))")
+                    Text("Budget \(KeepiFormat.currency(budget)) · \(percent)%")
                         .font(.caption2)
-                        .foregroundColor(Color(UIColor.gray))
-                        .padding(.top, 4)
-                    
-                    Text("\(percent)% used")
-                        .font(.caption2)
-                        .fontWeight(.bold)
                         .foregroundColor(percent > 100 ? Color("red") : Color(UIColor.gray))
                 }
             }
         }
         .padding(8)
-        .frame(width: 142, height: 160)
+        .frame(width: 142, height: 170)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
             
@@ -70,6 +71,6 @@ struct EnvelopeCardView: View {
 
 struct EnvelopeCardView_Previews: PreviewProvider {
     static var previews: some View {
-        EnvelopeCardView(icon: "birthday.cake.fill", name: "iFood", monthlyBudget: 200.0, spent: 50.0)
+        EnvelopeCardView(icon: "birthday.cake.fill", name: "iFood", monthlyBudget: 200.0, spent: 50.0, entryCount: 12)
     }
 }
