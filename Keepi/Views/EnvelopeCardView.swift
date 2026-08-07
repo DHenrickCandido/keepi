@@ -13,33 +13,11 @@ struct EnvelopeCardView: View {
     var monthlyBudget: Decimal?
     var spent: Decimal
 
-    private var remaining: Decimal? {
-        if let monthlyBudget = monthlyBudget {
-            return monthlyBudget - spent
-        }
-        return nil
-    }
-
-    private var statusText: String {
-        guard let remaining = remaining else { return "Spent" }
-        if remaining < 0 {
-            return "Over budget"
-        }
-        if remaining <= 25 {
-            return "Low balance"
-        }
-        return "Remaining"
-    }
-
-    private var statusColor: Color {
-        guard let remaining = remaining else { return Color(.systemGray) }
-        if remaining < 0 {
-            return Color("red")
-        }
-        if remaining <= 25 {
-            return Color("yellow")
-        }
-        return Color("darkGreenKeepi")
+    private var percentUsed: Int? {
+        guard let budget = monthlyBudget, budget > 0 else { return nil }
+        let doubleSpent = Double(truncating: spent as NSNumber)
+        let doubleBudget = Double(truncating: budget as NSNumber)
+        return Int((doubleSpent / doubleBudget) * 100)
     }
 
     var body: some View {
@@ -59,18 +37,31 @@ struct EnvelopeCardView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
 
-                Text(KeepiFormat.currency(remaining ?? spent))
-                    .font(.subheadline)
+                Text(KeepiFormat.currency(spent))
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("blackKeepi"))
+                    .padding(.top, 2)
+
+                Text("this month")
+                    .font(.caption)
                     .foregroundColor(Color(UIColor.darkGray))
 
-                Text(statusText)
-                    .font(.caption2)
-                    .fontWeight(.bold)
-                    .foregroundColor(statusColor)
+                if let budget = monthlyBudget, let percent = percentUsed {
+                    Text("Budget: \(KeepiFormat.currency(budget))")
+                        .font(.caption2)
+                        .foregroundColor(Color(UIColor.gray))
+                        .padding(.top, 4)
+                    
+                    Text("\(percent)% used")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundColor(percent > 100 ? Color("red") : Color(UIColor.gray))
+                }
             }
         }
         .padding(8)
-        .frame(width: 142, height: 119)
+        .frame(width: 142, height: 160)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
             

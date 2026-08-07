@@ -381,7 +381,7 @@ struct AddEntryView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
 
-                    Text(KeepiFormat.currency(envelope.monthlyBudget ?? interactor.spent(forEnvelopeId: envelope.id)))
+                    Text(KeepiFormat.currency(interactor.spent(forEnvelopeId: envelope.id)))
                         .font(.subheadline)
                         .foregroundColor(Color(.darkGray))
                 }

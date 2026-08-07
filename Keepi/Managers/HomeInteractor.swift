@@ -13,6 +13,7 @@ import FirebaseFirestore
 class HomeInteractor: ObservableObject {
     private let transactionListManager: TransactionListManager
     private let envelopeListManager: EnvelopeListManager
+    private let aggregationService: EntryAggregationService
 
     @Published var listTransactions: [TransactionModel] = []
     @Published var listEnvelopes: [Envelope] = []
@@ -20,9 +21,10 @@ class HomeInteractor: ObservableObject {
 
     private var cancellables: [AnyCancellable] = []
 
-    init(transactionListManager: TransactionListManager, envelopeListManager: EnvelopeListManager) {
+    init(transactionListManager: TransactionListManager, envelopeListManager: EnvelopeListManager, aggregationService: EntryAggregationService = DefaultEntryAggregationService()) {
         self.transactionListManager = transactionListManager
         self.envelopeListManager = envelopeListManager
+        self.aggregationService = aggregationService
 
         cancellables.append(contentsOf: [
             transactionListManager.publisher.sink(receiveCompletion: { completion in
@@ -142,10 +144,8 @@ class HomeInteractor: ObservableObject {
         envelopeListManager.getEnvelopeNameById(id: id)
     }
 
-    func spent(forEnvelopeId id: String) -> Decimal {
-        listTransactions
-            .filter { $0.envelopeId == id }
-            .reduce(0) { $0 + $1.value }
+    func spent(forEnvelopeId id: String, period: EntryPeriod = .month(Date())) -> Decimal {
+        aggregationService.total(entries: listTransactions, envelopeID: id, period: period)
     }
 
     func deleteAccountData(completion: @escaping (Error?) -> Void) {

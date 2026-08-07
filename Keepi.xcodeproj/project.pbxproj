@@ -15,6 +15,7 @@
 		5A92C7412A9E2E7C00F9C29A /* TransactionListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */; };
 		5AE47BE22AA759ED00EE90D5 /* Envelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE12AA759ED00EE90D5 /* Envelope.swift */; };
 		5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */; };
+		5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */; };
 		5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */; };
 		5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE82AA8A14600EE90D5 /* Icons.swift */; };
 		8B49CB502AB1E0B100883808 /* HomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */; };
@@ -97,6 +98,7 @@
 		5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListManager.swift; sourceTree = "<group>"; };
 		5AE47BE12AA759ED00EE90D5 /* Envelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Envelope.swift; sourceTree = "<group>"; };
 		5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeListManager.swift; sourceTree = "<group>"; };
+		5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryAggregationService.swift; sourceTree = "<group>"; };
 		5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaEnvelope.swift; sourceTree = "<group>"; };
 		5AE47BE82AA8A14600EE90D5 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
 		8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeInteractor.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 			children = (
 				5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */,
 				5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */,
+				5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */,
 				8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */,
 				8B83EEDE2FE5D23A00A9F84E /* CRUDValidation.swift */,
 			);
@@ -495,6 +498,7 @@
 				907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */,
 				8B83EEEC2FE60EE600A9F84E /* DailyWidgetDataStore.swift in Sources */,
 				5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */,
+				5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */,
 				5AE47BE22AA759ED00EE90D5 /* Envelope.swift in Sources */,
 				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,

@@ -359,7 +359,7 @@ struct EditTransactionView: View {
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
                 
-                Text(KeepiFormat.currency(envelope.monthlyBudget ?? interactor.spent(forEnvelopeId: envelope.id)))
+                Text(KeepiFormat.currency(interactor.spent(forEnvelopeId: envelope.id)))
                     .font(.subheadline)
                     .foregroundColor(Color(UIColor.darkGray))
             }
