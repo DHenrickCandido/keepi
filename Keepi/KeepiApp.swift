@@ -10,6 +10,7 @@ import FirebaseCore
 
 @main
 struct KeepiApp: App {
+    @StateObject private var premiumManager = StoreKitPremiumManager()
     @State var splash = 1.0
     
     init() {
@@ -20,6 +21,7 @@ struct KeepiApp: App {
         WindowGroup {
             ZStack {
                 ContentView()
+                    .environmentObject(premiumManager)
                     .preferredColorScheme(.light)
 
                 SplashScreenView()
