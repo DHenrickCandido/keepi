@@ -62,10 +62,10 @@ struct EnvelopeFilterView: View {
 //                    Spacer()
 //                        .frame(height: 46)
                     
-                    ForEach(Array(interactor.listTrades.enumerated()), id: \.element.id){ index, item in
+                    ForEach(Array(interactor.listTransactions.enumerated()), id: \.element.id){ index, item in
                         if(item.envelopeId == envelopeId){
                             //                    Text(item.name)
-                            TradeCardComponent(date: item.date, name: item.name, value: item.value, selectedTags: item.tag, envelopeName: interactor.getEnvelopeNameById(id: item.envelopeId), feeling: item.feeling, journalEntry: item.journalEntry)
+                            TransactionCardComponent(date: item.date, name: item.name, value: item.value, envelopeName: interactor.getEnvelopeNameById(id: item.envelopeId), feeling: item.feeling, journalEntry: item.journalEntry)
                                 .padding(.horizontal,16)
                         }
                         

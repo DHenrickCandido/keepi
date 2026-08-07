@@ -64,7 +64,7 @@ struct Onboarding1View: View {
                     .padding(.horizontal, 91.5)
                     .offset(y: -50)
                 
-                Text("Reflect the emotions of your currency trades.")
+                Text("Reflect the emotions of your currency transactions.")
                     .foregroundColor(.white)
                     .font(.system(size: 24))
                     .bold()

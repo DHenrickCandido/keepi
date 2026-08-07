@@ -6,39 +6,28 @@ enum steps {
     case secondStep
 }
 
-struct NewTradeView: View {
+struct NewTransactionView: View {
     
     @Binding var showNewTrade: Bool // toggle for Modal
     
     var interactor: HomeInteractor
-    var tagManager: Tags = Tags()
-    @State var selectedEnvelope: EnvelopeModel!
+        @State var selectedEnvelope: EnvelopeModel!
     
     
-    // Elements of the trade
+    // Elements of the transaction
     @State var tradeTitle: String = ""
     @State var value: String = ""
     @State var selectedFeeling: Int = 2
-    @State var selectedTags: [Tag] = []
-    @State var journalEntry: String = ""
-    var todayDate = Date()
-    
-    @State var stepsIndicator: steps = .firstStep
-    @State var showAlert = false
-    @State private var showNewEnvelope = false
-    @State private var isSaving = false
-    @State private var alertMessage = "Enter a valid title and amount before continuing."
-    
-    init(showNewTrade: Binding<Bool>, interactor: HomeInteractor, tagManager: Tags = Tags(), tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, selectedTags: [Tag] = [], todayDate: Date = Date()) {
+    @State var transactionType: TransactionType = .expense
+    @State var isPlanned: Bool = false
+    init(showNewTrade: Binding<Bool>, interactor: HomeInteractor, tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, todayDate: Date = Date()) {
         self._showNewTrade = showNewTrade
         self.interactor = interactor
-        self.tagManager = tagManager
-        
+                
         self.tradeTitle = tradeTitle
         self.value = value
         self.selectedFeeling = selectedFeeling
-        self.selectedTags = selectedTags
-        self.todayDate = todayDate
+                self.todayDate = todayDate
         
         self.selectedEnvelope = interactor.listEnvelopes.first
         
@@ -94,6 +83,15 @@ struct NewTradeView: View {
                 
             }
             
+            // Transaction Type
+            Picker("Type", selection: $transactionType) {
+                Text("Expense").tag(TransactionType.expense)
+                Text("Income").tag(TransactionType.income)
+                Text("Transfer").tag(TransactionType.transfer)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding(.bottom, 10)
+
             //inicio Qual envelope?
             VStack (alignment: .leading) {
                 QuestionText(text: "Which envelope?")
@@ -167,6 +165,38 @@ struct NewTradeView: View {
                 
             }
             
+            // Planned?
+            VStack (alignment: .leading) {
+                Text("Was it planned?")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                
+                HStack(spacing: 12) {
+                    Button(action: { isPlanned = true }) {
+                        Text("Yes")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(isPlanned ? .white : Color("darkGreenKeepi"))
+                            .frame(maxWidth: .infinity, minHeight: 52)
+                            .background(isPlanned ? Color("darkGreenKeepi") : .white)
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                    }
+
+                    Button(action: { isPlanned = false }) {
+                        Text("No")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(!isPlanned ? .white : Color("darkGreenKeepi"))
+                            .frame(maxWidth: .infinity, minHeight: 52)
+                            .background(!isPlanned ? Color("darkGreenKeepi") : .white)
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                    }
+                }
+            }
+            .padding(.bottom, 16)
+
             //Inicio como voce se sentiu?
             VStack (alignment: .leading) {
                 Text("How did you feel?")
@@ -194,12 +224,7 @@ struct NewTradeView: View {
             //Fim como voce se sentiu?
             VStack(alignment: .leading){
                 QuestionText(text: "What's your main motivation?")
-                TagCloudView(selectedTags: $selectedTags)
-            }
-
-            VStack(alignment: .leading) {
-                QuestionText(text: "Journal")
-                TextField("What do you want to remember about this purchase?", text: $journalEntry, axis: .vertical)
+                TagCloudView(text: $journalEntry, axis: .vertical)
                     .lineLimit(3...6)
                     .font(.callout)
                     .foregroundColor(.black)
@@ -355,18 +380,19 @@ struct NewTradeView: View {
         }
         let envelopeId = selectedEnvelope?.id ?? ""
         
-        let compra = TradeModel(
+        let compra = TransactionModel(
             id: TradeIdentity.make(),
             name: tradeTitle,
             value: valueFloat,
-            tag: selectedTags,
             envelopeId: envelopeId,
             feeling: selectedFeeling,
             date: todayDate,
+            isPlanned: isPlanned,
+            type: transactionType,
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
         isSaving = true
-        interactor.addTrade(trade: compra) { error in
+        interactor.addTransaction(trade: compra) { error in
             DispatchQueue.main.async {
                 isSaving = false
                 if let error {
@@ -441,101 +467,3 @@ struct NewTradeView: View {
     
 }
 
-struct TagCloudView: View {
-    let tags = Tags.getTags()
-    @Binding var selectedTags: [Tag]
-
-    @State private var totalHeight = CGFloat.zero       // << variant for ScrollView/List
-    //    = CGFloat.infinity   // << variant for VStack
-
-    var body: some View {
-        VStack {
-            GeometryReader { geometry in
-                self.generateContent(in: geometry)
-            }
-        }
-        .frame(height: totalHeight)// << variant for ScrollView/List
-        //.frame(maxHeight: totalHeight) // << variant for VStack
-    }
-
-    private func generateContent(in g: GeometryProxy) -> some View {
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-
-        return ZStack(alignment: .topLeading) {
-            ForEach(tags, id: \.self) { tag in
-                TagOption(tag: tag)
-                    .padding([.trailing, .bottom], 9)
-                    .alignmentGuide(.leading, computeValue: { d in
-                        if (abs(width - d.width) > g.size.width)
-                        {
-                            width = 0
-                            height -= d.height
-                        }
-                        let result = width
-                        if tag == self.tags.last! {
-                            width = 0 //last item
-                        } else {
-                            width -= d.width
-                        }
-                        return result
-                    })
-                    .alignmentGuide(.top, computeValue: {d in
-                        let result = height
-                        if tag == self.tags.last! {
-                            height = 0 // last item
-                        }
-                        return result
-                    })
-            }
-        }.background(viewHeightReader($totalHeight))
-    }
-    
-    func isSelectedTag(tag: Tag) -> Bool{
-        if selectedTags.firstIndex(of: tag) != nil {
-            if self.selectedTags.contains(tag){
-                return true
-            }
-        }
-        return false
-    }
-
-    func TagOption(tag: Tag) -> some View {
-        
-        Text(tag.name)
-            .font(.body)
-            .fontWeight(isSelectedTag(tag: tag) ? .bold : .regular)
-            .foregroundColor(isSelectedTag(tag: tag) ? .white : Color("darkGreenKeepi"))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 4)
-            .background(isSelectedTag(tag: tag) ? Color("darkGreenKeepi") : Color.clear)
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(lineWidth: 2)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .foregroundColor(isSelectedTag(tag: tag) ? Color.clear : Color("darkGreenKeepi") )
-                
-            )
-            .cornerRadius(16)
-            .onTapGesture {
-                if isSelectedTag(tag: tag){
-                    if let index = selectedTags.firstIndex(of: tag){
-                        selectedTags.remove(at: index)
-                    }
-                } else {
-                    selectedTags.append(tag)
-                }
-                
-            }
-    }
-
-    private func viewHeightReader(_ binding: Binding<CGFloat>) -> some View {
-        return GeometryReader { geometry -> Color in
-            let rect = geometry.frame(in: .local)
-            DispatchQueue.main.async {
-                binding.wrappedValue = rect.size.height
-            }
-            return .clear
-        }
-    }
-}

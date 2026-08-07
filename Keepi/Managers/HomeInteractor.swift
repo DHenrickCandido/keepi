@@ -11,26 +11,26 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class HomeInteractor: ObservableObject {
-    private let tradeListManager: TradeListManager
+    private let transactionListManager: TransactionListManager
     private let envelopeListManager: EnvelopeListManager
 
-    @Published var listTrades: [TradeModel] = []
+    @Published var listTransactions: [TransactionModel] = []
     @Published var listEnvelopes: [EnvelopeModel] = []
     @Published var errorMessage: String?
 
     private var cancellables: [AnyCancellable] = []
 
-    init(tradeListManager: TradeListManager, envelopeListManager: EnvelopeListManager) {
-        self.tradeListManager = tradeListManager
+    init(transactionListManager: TransactionListManager, envelopeListManager: EnvelopeListManager) {
+        self.transactionListManager = transactionListManager
         self.envelopeListManager = envelopeListManager
 
         cancellables.append(contentsOf: [
-            tradeListManager.publisher.sink(receiveCompletion: { completion in
+            transactionListManager.publisher.sink(receiveCompletion: { completion in
                 if case let .failure(error) = completion {
                     self.errorMessage = error.localizedDescription
                 }
             }, receiveValue: { list in
-                self.listTrades = list
+                self.listTransactions = list
             }),
 
             envelopeListManager.publisher.sink(receiveCompletion: { completion in
@@ -44,7 +44,7 @@ class HomeInteractor: ObservableObject {
     }
 
     func loadData() {
-        tradeListManager.fetchTrades { error in
+        transactionListManager.fetchTrades { error in
             if let error {
                 self.errorMessage = error.localizedDescription
             }
@@ -56,14 +56,14 @@ class HomeInteractor: ObservableObject {
         }
     }
 
-    func removeTrade(indexItem: Int, completion: ((Error?) -> Void)? = nil) {
-        guard listTrades.indices.contains(indexItem) else {
+    func removeTransaction(indexItem: Int, completion: ((Error?) -> Void)? = nil) {
+        guard listTransactions.indices.contains(indexItem) else {
             errorMessage = "Selected entry no longer exists."
             completion?(NSError(domain: "Keepi", code: 404, userInfo: [NSLocalizedDescriptionKey: errorMessage!]))
             return
         }
 
-        tradeListManager.removeTrade(indexItem: indexItem) { error in
+        transactionListManager.removeTransaction(indexItem: indexItem) { error in
             if let error {
                 self.errorMessage = error.localizedDescription
             }
@@ -88,7 +88,7 @@ class HomeInteractor: ObservableObject {
             return
         }
 
-        guard CRUDValidation.canDeleteEnvelope(envelopeId: envelopeId, trades: listTrades) else {
+        guard CRUDValidation.canDeleteEnvelope(envelopeId: envelopeId, trades: listTransactions) else {
             errorMessage = "Move or delete entries before removing this envelope."
             completion?(NSError(domain: "Keepi", code: 409, userInfo: [NSLocalizedDescriptionKey: errorMessage!]))
             return
@@ -102,8 +102,8 @@ class HomeInteractor: ObservableObject {
         }
     }
 
-    func updateTrade(trade: TradeModel, completion: ((Error?) -> Void)? = nil) {
-        tradeListManager.updateTrade(trade: trade) { error in
+    func updateTransaction(transaction: TransactionModel, completion: ((Error?) -> Void)? = nil) {
+        transactionListManager.updateTransaction(trade: trade) { error in
             if let error {
                 self.errorMessage = error.localizedDescription
             }
@@ -120,8 +120,8 @@ class HomeInteractor: ObservableObject {
         }
     }
 
-    func addTrade(trade: TradeModel, completion: ((Error?) -> Void)? = nil) {
-        tradeListManager.addTrade(trade: trade) { error in
+    func addTransaction(transaction: TransactionModel, completion: ((Error?) -> Void)? = nil) {
+        transactionListManager.addTransaction(trade: trade) { error in
             if let error {
                 self.errorMessage = error.localizedDescription
             }
@@ -171,7 +171,7 @@ class HomeInteractor: ObservableObject {
 
                     user.delete { error in
                         if error == nil {
-                            self.listTrades = []
+                            self.listTransactions = []
                             self.listEnvelopes = []
                         }
                         completion(error)

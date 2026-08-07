@@ -15,8 +15,7 @@ struct LoginView: View {
 
     var body: some View {
         if userIsLoggedIn {
-            HomeView(tradeModel: TradeModel(id: "34", name: "Comida", value: 25, tag: []))
-                .environmentObject(HomeInteractor(tradeListManager: TradeListManager(), envelopeListManager: EnvelopeListManager()))
+            HomeView(tradeModel: TransactionModel(id: "34", name: "Comida", value: 25, envelopeListManager: EnvelopeListManager()))
         } else {
             content
         }

@@ -8,8 +8,8 @@ struct TodayView: View {
     @State private var selectedTrade = 0
     @State private var showSettings = false
 
-    private var todayEntries: [TradeModel] {
-        interactor.listTrades
+    private var todayEntries: [TransactionModel] {
+        interactor.listTransactions
             .filter { Calendar.current.isDateInToday($0.date) }
             .sorted { $0.date > $1.date }
     }
@@ -19,15 +19,15 @@ struct TodayView: View {
     }
 
 
-    private var morningEntries: [TradeModel] {
+    private var morningEntries: [TransactionModel] {
         entries(for: 5..<12)
     }
 
-    private var afternoonEntries: [TradeModel] {
+    private var afternoonEntries: [TransactionModel] {
         entries(for: 12..<18)
     }
 
-    private var eveningEntries: [TradeModel] {
+    private var eveningEntries: [TransactionModel] {
         todayEntries.filter { entry in
             let hour = Calendar.current.component(.hour, from: entry.date)
             return hour >= 18 || hour < 5
@@ -130,16 +130,16 @@ struct TodayView: View {
             .background(Color("lightGrayKeepi"))
             .navigationBarHidden(true)
             .sheet(isPresented: $showNewTrade) {
-                NewTradeView(showNewTrade: $showNewTrade, interactor: interactor)
+                NewTransactionView(showNewTrade: $showNewTrade, interactor: interactor)
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
             }
             .sheet(isPresented: $showEditTrade) {
-                if interactor.listTrades.indices.contains(selectedTrade) {
-                    EditTradeView(
+                if interactor.listTransactions.indices.contains(selectedTrade) {
+                    EditTransactionView(
                         showEditTrade: $showEditTrade,
                         index: selectedTrade,
-                        trade: $interactor.listTrades[selectedTrade],
+                        trade: $interactor.listTransactions[selectedTrade],
                         selectedIndex: $selectedTrade
                     )
                     .environmentObject(interactor)
@@ -163,7 +163,7 @@ struct TodayView: View {
                         .fontWeight(.bold)
                         .foregroundColor(Color(.gray))
 
-                    Text(TradeListManager.date2string(date: Date(), dateFormat: "dd MMM"))
+                    Text(TransactionListManager.date2string(date: Date(), dateFormat: "dd MMM"))
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(Color("blackKeepi"))
@@ -244,7 +244,7 @@ struct TodayView: View {
     }
 
     @ViewBuilder
-    private func timelineSection(title: String, entries: [TradeModel]) -> some View {
+    private func timelineSection(title: String, entries: [TransactionModel]) -> some View {
         if !entries.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
                 Text(title)
@@ -256,11 +256,10 @@ struct TodayView: View {
                     Button {
                         openEdit(for: entry)
                     } label: {
-                        TradeCardComponent(
+                        TransactionCardComponent(
                             date: entry.date,
                             name: entry.name,
                             value: entry.value,
-                            selectedTags: entry.tag,
                             envelopeName: interactor.getEnvelopeNameById(id: entry.envelopeId),
                             feeling: entry.feeling,
                             journalEntry: entry.journalEntry
@@ -272,7 +271,7 @@ struct TodayView: View {
         }
     }
 
-    private func entries(for range: Range<Int>) -> [TradeModel] {
+    private func entries(for range: Range<Int>) -> [TransactionModel] {
         todayEntries.filter { entry in
             let hour = Calendar.current.component(.hour, from: entry.date)
             return range.contains(hour)
@@ -285,8 +284,8 @@ struct TodayView: View {
             .key
     }
 
-    private func openEdit(for entry: TradeModel) {
-        guard let index = interactor.listTrades.firstIndex(where: { $0.id == entry.id }) else {
+    private func openEdit(for entry: TransactionModel) {
+        guard let index = interactor.listTransactions.firstIndex(where: { $0.id == entry.id }) else {
             return
         }
 
@@ -298,6 +297,6 @@ struct TodayView: View {
 struct TodayView_Previews: PreviewProvider {
     static var previews: some View {
         TodayView()
-            .environmentObject(HomeInteractor(tradeListManager: TradeListManager(), envelopeListManager: EnvelopeListManager()))
+            .environmentObject(HomeInteractor(transactionListManager: TransactionListManager(), envelopeListManager: EnvelopeListManager()))
     }
 }

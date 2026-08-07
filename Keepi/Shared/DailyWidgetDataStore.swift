@@ -28,7 +28,7 @@ enum DailyWidgetDataStore {
         UserDefaults(suiteName: appGroupIdentifier) ?? .standard
     }
 
-    static func save(trades: [TradeModel], calendar: Calendar = .current) {
+    static func save(trades: [TransactionModel], calendar: Calendar = .current) {
         let todayTrades = trades
             .filter { calendar.isDateInToday($0.date) }
             .sorted { $0.date > $1.date }

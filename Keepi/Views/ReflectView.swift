@@ -5,20 +5,21 @@ struct ReflectView: View {
 
     @State private var selectedPendingIndex = 0
     @State private var selectedFeeling = 2
-    @State private var selectedTags: [Tag] = []
     @State private var worthIt = true
+            isPlanned = false
+    @State private var isPlanned = false
     @State private var journalEntry = ""
     @State private var isSaving = false
     @State private var showSaveError = false
     @State private var saveErrorMessage = ""
 
-    private var pendingEntries: [TradeModel] {
-        interactor.listTrades
+    private var pendingEntries: [TransactionModel] {
+        interactor.listTransactions
             .filter { !$0.reflectionCompleted }
             .sorted { $0.date > $1.date }
     }
 
-    private var currentEntry: TradeModel? {
+    private var currentEntry: TransactionModel? {
         guard pendingEntries.indices.contains(selectedPendingIndex) else {
             return pendingEntries.first
         }
@@ -127,14 +128,14 @@ struct ReflectView: View {
         .frame(height: 180)
     }
 
-    private func reflectionForm(for entry: TradeModel) -> some View {
+    private func reflectionForm(for entry: TransactionModel) -> some View {
         VStack(alignment: .leading, spacing: 18) {
             entrySummary(entry)
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 24) {
                     feelingSection
-                    motivationSection
+                    plannedSection
                     worthItSection
                     journalSection
                 }
@@ -153,7 +154,7 @@ struct ReflectView: View {
         }
     }
 
-    private func entrySummary(_ entry: TradeModel) -> some View {
+    private func entrySummary(_ entry: TransactionModel) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
@@ -175,7 +176,7 @@ struct ReflectView: View {
                     .foregroundColor(Color("darkGreenKeepi"))
             }
 
-            Text(TradeListManager.date2string(date: entry.date, dateFormat: "dd MMM"))
+            Text(TransactionListManager.date2string(date: entry.date, dateFormat: "dd MMM"))
                 .font(.footnote)
                 .foregroundColor(Color(.systemGray))
         }
@@ -219,17 +220,21 @@ struct ReflectView: View {
         }
     }
 
-    private var motivationSection: some View {
+    private var plannedSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("What drove this purchase?")
+            Text("Was it planned?")
                 .font(.headline)
                 .fontWeight(.bold)
 
-            TagCloudView(selectedTags: $selectedTags)
-                .padding(16)
-                .background(.white)
-                .cornerRadius(16)
-                .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+            HStack(spacing: 12) {
+                choiceButton(title: "Yes", isSelected: isPlanned) {
+                    isPlanned = true
+                }
+
+                choiceButton(title: "No", isSelected: !isPlanned) {
+                    isPlanned = false
+                }
+            }
         }
     }
 
@@ -242,6 +247,7 @@ struct ReflectView: View {
             HStack(spacing: 12) {
                 choiceButton(title: "Yes", isSelected: worthIt) {
                     worthIt = true
+            isPlanned = false
                 }
 
                 choiceButton(title: "No", isSelected: !worthIt) {
@@ -339,36 +345,36 @@ struct ReflectView: View {
     private func loadCurrentEntry() {
         guard let entry = currentEntry else {
             selectedFeeling = 2
-            selectedTags = []
-            worthIt = true
+                        worthIt = true
+            isPlanned = false
             journalEntry = ""
             return
         }
 
         selectedFeeling = entry.feeling
-        selectedTags = entry.tag
-        worthIt = entry.worthIt ?? true
+                worthIt = entry.worthIt ?? true
+        isPlanned = entry.isPlanned ?? false
         journalEntry = entry.journalEntry.isEmpty ? entry.note : entry.journalEntry
     }
 
-    private func saveReflection(for entry: TradeModel) {
+    private func saveReflection(for entry: TransactionModel) {
         guard !isSaving else { return }
-        let updatedEntry = TradeModel(
+        let updatedEntry = TransactionModel(
             id: entry.id,
             name: entry.name,
             value: entry.value,
-            tag: selectedTags,
-            envelopeId: entry.envelopeId,
+                        envelopeId: entry.envelopeId,
             feeling: selectedFeeling,
             date: entry.date,
             reflectionCompleted: true,
             worthIt: worthIt,
+            isPlanned: isPlanned,
             note: entry.note,
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
 
         isSaving = true
-        interactor.updateTrade(trade: updatedEntry) { error in
+        interactor.updateTrade(transaction: updatedEntry) { error in
             DispatchQueue.main.async {
                 isSaving = false
                 if let error {
@@ -390,6 +396,6 @@ struct ReflectView: View {
 struct ReflectView_Previews: PreviewProvider {
     static var previews: some View {
         ReflectView()
-            .environmentObject(HomeInteractor(tradeListManager: TradeListManager(), envelopeListManager: EnvelopeListManager()))
+            .environmentObject(HomeInteractor(tradeListManager: TransactionListManager(), envelopeListManager: EnvelopeListManager()))
     }
 }

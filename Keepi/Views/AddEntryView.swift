@@ -7,27 +7,7 @@ struct AddEntryView: View {
     @State private var title = ""
     @State private var selectedEnvelope: EnvelopeModel?
     @State private var selectedFeeling = 2
-    @State private var selectedTags: [Tag] = []
-    @State private var journalEntry = ""
-    @State private var selectedPresetTitle: String?
-    @State private var step: AddEntryStep = .details
-    @State private var showAlert = false
-    @State private var showNewEnvelope = false
-    @State private var alertMessage = ""
-    @State private var isSaving = false
-
-    var body: some View {
-        NavigationView {
-            ZStack {
-
-                Color("lightGrayKeepi")
-                    .ignoresSafeArea()
-              VStack {
-                  ZStack(alignment: .leading) {
-                      Rectangle()
-                          .frame(height: 240)
-                          .foregroundColor(Color("darkGreenKeepi"))
-                          .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
+    @State private var corners: [.bottomLeft, .bottomRight])
 
                       HStack(alignment: .top) {
                           Image("keepi")
@@ -213,11 +193,7 @@ struct AddEntryView: View {
                     .font(.headline)
                     .fontWeight(.bold)
 
-                TagCloudView(selectedTags: $selectedTags)
-                    .padding(16)
-                    .background(.white)
-                    .cornerRadius(16)
-                    .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                TagCloudView(radius: 8, y: 4)
             }
 
             VStack(alignment: .leading, spacing: 8) {
@@ -496,11 +472,10 @@ struct AddEntryView: View {
         }
 
         let date = Date()
-        let entry = TradeModel(
+        let entry = TransactionModel(
             id: TradeIdentity.make(),
             name: title.trimmingCharacters(in: .whitespacesAndNewlines),
             value: value,
-            tag: selectedTags,
             envelopeId: selectedEnvelope?.id ?? "",
             feeling: selectedFeeling,
             date: date,
@@ -509,7 +484,7 @@ struct AddEntryView: View {
         )
 
         isSaving = true
-        interactor.addTrade(trade: entry) { error in
+        interactor.addTransaction(trade: entry) { error in
             DispatchQueue.main.async {
                 isSaving = false
                 if let error {
@@ -529,8 +504,7 @@ struct AddEntryView: View {
         title = ""
         selectedEnvelope = nil
         selectedFeeling = 2
-        selectedTags = []
-        journalEntry = ""
+                journalEntry = ""
         selectedPresetTitle = nil
         step = .details
     }
@@ -564,6 +538,6 @@ private struct EntryPreset: Identifiable {
 struct AddEntryView_Previews: PreviewProvider {
     static var previews: some View {
         AddEntryView()
-            .environmentObject(HomeInteractor(tradeListManager: TradeListManager(), envelopeListManager: EnvelopeListManager()))
+            .environmentObject(HomeInteractor(transactionListManager: TransactionListManager(), envelopeListManager: EnvelopeListManager()))
     }
 }

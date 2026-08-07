@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct HomeView: View {
-    @StateObject var tradeModel: TradeModel
+    @StateObject var tradeModel: TransactionModel
     @EnvironmentObject var interactor: HomeInteractor
     
     @State private var showNewTrade: Bool = false
@@ -19,22 +19,7 @@ struct HomeView: View {
     @State private var showNewEnvelope: Bool = false
     @State private var selectedEnvelope: Int = 0
     
-    @State var compra = TradeModel(id: "34", name: "Hey", value: 23, tag: Tags.getTags())
-    
-//    @Binding var listTitleEnvelopeName: String
-    
-    var userName: String = "Jujuba"
-    var body: some View {
-        NavigationView{
-            ZStack {
-                
-                //Header (logo + mascote)
-                VStack {
-                    ZStack (alignment: .leading) {
-                        Rectangle()
-                            .frame(height: 240)
-                            .foregroundColor(Color("darkGreenKeepi"))
-                            .onChange(of: showEditTrade, perform: { _ in
+    @State var compra = TransactionModel(id: "34", name: "Hey", value: 23, perform: { _ in
                                 
                             }) // NAO TIRA ISSO
                             .roundedCorner(16, corners: [.bottomLeft, .bottomRight])
@@ -152,7 +137,7 @@ struct HomeView: View {
                         Spacer()
                         
                         VStack (alignment: .center) {
-                            if(interactor.listTrades.count == 0) {
+                            if(interactor.listTransactions.count == 0) {
                                 Spacer()
                                 
                                 Image("keepiTrocas")
@@ -190,21 +175,21 @@ struct HomeView: View {
 
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color("lightGrayKeepi"))
-//            .onChange(of: tradeListManager.lista.count, perform: { _ in
+//            .onChange(of: transactionListManager.lista.count, perform: { _ in
 //                envelopeListManager.fetchEnvelopes()
 //            })
 
             .sheet(isPresented: $showNewTrade){
-                NewTradeView(showNewTrade: $showNewTrade, interactor: interactor)
+                NewTransactionView(showNewTrade: $showNewTrade, interactor: interactor)
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
             }
             .sheet(isPresented: $showEditTrade){
-                if interactor.listTrades.indices.contains(selectedTrade) {
-                    EditTradeView(
+                if interactor.listTransactions.indices.contains(selectedTrade) {
+                    EditTransactionView(
                         showEditTrade: $showEditTrade,
                         index: selectedTrade,
-                        trade: $interactor.listTrades[selectedTrade],
+                        trade: $interactor.listTransactions[selectedTrade],
                         selectedIndex: $selectedTrade)
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
@@ -261,7 +246,7 @@ extension View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(tradeModel: TradeModel(id: "3", name: "iFood", value: 25, tag: []))
+        HomeView(tradeModel: TransactionModel(id: "3", name: "iFood", value: 25, ))
                     
     }
 }

@@ -9,6 +9,6 @@
 //
 //struct ListaFiltro: Identifiable{
 //    let id = UUID()
-//    var listaFiltro: [TradeModel] = []
+//    var listaFiltro: [TransactionModel] = []
 //    
 //}

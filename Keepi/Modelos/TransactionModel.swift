@@ -7,17 +7,23 @@
 
 import SwiftUI
 
-class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
-//    let id = UUID()
+enum TransactionType: String, CaseIterable, Codable {
+    case expense
+    case income
+    case transfer
+}
+
+class TransactionModel: Identifiable, ObservableObject, CustomStringConvertible {
     @Published var id: String
     @Published var name: String
     @Published var envelopeId: String
     @Published var value: Decimal
     @Published var date: Date
-    @Published var tag: [Tag]
     @Published var feeling: Int // Int de 0 a 4 - vai definir o icon
     @Published var reflectionCompleted: Bool
     @Published var worthIt: Bool?
+    @Published var isPlanned: Bool?
+    @Published var type: TransactionType
     @Published var note: String
     @Published var journalEntry: String
     
@@ -29,24 +35,26 @@ class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
         id: String,
         name: String,
         value: Decimal,
-        tag: [Tag],
         envelopeId: String = "",
         feeling: Int = 0,
         date: Date = Date(),
         reflectionCompleted: Bool = true,
         worthIt: Bool? = nil,
+        isPlanned: Bool? = nil,
+        type: TransactionType = .expense,
         note: String = "",
         journalEntry: String = ""
     ) {
         self.id = id
         self.name = name
         self.value = value
-        self.tag = tag
         self.envelopeId = envelopeId
         self.date = date
         self.feeling = feeling
         self.reflectionCompleted = reflectionCompleted
         self.worthIt = worthIt
+        self.isPlanned = isPlanned
+        self.type = type
         self.note = note
         self.journalEntry = journalEntry
     }

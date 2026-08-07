@@ -1,35 +1,48 @@
-# Keepi - Your Finance Tracker
+# Keepi - Your Spending Journal
 
-Keepi is a finance tracker app designed to help you build a better relationship with your money. 
+Keepi is a new kind of financial app. It’s not just about tracking numbers, budgets, or investments; it’s about understanding your relationship with your money. Keepi is a **Spending Journal** designed to help you understand your spending habits, discover what drives your purchases, and identify meaningful patterns in your financial life.
+
+Understand your spending, not just track it. 
 
 ## Features
 
-* **Track your trades:** Record your purchases, investments, or any other financial transaction with ease.
-* **Organize with envelopes:** Categorize your trades into different envelopes, helping you visualize your spending by category. 
-* **Reflect on your feelings:** Capture your emotions when making trades, allowing you to gain insights into your spending habits and motivations. 
-* **Visualize your trends:** Analyze your spending patterns with clear charts and graphs.
-* **Detailed Reporting:** Discover your most frequent trades and gain deep insights into where your money goes.
-* **Tagging System:** Add custom tags to your trades for even more granular tracking.
-* **Home Screen Widgets:** Keep a pulse on your daily finances directly from your iOS home screen.
-* **Secure Authentication:** Keep your financial data safe with secure sign-in.
-* **Cloud Syncing:** Powered by Firebase to ensure your data is backed up and synchronized.
-* **Premium Subscription:** Upgrade to Keepi Premium to unlock exclusive features and take your finance tracking to the next level.
+### 📖 The Spending Journal
+The transaction is basically your journal entry. Each purchase you make is an opportunity to reflect on your financial choices and emotions.
+
+### 🧠 Meaningful Patterns
+Keepi starts finding patterns in your spending behavior so you don't have to. You'll get insights like:
+* "You spend the most when you feel sad."
+* "70% of your unplanned purchases were regretted."
+* "Purchases made while stressed are often regretted."
+
+### 💖 Emotional Reflection
+Every transaction asks you:
+* *How did this purchase feel?*
+* *Was it planned?*
+* *Would you make it again?*
+By answering these questions, you gain deep insights into what truly makes you happy.
+
+### ✉️ Envelope Organization
+Keep your primary finances organized. Categorize your entries into different Envelopes, helping you visualize and manage your primary budgets without overwhelming complexity.
+
+### 🔒 Secure & Private
+Keepi stores an anonymous account identifier, your entries, envelope budgets, reflections, feelings, and journal texts securely in Firebase. Your data is synced to the cloud so you never lose your journal.
+
+---
 
 ## Getting Started
 
-**This repository is for development purposes only and contains the source code for the iOS app. The app is currently available on the App Store.**
+**This repository contains the source code for the iOS app. The app is available on the App Store.**
 
-## Installation
+### Installation
 
 1. Clone the repository:
 ```bash
 git clone https://github.com/DHenrickCandido/keepi.git
 ```
-2. Open the project in Xcode.
+2. Open the project in Xcode (`Keepi.xcodeproj`).
+3. Ensure you have the necessary dependencies installed (e.g., Firebase).
 
-3. Ensure you have the necessary dependencies:
-  - Firebase
-    
 # Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
 
@@ -45,4 +58,4 @@ Email: candidohdiego@gmail.com
 Keepi is built with the following technologies:
 - SwiftUI
 - Firebase
--  Combine
+- Combine

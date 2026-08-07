@@ -13,7 +13,7 @@ enum CRUDValidation {
         return id.isEmpty ? nil : id
     }
 
-    static func canDeleteEnvelope(envelopeId: String, trades: [TradeModel]) -> Bool {
+    static func canDeleteEnvelope(envelopeId: String, trades: [TransactionModel]) -> Bool {
         guard !envelopeId.isEmpty else { return true }
         return !trades.contains { $0.envelopeId == envelopeId }
     }

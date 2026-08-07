@@ -4,7 +4,7 @@ import WidgetKit
 
 struct MainTabView: View {
     @StateObject private var interactor = HomeInteractor(
-        tradeListManager: TradeListManager(),
+        transactionListManager: TransactionListManager(),
         envelopeListManager: EnvelopeListManager()
     )
     @State private var selectedTab: MainTab = .today
@@ -74,7 +74,7 @@ struct MainTabView: View {
     }
 
     private var widgetSnapshotRefreshKey: String {
-        interactor.listTrades
+        interactor.listTransactions
             .map { "\($0.id)-\($0.value)-\($0.date.timeIntervalSince1970)-\($0.reflectionCompleted)" }
             .joined(separator: "|")
     }
@@ -104,7 +104,7 @@ struct MainTabView: View {
     }
 
     private func updateWidgetSnapshot() {
-        DailyWidgetDataStore.save(trades: interactor.listTrades)
+        DailyWidgetDataStore.save(trades: interactor.listTransactions)
         WidgetCenter.shared.reloadTimelines(ofKind: "KeepiDailyWidget")
     }
 }
@@ -125,10 +125,10 @@ private struct EntriesTabView: View {
     @State private var searchText = ""
     @State private var selectedFilter: EntryFilter = .all
 
-    private var filteredEntries: [TradeModel] {
-        interactor.listTrades.filter { entry in
+    private var filteredEntries: [TransactionModel] {
+        interactor.listTransactions.filter { entry in
             let envelopeName = interactor.getEnvelopeNameById(id: entry.envelopeId)
-            let searchableText = ([entry.name, envelopeName, entry.journalEntry] + entry.tag.map(\.name))
+            let searchableText = ([entry.name, envelopeName, entry.journalEntry])
                 .joined(separator: " ")
                 .lowercased()
             let matchesSearch = searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
@@ -168,7 +168,7 @@ private struct EntriesTabView: View {
 
                     ScrollView(showsIndicators: false) {
                         VStack(spacing: 12) {
-                            if interactor.listTrades.isEmpty {
+                            if interactor.listTransactions.isEmpty {
                                 emptyEntriesState
                             } else if filteredEntries.isEmpty {
                                 emptyFilteredState
@@ -177,11 +177,10 @@ private struct EntriesTabView: View {
                                     Button {
                                         openEdit(for: entry)
                                     } label: {
-                                        TradeCardComponent(
+                                        TransactionCardComponent(
                                             date: entry.date,
                                             name: entry.name,
                                             value: entry.value,
-                                            selectedTags: entry.tag,
                                             envelopeName: interactor.getEnvelopeNameById(id: entry.envelopeId),
                                             feeling: entry.feeling,
                                             journalEntry: entry.journalEntry
@@ -198,11 +197,11 @@ private struct EntriesTabView: View {
             }
             .navigationBarHidden(true)
             .sheet(isPresented: $showEditTrade) {
-                if interactor.listTrades.indices.contains(selectedTrade) {
-                    EditTradeView(
+                if interactor.listTransactions.indices.contains(selectedTrade) {
+                    EditTransactionView(
                         showEditTrade: $showEditTrade,
                         index: selectedTrade,
-                        trade: $interactor.listTrades[selectedTrade],
+                        trade: $interactor.listTransactions[selectedTrade],
                         selectedIndex: $selectedTrade
                     )
                     .environmentObject(interactor)
@@ -225,7 +224,7 @@ private struct EntriesTabView: View {
                 .fontWeight(.bold)
                 .foregroundColor(Color("blackKeepi"))
 
-            Text("Use the Add tab to record your first purchase, trade, or money moment.")
+            Text("Use the Add tab to record your first purchase, transaction, or money moment.")
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(.systemGray))
@@ -309,8 +308,8 @@ private struct EntriesTabView: View {
         }
     }
 
-    private func openEdit(for entry: TradeModel) {
-        guard let index = interactor.listTrades.firstIndex(where: { $0.id == entry.id }) else {
+    private func openEdit(for entry: TransactionModel) {
+        guard let index = interactor.listTransactions.firstIndex(where: { $0.id == entry.id }) else {
             return
         }
 
@@ -355,8 +354,8 @@ private struct InsightsTabView: View {
                             .fontWeight(.bold)
                             .foregroundColor(Color("blackKeepi"))
 
-                        // MostTradesView expects non-empty spending totals, so show a stable empty state first.
-                        if interactor.listTrades.isEmpty {
+                        // MeaningfulPatternsView expects non-empty spending totals, so show a stable empty state first.
+                        if interactor.listTransactions.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("No insights yet")
                                     .font(.headline)
@@ -373,7 +372,7 @@ private struct InsightsTabView: View {
                             .cornerRadius(16)
                             .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
                         } else {
-                            MostTradesView()
+                            MeaningfulPatternsView()
                         }
                     }
                     .padding(16)

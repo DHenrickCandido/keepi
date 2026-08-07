@@ -11,21 +11,7 @@ struct TradeCardComponent: View {
     var date: Date
     var name: String
     var value: Decimal
-    var selectedTags: [Tag]
-    var envelopeName: String
-    var feeling: Int
-    var journalEntry: String = ""
-
-    var body: some View {
-        VStack{
-            HStack(spacing: 18){
-                //icon
-                VStack{
-                    //img aqui
-                    Image("feeling\(feeling)")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 50, height: 50)
+    var height: 50)
                         
                         
                 }
@@ -63,7 +49,7 @@ struct TradeCardComponent: View {
                                     .foregroundColor(Color("darkGreenKeepi"))
                             }
                             
-                            Text(TradeListManager.date2string(date: date, dateFormat: "dd MMM"))
+                            Text(TransactionListManager.date2string(date: date, dateFormat: "dd MMM"))
                                 .font(.footnote)
                         
                         }
@@ -76,10 +62,7 @@ struct TradeCardComponent: View {
                     HStack(alignment: .center, spacing: 8){
                         ScrollView (.horizontal, showsIndicators: false){
                             HStack {
-                                ForEach(selectedTags) { tag in
-                                    TagComponent(selectedTag: tag)
-                                }
-                            }
+                                                            }
                             
                         }
                             
@@ -114,6 +97,6 @@ struct TradeCardComponent: View {
 
 struct TradeCardComponent_Previews: PreviewProvider {
     static var previews: some View {
-        TradeCardComponent(date: Date(), name: "teste", value: 25, selectedTags: [], envelopeName: "ifood", feeling: 4)
+        TransactionCardComponent(date: Date(), name: "teste", value: 25, envelopeName: "ifood", feeling: 4)
     }
 }

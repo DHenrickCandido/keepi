@@ -1,5 +1,5 @@
 //
-//  EditTradeView.swift
+//  EditTransactionView.swift
 //  Keepi
 //
 //  Created by Andrea Oquendo on 01/09/23.
@@ -7,43 +7,32 @@
 
 import SwiftUI
 
-struct EditTradeView: View {
+struct EditTransactionView: View {
     
-    @Binding var showEditTrade: Bool // toggle for Modal
+    @Binding var showEditTransaction: Bool // toggle for Modal
     @EnvironmentObject var interactor: HomeInteractor
     var index: Int
-    @Binding var trade: TradeModel
+    @Binding var transaction: TransactionModel
     
-    var tagManager: Tags = Tags()
+        
     
-    
-    // Elements of the trade
+    // Elements of the transaction
     @State var tradeTitle: String = ""
     @State var value: String = ""
     @State var selectedFeeling: Int = 2
-    @State var selectedTags: [Tag] = []
-    @State var selectedEnvelope: EnvelopeModel!
-    @State var journalEntry: String = ""
-    @State var stepsIndicator: steps = .firstStep
-    @State private var showAlert = false
-    @State private var showNewEnvelope = false
-    @State private var alertMessage = "Enter a valid title and amount before continuing."
-    @State private var isSaving = false
-    @State private var showDeleteConfirmation = false
-    @Binding var selectedIndex: Int
-
-    init(showEditTrade: Binding<Bool>, index: Int, trade: Binding<TradeModel>, selectedIndex: Binding<Int>){
-        self._showEditTrade = showEditTrade
+    @State var transactionType: TransactionType = .expense
+    @State var isPlanned: Bool = false
+    init(showEditTransaction: Binding<Bool>, index: Int, trade: Binding<TransactionModel>, selectedIndex: Binding<Int>) {
+        self._showEditTransaction = showEditTransaction
         
-        self._trade = trade
+        self._transaction = trade
         self.index = index
         self._selectedIndex = selectedIndex
         
-        self.tradeTitle = self.trade.name
-        self.value = KeepiFormat.editableAmount(self.trade.value)
-        self.selectedTags = self.trade.tag
-        self.selectedFeeling = self.trade.feeling
-        self.journalEntry = self.trade.journalEntry
+        self.tradeTitle = self.transaction.name
+        self.value = KeepiFormat.editableAmount(self.transaction.value)
+                self.selectedFeeling = self.transaction.feeling
+        self.journalEntry = self.transaction.journalEntry
         
     }
     
@@ -70,7 +59,7 @@ struct EditTradeView: View {
         }
         .confirmationDialog("Delete this entry?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
             Button("Delete entry", role: .destructive) {
-                deleteTrade()
+                deleteTransaction()
             }
             Button("Cancel", role: .cancel) { }
         } message: {
@@ -89,7 +78,7 @@ struct EditTradeView: View {
                         .fontWeight(.bold)
                         .onTapGesture {
                             
-                            showEditTrade.toggle()
+                            showEditTransaction.toggle()
                         }
 
                     Spacer()
@@ -100,13 +89,22 @@ struct EditTradeView: View {
 
                 }
 
-                Text("Edit trade")
+                Text("Edit transaction")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
 
             }
             
+            // Transaction Type
+            Picker("Type", selection: $transactionType) {
+                Text("Expense").tag(TransactionType.expense)
+                Text("Income").tag(TransactionType.income)
+                Text("Transfer").tag(TransactionType.transfer)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding(.bottom, 10)
+
             //inicio Qual envelope?
             VStack (alignment: .leading) {
                 QuestionText(text: "Which envelope?")
@@ -147,15 +145,16 @@ struct EditTradeView: View {
             NextButton()
         }
         .onAppear{
-            self.tradeTitle = self.trade.name
-            self.value = KeepiFormat.editableAmount(self.trade.value)
-            self.selectedTags = self.trade.tag
-            self.selectedFeeling = self.trade.feeling
-            self.journalEntry = self.trade.journalEntry
+            self.tradeTitle = self.transaction.name
+            self.value = KeepiFormat.editableAmount(self.transaction.value)
+                        self.selectedFeeling = self.transaction.feeling
+            self.journalEntry = self.transaction.journalEntry
+            self.transactionType = self.transaction.type
+            self.isPlanned = self.transaction.isPlanned ?? false
             
             selectedEnvelope = nil
             interactor.listEnvelopes.forEach({ envelope in
-                if envelope.id == trade.envelopeId {
+                if envelope.id == transaction.envelopeId {
                     selectedEnvelope = envelope
                 }
             })
@@ -171,7 +170,7 @@ struct EditTradeView: View {
                     Image(systemName: "xmark")
                         .fontWeight(.bold)
                         .onTapGesture {
-                            showEditTrade.toggle()
+                            showEditTransaction.toggle()
                         }
                     
                     Spacer()
@@ -182,13 +181,45 @@ struct EditTradeView: View {
                     
                 }
                 
-                Text("New trade")
+                Text("New transaction")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
                 
             }
             
+            // Planned?
+            VStack (alignment: .leading) {
+                Text("Was it planned?")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                
+                HStack(spacing: 12) {
+                    Button(action: { isPlanned = true }) {
+                        Text("Yes")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(isPlanned ? .white : Color("darkGreenKeepi"))
+                            .frame(maxWidth: .infinity, minHeight: 52)
+                            .background(isPlanned ? Color("darkGreenKeepi") : .white)
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                    }
+
+                    Button(action: { isPlanned = false }) {
+                        Text("No")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(!isPlanned ? .white : Color("darkGreenKeepi"))
+                            .frame(maxWidth: .infinity, minHeight: 52)
+                            .background(!isPlanned ? Color("darkGreenKeepi") : .white)
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                    }
+                }
+            }
+            .padding(.bottom, 16)
+
             //Inicio como voce se sentiu?
             VStack (alignment: .leading) {
                 Text("How did you feel?")
@@ -216,12 +247,7 @@ struct EditTradeView: View {
             //Fim como voce se sentiu?
             VStack(alignment: .leading){
                 QuestionText(text: "What's your main motivation?")
-                TagCloudView(selectedTags: $selectedTags)
-            }
-
-            VStack(alignment: .leading) {
-                QuestionText(text: "Journal")
-                TextField("What do you want to remember about this purchase?", text: $journalEntry, axis: .vertical)
+                TagCloudView(text: $journalEntry, axis: .vertical)
                     .lineLimit(3...6)
                     .font(.callout)
                     .foregroundColor(.black)
@@ -233,7 +259,7 @@ struct EditTradeView: View {
             
             Spacer()
             
-            AddTradeButton()
+            AddTransactionButton()
         }
     }
     
@@ -254,10 +280,10 @@ struct EditTradeView: View {
         .disabled(isSaving)
     }
 
-    private func deleteTrade() {
+    private func deleteTransaction() {
         guard !isSaving else { return }
         isSaving = true
-        interactor.removeTrade(indexItem: index) { error in
+        interactor.removeTransaction(indexItem: index) { error in
             DispatchQueue.main.async {
                 isSaving = false
                 if let error {
@@ -265,7 +291,7 @@ struct EditTradeView: View {
                     showAlert = true
                     return
                 }
-                showEditTrade = false
+                showEditTransaction = false
             }
         }
     }
@@ -404,7 +430,7 @@ struct EditTradeView: View {
     }
     
     
-    func saveTrade(){
+    func saveTransaction(){
         guard !isSaving else { return }
         func date2string(date: Date) -> String {
             let dateFormatter = DateFormatter()
@@ -421,26 +447,27 @@ struct EditTradeView: View {
             return
         }
 
-        let id = trade.id
-        let date = trade.date
+        let id = transaction.id
+        let date = transaction.date
         let envelopeId = selectedEnvelope?.id ?? ""
 
-        let compra = TradeModel(
+        let compra = TransactionModel(
             id: id,
             name: tradeTitle,
             value: valueFloat,
-            tag: selectedTags,
             envelopeId: envelopeId,
             feeling: selectedFeeling,
             date: date,
-            reflectionCompleted: trade.reflectionCompleted,
-            worthIt: trade.worthIt,
-            note: trade.note,
+            reflectionCompleted: transaction.reflectionCompleted,
+            worthIt: transaction.worthIt,
+            isPlanned: isPlanned,
+            type: transactionType,
+            note: transaction.note,
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
         
         isSaving = true
-        interactor.updateTrade(trade: compra) { error in
+        interactor.updateTransaction(trade: compra) { error in
             DispatchQueue.main.async {
                 isSaving = false
                 if let error {
@@ -448,24 +475,24 @@ struct EditTradeView: View {
                     showAlert = true
                     return
                 }
-                showEditTrade = false
+                showEditTransaction = false
             }
         }
     }
     
-    func AddTradeButton() -> some View {
+    func AddTransactionButton() -> some View {
         HStack{
             DeleteIcon()
             
             Spacer()
             
-            Button(action: saveTrade) {
+            Button(action: saveTransaction) {
                 HStack(spacing: 8) {
                     if isSaving {
                         ProgressView()
                             .tint(.white)
                     }
-                    Text(isSaving ? "Saving..." : "Save trade")
+                    Text(isSaving ? "Saving..." : "Save transaction")
                         .font(.body)
                         .fontWeight(.bold)
                 }

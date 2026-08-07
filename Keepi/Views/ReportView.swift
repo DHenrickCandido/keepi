@@ -57,7 +57,7 @@ struct ReportView: View {
             
             
             ScrollView{
-                MostTradesView()
+                MeaningfulPatternsView()
                     .environmentObject(interactor)
             }
             .padding(.top, 154)

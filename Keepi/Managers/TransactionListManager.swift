@@ -9,15 +9,15 @@ import Combine
 import FirebaseAuth
 import FirebaseFirestore
 
-class TradeListManager {
-    var lista: [TradeModel] = []
+class TransactionListManager {
+    var lista: [TransactionModel] = []
 
-    private let subject = PassthroughSubject<[TradeModel], Error>()
-    var publisher: AnyPublisher<[TradeModel], Error> {
+    private let subject = PassthroughSubject<[TransactionModel], Error>()
+    var publisher: AnyPublisher<[TransactionModel], Error> {
         self.subject.eraseToAnyPublisher()
     }
 
-    func removeTrade(indexItem: Int, completion: ((Error?) -> Void)? = nil) {
+    func removeTransaction(indexItem: Int, completion: ((Error?) -> Void)? = nil) {
         guard lista.indices.contains(indexItem) else {
             completion?(Self.error(code: 404, message: "Selected entry no longer exists."))
             return
@@ -29,25 +29,25 @@ class TradeListManager {
             return
         }
 
-        let trade = lista[indexItem]
-        let tradeRef = db.collection("Users").document(userID).collection("Trades").document(trade.id)
+        let transaction = lista[indexItem]
+        let transactionRef = db.collection("Users").document(userID).collection("Trades").document(transaction.id)
 
         db.runTransaction({ transaction, errorPointer in
-            let tradeSnapshot: DocumentSnapshot
+            let transactionSnapshot: DocumentSnapshot
             do {
-                tradeSnapshot = try transaction.getDocument(tradeRef)
+                transactionSnapshot = try transaction.getDocument(transactionRef)
             } catch let error as NSError {
                 errorPointer?.pointee = error
                 return nil
             }
 
-            guard tradeSnapshot.exists else {
+            guard transactionSnapshot.exists else {
                 errorPointer?.pointee = Self.error(code: 404, message: "Selected entry no longer exists.")
                 return nil
             }
 
-            let storedEnvelopeId = tradeSnapshot.data()?["envelopeId"] as? String ?? ""
-            let storedValue = FirestoreValueParser.decimalValue(from: tradeSnapshot.data()?["value"])
+            let storedEnvelopeId = transactionSnapshot.data()?["envelopeId"] as? String ?? ""
+            let storedValue = FirestoreValueParser.decimalValue(from: transactionSnapshot.data()?["value"])
 
             if !storedEnvelopeId.isEmpty {
                 let envelopeRef = db.collection("Users").document(userID).collection("Envelopes").document(storedEnvelopeId)
@@ -66,7 +66,7 @@ class TradeListManager {
                 }
             }
 
-            transaction.deleteDocument(tradeRef)
+            transaction.deleteDocument(transactionRef)
             return nil
         }, completion: { _, error in
             if let error {
@@ -75,9 +75,9 @@ class TradeListManager {
                 return
             }
 
-            if self.lista.indices.contains(indexItem), self.lista[indexItem].id == trade.id {
+            if self.lista.indices.contains(indexItem), self.lista[indexItem].id == transaction.id {
                 self.lista.remove(at: indexItem)
-            } else if let index = self.lista.firstIndex(where: { $0.id == trade.id }) {
+            } else if let index = self.lista.firstIndex(where: { $0.id == transaction.id }) {
                 self.lista.remove(at: index)
             }
             self.sortTradesNewestFirst()
@@ -92,7 +92,7 @@ class TradeListManager {
         return dateFormatter.string(from: date)
     }
 
-    func fetchTrades(completion: ((Error?) -> Void)? = nil) {
+    func fetchTransactions(completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
             completion?(Self.error(code: 401, message: "Cannot load entries without an authenticated user."))
@@ -110,7 +110,7 @@ class TradeListManager {
             guard let snapshot else { return }
 
             self.lista = snapshot.documents.compactMap { document in
-                Self.makeTrade(from: document)
+                Self.makeTransaction(from: document)
             }
             self.sortTradesNewestFirst()
             self.subject.send(self.lista)
@@ -118,7 +118,7 @@ class TradeListManager {
         }
     }
 
-    func addTrade(trade: TradeModel, completion: ((Error?) -> Void)? = nil) {
+    func addTransaction(transaction: TransactionModel, completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
             let error = NSError(domain: "Keepi", code: 401, userInfo: [NSLocalizedDescriptionKey: "Cannot add entry without an authenticated user."])
@@ -127,13 +127,13 @@ class TradeListManager {
             return
         }
 
-        let tradeRef = db.collection("Users").document(userID).collection("Trades").document(trade.id)
-        let tradeData = Self.makeTradeData(from: trade)
+        let transactionRef = db.collection("Users").document(userID).collection("Trades").document(transaction.id)
+        let transactionData = Self.makeTransactionData(from: transaction)
 
         db.runTransaction({ transaction, errorPointer in
             let existingTrade: DocumentSnapshot
             do {
-                existingTrade = try transaction.getDocument(tradeRef)
+                existingTrade = try transaction.getDocument(transactionRef)
             } catch let error as NSError {
                 errorPointer?.pointee = error
                 return nil
@@ -144,8 +144,8 @@ class TradeListManager {
                 return nil
             }
 
-            if !trade.envelopeId.isEmpty {
-                let envelopeRef = db.collection("Users").document(userID).collection("Envelopes").document(trade.envelopeId)
+            if !transaction.envelopeId.isEmpty {
+                let envelopeRef = db.collection("Users").document(userID).collection("Envelopes").document(transaction.envelopeId)
                 let envelopeSnapshot: DocumentSnapshot
 
                 do {
@@ -161,10 +161,10 @@ class TradeListManager {
                 }
 
                 let envelopeBudget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                transaction.updateData(["budget": Money.firestoreNumber(envelopeBudget - trade.value)], forDocument: envelopeRef)
+                transaction.updateData(["budget": Money.firestoreNumber(envelopeBudget - transaction.value)], forDocument: envelopeRef)
             }
 
-            transaction.setData(tradeData, forDocument: tradeRef)
+            transaction.setData(transactionData, forDocument: transactionRef)
             return nil
         }, completion: { _, error in
             if let error {
@@ -173,15 +173,15 @@ class TradeListManager {
                 return
             }
 
-            self.lista.removeAll { $0.id == trade.id }
-            self.lista.append(trade)
+            self.lista.removeAll { $0.id == transaction.id }
+            self.lista.append(transaction)
             self.sortTradesNewestFirst()
             self.subject.send(self.lista)
             completion?(nil)
         })
     }
 
-    func updateTrade(trade: TradeModel, completion: ((Error?) -> Void)? = nil) {
+    func updateTransaction(transaction: TransactionModel, completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
             completion?(Self.error(code: 401, message: "Cannot update an entry without an authenticated user."))
@@ -189,27 +189,27 @@ class TradeListManager {
         }
 
         let envelopesCollection = db.collection("Users").document(userID).collection("Envelopes")
-        let tradeRef = db.collection("Users").document(userID).collection("Trades").document(trade.id)
-        let tradeData = Self.makeTradeData(from: trade)
+        let transactionRef = db.collection("Users").document(userID).collection("Trades").document(transaction.id)
+        let transactionData = Self.makeTransactionData(from: transaction)
 
         db.runTransaction({ transaction, errorPointer in
-            let tradeSnapshot: DocumentSnapshot
+            let transactionSnapshot: DocumentSnapshot
 
             do {
-                tradeSnapshot = try transaction.getDocument(tradeRef)
+                transactionSnapshot = try transaction.getDocument(transactionRef)
             } catch let error as NSError {
                 errorPointer?.pointee = error
                 return nil
             }
 
-            guard tradeSnapshot.exists else {
+            guard transactionSnapshot.exists else {
                 errorPointer?.pointee = Self.error(code: 404, message: "Entry does not exist.")
                 return nil
             }
 
-            let oldEnvelopeId = tradeSnapshot.data()?["envelopeId"] as? String ?? ""
-            let newEnvelopeId = trade.envelopeId
-            let oldValue = FirestoreValueParser.decimalValue(from: tradeSnapshot.data()?["value"])
+            let oldEnvelopeId = transactionSnapshot.data()?["envelopeId"] as? String ?? ""
+            let newEnvelopeId = transaction.envelopeId
+            let oldValue = FirestoreValueParser.decimalValue(from: transactionSnapshot.data()?["value"])
 
             let oldEnvelopeRef = oldEnvelopeId.isEmpty ? nil : envelopesCollection.document(oldEnvelopeId)
             let newEnvelopeRef = newEnvelopeId.isEmpty ? nil : envelopesCollection.document(newEnvelopeId)
@@ -238,7 +238,7 @@ class TradeListManager {
             if oldEnvelopeId == newEnvelopeId {
                 if let envelopeRef = newEnvelopeRef, let envelopeSnapshot = newEnvelopeSnapshot {
                     let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    transaction.updateData(["budget": Money.firestoreNumber(budget + oldValue - trade.value)], forDocument: envelopeRef)
+                    transaction.updateData(["budget": Money.firestoreNumber(budget + oldValue - transaction.value)], forDocument: envelopeRef)
                 }
             } else {
                 if let envelopeRef = oldEnvelopeRef, let envelopeSnapshot = oldEnvelopeSnapshot {
@@ -248,11 +248,11 @@ class TradeListManager {
 
                 if let envelopeRef = newEnvelopeRef, let envelopeSnapshot = newEnvelopeSnapshot {
                     let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
-                    transaction.updateData(["budget": Money.firestoreNumber(budget - trade.value)], forDocument: envelopeRef)
+                    transaction.updateData(["budget": Money.firestoreNumber(budget - transaction.value)], forDocument: envelopeRef)
                 }
             }
 
-            transaction.updateData(tradeData, forDocument: tradeRef)
+            transaction.updateData(transactionData, forDocument: transactionRef)
             return nil
         }, completion: { _, error in
             if let error {
@@ -261,8 +261,8 @@ class TradeListManager {
                 return
             }
 
-            if let index = self.lista.firstIndex(where: { $0.id == trade.id }) {
-                self.lista[index] = trade
+            if let index = self.lista.firstIndex(where: { $0.id == transaction.id }) {
+                self.lista[index] = transaction
             }
             self.sortTradesNewestFirst()
             self.subject.send(self.lista)
@@ -276,56 +276,66 @@ class TradeListManager {
         }
     }
 
-    private static func makeTrade(from document: QueryDocumentSnapshot) -> TradeModel? {
+    private static func makeTransaction(from document: QueryDocumentSnapshot) -> TransactionModel? {
         let data = document.data()
         let id = data["id"] as? String ?? document.documentID
         let name = data["name"] as? String ?? ""
         let value = FirestoreValueParser.decimalValue(from: data["value"])
         let envelopeId = data["envelopeId"] as? String ?? ""
         let feeling = data["feeling"] as? Int ?? 0
-        let listTagNames = data["tags"] as? [String] ?? []
-        let tags = Tags.getTags(listNames: listTagNames)
+        
+        // Migration: Default to expense if missing
+        let typeString = data["type"] as? String ?? TransactionType.expense.rawValue
+        let type = TransactionType(rawValue: typeString) ?? .expense
+        
         let date = (data["date"] as? Timestamp)?.dateValue() ?? Date()
         let reflectionCompleted = data["reflectionCompleted"] as? Bool ?? true
         let worthIt = data["worthIt"] as? Bool
+        let isPlanned = data["isPlanned"] as? Bool
         let note = data["note"] as? String ?? ""
         let journalEntry = data["journalEntry"] as? String ?? ""
 
         guard !id.isEmpty else { return nil }
-        return TradeModel(
+        return TransactionModel(
             id: id,
             name: name,
             value: value,
-            tag: tags,
             envelopeId: envelopeId,
             feeling: feeling,
             date: date,
             reflectionCompleted: reflectionCompleted,
             worthIt: worthIt,
+            isPlanned: isPlanned,
+            type: type,
             note: note,
             journalEntry: journalEntry
         )
     }
 
-    static func makeTradeData(from trade: TradeModel) -> [String: Any] {
-        let listTagNames = trade.tag.map { $0.name }
+    static func makeTransactionData(from transaction: TransactionModel) -> [String: Any] {
         var data: [String: Any] = [
-            "name": trade.name,
-            "value": Money.firestoreNumber(trade.value),
-            "id": trade.id,
-            "tags": listTagNames,
-            "envelopeId": trade.envelopeId,
-            "date": trade.date,
-            "feeling": trade.feeling,
-            "reflectionCompleted": trade.reflectionCompleted,
-            "note": trade.note,
-            "journalEntry": trade.journalEntry
+            "name": transaction.name,
+            "value": Money.firestoreNumber(transaction.value),
+            "id": transaction.id,
+            "envelopeId": transaction.envelopeId,
+            "date": transaction.date,
+            "feeling": transaction.feeling,
+            "reflectionCompleted": transaction.reflectionCompleted,
+            "type": transaction.type.rawValue,
+            "note": transaction.note,
+            "journalEntry": transaction.journalEntry
         ]
 
-        if let worthIt = trade.worthIt {
+        if let worthIt = transaction.worthIt {
             data["worthIt"] = worthIt
         } else {
             data["worthIt"] = NSNull()
+        }
+        
+        if let isPlanned = transaction.isPlanned {
+            data["isPlanned"] = isPlanned
+        } else {
+            data["isPlanned"] = NSNull()
         }
 
         return data

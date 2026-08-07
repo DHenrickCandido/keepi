@@ -13,28 +13,27 @@ struct ListaCompra: View {
     @Binding var showEditView : Bool
     @Binding var selectedTrade: Int
 
-    private var orderedTrades: [(index: Int, trade: TradeModel)] {
-        interactor.listTrades
+    private var orderedTrades: [(index: Int, transaction: TransactionModel)] {
+        interactor.listTransactions
             .enumerated()
             .map { (index: $0.offset, trade: $0.element) }
-            .sorted { $0.trade.date > $1.trade.date }
+            .sorted { $0.transaction.date > $1.transaction.date }
     }
     
     var body: some View {
         VStack {
-            ForEach(orderedTrades, id: \.trade.id) { item in
+            ForEach(orderedTrades, id: \.transaction.id) { item in
                 Button(action: {
                     selectedTrade = item.index
                     showEditView = true
                 }) {
-                    TradeCardComponent(
-                        date: item.trade.date,
-                        name: item.trade.name,
-                        value: item.trade.value,
-                        selectedTags: item.trade.tag,
-                        envelopeName: interactor.getEnvelopeNameById(id: item.trade.envelopeId),
-                        feeling: item.trade.feeling,
-                        journalEntry: item.trade.journalEntry
+                    TransactionCardComponent(
+                        date: item.transaction.date,
+                        name: item.transaction.name,
+                        value: item.transaction.value,
+                        envelopeName: interactor.getEnvelopeNameById(id: item.transaction.envelopeId),
+                        feeling: item.transaction.feeling,
+                        journalEntry: item.transaction.journalEntry
                     )
                 }
             }
@@ -44,6 +43,6 @@ struct ListaCompra: View {
 
 //struct ListaCompra_Previews: PreviewProvider {
 //    static var previews: some View {
-////        ListaCompra(tradeListManager: TradeListManager())
+////        ListaCompra(transactionListManager: TransactionListManager())
 //    }
 //}
