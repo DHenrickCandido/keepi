@@ -6,6 +6,7 @@ struct TodayView: View {
     @State private var showNewTrade = false
     @State private var showEditTrade = false
     @State private var selectedTrade = 0
+    @State private var showSettings = false
 
     private var todayEntries: [TradeModel] {
         interactor.listTrades
@@ -13,7 +14,7 @@ struct TodayView: View {
             .sorted { $0.date > $1.date }
     }
 
-    private var totalSpentToday: Float {
+    private var totalSpentToday: Decimal {
         todayEntries.reduce(0) { $0 + $1.value }
     }
 
@@ -50,6 +51,18 @@ struct TodayView: View {
                                 .frame(height: 40)
 
                             Spacer()
+
+                            Button {
+                                showSettings = true
+                            } label: {
+                                Image(systemName: "gearshape.fill")
+                                    .font(.title3)
+                                    .foregroundColor(Color("darkGreenKeepi"))
+                                    .frame(width: 44, height: 44)
+                                    .background(.white)
+                                    .clipShape(Circle())
+                            }
+                            .accessibilityLabel("Settings")
 
                             Image("keepiMascote")
                                 .resizable()
@@ -133,6 +146,10 @@ struct TodayView: View {
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
                 }
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+                    .environmentObject(interactor)
             }
         }
     }

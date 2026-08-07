@@ -19,12 +19,14 @@ struct NewEnvelopeView: View {
     @State private var selectedTheme = "Dark"
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @State private var isSaving = false
     
     let columns = [GridItem(), GridItem(), GridItem(), GridItem()]
     
     @State var clickable: Bool = false
     
     var body: some View {
+        ScrollView(showsIndicators: false) {
         VStack (alignment: .leading, spacing: 40) {
             //Cabeçalho
             ZStack {
@@ -131,15 +133,15 @@ struct NewEnvelopeView: View {
                 
                 Spacer()
                 
-                Text("Save envelope")
+                Text(isSaving ? "Saving..." : "Save envelope")
                     .font(.body)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .frame(width: 150, height: 54)
-                    .background(clickable ? Color("darkGreenKeepi"):.gray)
+                    .background(clickable && !isSaving ? Color("darkGreenKeepi"):.gray)
                     .cornerRadius(16)
                     .onTapGesture {
-                        if envelopeName != "" && envelopeBudget != "" {
+                        if envelopeName != "" && envelopeBudget != "" && !isSaving {
                             saveEnvelope()
                         }
                         
@@ -148,6 +150,8 @@ struct NewEnvelopeView: View {
             }
         }
         .padding(16)
+        }
+        .scrollDismissesKeyboard(.interactively)
         .onChange(of: envelopeName){newValue in
             if newValue == "" || envelopeBudget == ""{
                 clickable = false
@@ -172,7 +176,7 @@ struct NewEnvelopeView: View {
     }
     
     func saveEnvelope() {
-        
+        guard !isSaving else { return }
         guard let valueFloat = CRUDValidation.normalizedDecimal(envelopeBudget),
               let id = CRUDValidation.envelopeId(from: envelopeName) else {
             alertMessage = "Add a valid envelope name and budget greater than zero."
@@ -181,8 +185,10 @@ struct NewEnvelopeView: View {
         }
 
         let envelope = EnvelopeModel(id: id, name: envelopeName, budget: valueFloat, icon: iconSelected)
+        isSaving = true
         interactor.addEnvelope(envelope: envelope) { error in
             DispatchQueue.main.async {
+                isSaving = false
                 if let error {
                     alertMessage = error.localizedDescription
                     showAlert = true

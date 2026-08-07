@@ -1,5 +1,5 @@
 import SwiftUI
-import Firebase
+import FirebaseAuth
 import WidgetKit
 
 struct MainTabView: View {
@@ -53,6 +53,24 @@ struct MainTabView: View {
         .onOpenURL { url in
             handleDeepLink(url)
         }
+        .alert("Something went wrong", isPresented: errorAlertBinding) {
+            Button("OK", role: .cancel) {
+                interactor.errorMessage = nil
+            }
+        } message: {
+            Text(interactor.errorMessage ?? "Please try again.")
+        }
+    }
+
+    private var errorAlertBinding: Binding<Bool> {
+        Binding(
+            get: { interactor.errorMessage != nil },
+            set: { isPresented in
+                if !isPresented {
+                    interactor.errorMessage = nil
+                }
+            }
+        )
     }
 
     private var widgetSnapshotRefreshKey: String {
@@ -369,5 +387,115 @@ private struct InsightsTabView: View {
 struct MainTabView_Previews: PreviewProvider {
     static var previews: some View {
         MainTabView()
+    }
+}
+
+struct SettingsView: View {
+    @EnvironmentObject private var interactor: HomeInteractor
+    @Environment(\.dismiss) private var dismiss
+    @AppStorage("notFirstTime") private var notFirstTime = true
+
+    @State private var showDeleteConfirmation = false
+    @State private var isDeleting = false
+    @State private var deletionError = ""
+    @State private var showDeletionError = false
+
+    private let privacyPolicyURL = URL(string: "https://github.com/DHenrickCandido/keepi/blob/main/PRIVACY.md")!
+    private let supportURL = URL(string: "mailto:candidohdiego@gmail.com?subject=Keepi%20Support")!
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section("Privacy") {
+                    NavigationLink("How Keepi uses your data") {
+                        PrivacyDetailsView()
+                    }
+
+                    Link(destination: privacyPolicyURL) {
+                        Label("Privacy policy", systemImage: "hand.raised")
+                    }
+                }
+
+                Section("Support") {
+                    Link(destination: supportURL) {
+                        Label("Contact support", systemImage: "envelope")
+                    }
+                }
+
+                Section {
+                    Button(role: .destructive) {
+                        showDeleteConfirmation = true
+                    } label: {
+                        HStack {
+                            Label("Delete my data", systemImage: "trash")
+                            Spacer()
+                            if isDeleting {
+                                ProgressView()
+                            }
+                        }
+                    }
+                    .disabled(isDeleting)
+                } footer: {
+                    Text("Deletes your entries, envelopes, reflections, and anonymous Keepi account.")
+                }
+            }
+            .navigationTitle("Settings")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+            .confirmationDialog("Delete all Keepi data?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                Button("Delete permanently", role: .destructive) {
+                    deleteAccountData()
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("This cannot be undone.")
+            }
+            .alert("Couldn't delete your data", isPresented: $showDeletionError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(deletionError)
+            }
+        }
+    }
+
+    private func deleteAccountData() {
+        guard !isDeleting else { return }
+        isDeleting = true
+        interactor.deleteAccountData { error in
+            DispatchQueue.main.async {
+                isDeleting = false
+                if let error {
+                    deletionError = error.localizedDescription
+                    showDeletionError = true
+                    return
+                }
+
+                notFirstTime = false
+                dismiss()
+            }
+        }
+    }
+}
+
+private struct PrivacyDetailsView: View {
+    var body: some View {
+        List {
+            Section("Data stored") {
+                Text("Keepi stores an anonymous account identifier, your entries, envelope budgets, reflections, feelings, tags, and journal text in Firebase.")
+            }
+
+            Section("Purpose") {
+                Text("This data is used only to provide syncing, budgeting, reflection, and reporting features. Keepi does not sell your data or use it for advertising or cross-app tracking.")
+            }
+
+            Section("Retention and deletion") {
+                Text("Data remains until you delete it from Settings. Deleting your data also removes the anonymous account used to sync it.")
+            }
+        }
+        .navigationTitle("Your data")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

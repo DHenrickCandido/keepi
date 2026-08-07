@@ -14,6 +14,7 @@ struct AddEntryView: View {
     @State private var showAlert = false
     @State private var showNewEnvelope = false
     @State private var alertMessage = ""
+    @State private var isSaving = false
 
     var body: some View {
         NavigationView {
@@ -48,16 +49,20 @@ struct AddEntryView: View {
               }
               .ignoresSafeArea()
 
-                VStack(spacing: 24) {
-                  Spacer()
-                      .frame(height: 46)
-                    if step == .details {
-                        detailsStep
-                    } else {
-                        contextStep
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 24) {
+                        Spacer()
+                            .frame(height: 46)
+                        if step == .details {
+                            detailsStep
+                        } else {
+                            contextStep
+                        }
                     }
+                    .padding(.bottom, 24)
                 }
-                .padding(.horizontal,12)
+                .scrollDismissesKeyboard(.interactively)
+                .padding(.horizontal, 12)
             }
             .navigationBarHidden(true)
             .alert("Entry incomplete", isPresented: $showAlert) {
@@ -417,27 +422,34 @@ struct AddEntryView: View {
 
     private func primaryButton(title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(title)
-                .font(.body)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity, minHeight: 54)
-                .background(Color("darkGreenKeepi"))
-                .cornerRadius(16)
+            buttonLabel(title: title, foregroundColor: .white, backgroundColor: Color("darkGreenKeepi"))
         }
+        .disabled(isSaving)
     }
 
     private func secondaryButton(title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(title)
-                .font(.body)
-                .fontWeight(.bold)
-                .foregroundColor(Color("darkGreenKeepi"))
-                .frame(maxWidth: .infinity, minHeight: 54)
-                .background(.white)
-                .cornerRadius(16)
+            buttonLabel(title: title, foregroundColor: Color("darkGreenKeepi"), backgroundColor: .white)
                 .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
         }
+        .disabled(isSaving)
+    }
+
+    private func buttonLabel(title: String, foregroundColor: Color, backgroundColor: Color) -> some View {
+        HStack(spacing: 8) {
+            if isSaving {
+                ProgressView()
+                    .tint(foregroundColor)
+            }
+            Text(isSaving ? "Saving..." : title)
+                .font(.body)
+                .fontWeight(.bold)
+        }
+        .foregroundColor(foregroundColor)
+        .frame(maxWidth: .infinity, minHeight: 54)
+        .background(backgroundColor)
+        .cornerRadius(16)
+        .opacity(isSaving ? 0.75 : 1)
     }
 
     private func applyPreset(_ preset: EntryPreset) {
@@ -475,8 +487,9 @@ struct AddEntryView: View {
     }
 
     private func saveEntry(reflectionCompleted: Bool) {
+        guard !isSaving else { return }
         guard let value = CRUDValidation.normalizedDecimal(amount),
-              let baseId = CRUDValidation.envelopeId(from: title) else {
+              CRUDValidation.envelopeId(from: title) != nil else {
             alertMessage = "Enter an amount and title before saving."
             showAlert = true
             return
@@ -484,7 +497,7 @@ struct AddEntryView: View {
 
         let date = Date()
         let entry = TradeModel(
-            id: baseId + TradeListManager.date2string(date: date),
+            id: TradeIdentity.make(),
             name: title.trimmingCharacters(in: .whitespacesAndNewlines),
             value: value,
             tag: selectedTags,
@@ -495,8 +508,10 @@ struct AddEntryView: View {
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
 
+        isSaving = true
         interactor.addTrade(trade: entry) { error in
             DispatchQueue.main.async {
+                isSaving = false
                 if let error {
                     alertMessage = error.localizedDescription
                     showAlert = true

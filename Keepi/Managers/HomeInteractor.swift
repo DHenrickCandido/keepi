@@ -7,6 +7,8 @@
 
 import Foundation
 import Combine
+import FirebaseAuth
+import FirebaseFirestore
 
 class HomeInteractor: ObservableObject {
     private let tradeListManager: TradeListManager
@@ -29,7 +31,6 @@ class HomeInteractor: ObservableObject {
                 }
             }, receiveValue: { list in
                 self.listTrades = list
-                envelopeListManager.fetchEnvelopes()
             }),
 
             envelopeListManager.publisher.sink(receiveCompletion: { completion in
@@ -40,53 +41,83 @@ class HomeInteractor: ObservableObject {
                 self.listEnvelopes = list
             })
         ])
-
-        loadData()
     }
 
     func loadData() {
-        tradeListManager.fetchTrades()
-        envelopeListManager.fetchEnvelopes()
+        tradeListManager.fetchTrades { error in
+            if let error {
+                self.errorMessage = error.localizedDescription
+            }
+        }
+        envelopeListManager.fetchEnvelopes { error in
+            if let error {
+                self.errorMessage = error.localizedDescription
+            }
+        }
     }
 
-    func removeTrade(indexItem: Int) {
+    func removeTrade(indexItem: Int, completion: ((Error?) -> Void)? = nil) {
         guard listTrades.indices.contains(indexItem) else {
             errorMessage = "Selected entry no longer exists."
+            completion?(NSError(domain: "Keepi", code: 404, userInfo: [NSLocalizedDescriptionKey: errorMessage!]))
             return
         }
 
-        tradeListManager.removeTrade(indexItem: indexItem)
+        tradeListManager.removeTrade(indexItem: indexItem) { error in
+            if let error {
+                self.errorMessage = error.localizedDescription
+            }
+            completion?(error)
+        }
     }
 
-    func removeEnvelope(indexItem: Int) {
+    func removeEnvelope(indexItem: Int, completion: ((Error?) -> Void)? = nil) {
         guard listEnvelopes.indices.contains(indexItem) else {
             errorMessage = "Selected envelope no longer exists."
+            completion?(NSError(domain: "Keepi", code: 404, userInfo: [NSLocalizedDescriptionKey: errorMessage!]))
             return
         }
 
-        removeEnvelope(envelopeId: listEnvelopes[indexItem].id)
+        removeEnvelope(envelopeId: listEnvelopes[indexItem].id, completion: completion)
     }
 
-    func removeEnvelope(envelopeId: String) {
+    func removeEnvelope(envelopeId: String, completion: ((Error?) -> Void)? = nil) {
         guard listEnvelopes.contains(where: { $0.id == envelopeId }) else {
             errorMessage = "Selected envelope no longer exists."
+            completion?(NSError(domain: "Keepi", code: 404, userInfo: [NSLocalizedDescriptionKey: errorMessage!]))
             return
         }
 
         guard CRUDValidation.canDeleteEnvelope(envelopeId: envelopeId, trades: listTrades) else {
             errorMessage = "Move or delete entries before removing this envelope."
+            completion?(NSError(domain: "Keepi", code: 409, userInfo: [NSLocalizedDescriptionKey: errorMessage!]))
             return
         }
 
-        envelopeListManager.removeEnvelope(envelopeId: envelopeId)
+        envelopeListManager.removeEnvelope(envelopeId: envelopeId) { error in
+            if let error {
+                self.errorMessage = error.localizedDescription
+            }
+            completion?(error)
+        }
     }
 
-    func updateTrade(trade: TradeModel) {
-        tradeListManager.updateTrade(trade: trade)
+    func updateTrade(trade: TradeModel, completion: ((Error?) -> Void)? = nil) {
+        tradeListManager.updateTrade(trade: trade) { error in
+            if let error {
+                self.errorMessage = error.localizedDescription
+            }
+            completion?(error)
+        }
     }
 
-    func updateEnvelope(envelope: EnvelopeModel) {
-        envelopeListManager.updateEnvelope(envelope: envelope)
+    func updateEnvelope(envelope: EnvelopeModel, completion: ((Error?) -> Void)? = nil) {
+        envelopeListManager.updateEnvelope(envelope: envelope) { error in
+            if let error {
+                self.errorMessage = error.localizedDescription
+            }
+            completion?(error)
+        }
     }
 
     func addTrade(trade: TradeModel, completion: ((Error?) -> Void)? = nil) {
@@ -109,5 +140,69 @@ class HomeInteractor: ObservableObject {
 
     func getEnvelopeNameById(id: String) -> String {
         envelopeListManager.getEnvelopeNameById(id: id)
+    }
+
+    func deleteAccountData(completion: @escaping (Error?) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            completion(NSError(domain: "Keepi", code: 401, userInfo: [NSLocalizedDescriptionKey: "No signed-in account was found."]))
+            return
+        }
+
+        let db = Firestore.firestore()
+        let userRef = db.collection("Users").document(user.uid)
+
+        deleteDocuments(in: userRef.collection("Trades")) { error in
+            if let error {
+                completion(error)
+                return
+            }
+
+            self.deleteDocuments(in: userRef.collection("Envelopes")) { error in
+                if let error {
+                    completion(error)
+                    return
+                }
+
+                userRef.delete { error in
+                    if let error {
+                        completion(error)
+                        return
+                    }
+
+                    user.delete { error in
+                        if error == nil {
+                            self.listTrades = []
+                            self.listEnvelopes = []
+                        }
+                        completion(error)
+                    }
+                }
+            }
+        }
+    }
+
+    private func deleteDocuments(in collection: CollectionReference, completion: @escaping (Error?) -> Void) {
+        collection.limit(to: 400).getDocuments { snapshot, error in
+            if let error {
+                completion(error)
+                return
+            }
+
+            guard let documents = snapshot?.documents, !documents.isEmpty else {
+                completion(nil)
+                return
+            }
+
+            let batch = Firestore.firestore().batch()
+            documents.forEach { batch.deleteDocument($0.reference) }
+            batch.commit { error in
+                if let error {
+                    completion(error)
+                    return
+                }
+
+                self.deleteDocuments(in: collection, completion: completion)
+            }
+        }
     }
 }

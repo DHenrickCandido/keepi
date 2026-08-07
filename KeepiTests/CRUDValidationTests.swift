@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import Keepi
 
@@ -11,6 +12,27 @@ struct CRUDValidationTests {
         #expect(CRUDValidation.normalizedDecimal("") == nil)
         #expect(CRUDValidation.normalizedDecimal("0") == nil)
         #expect(CRUDValidation.normalizedDecimal("-1") == nil)
+    }
+
+    @Test func moneyRoundsToCurrencyPrecision() {
+        #expect(CRUDValidation.normalizedDecimal("10.555") == Decimal(string: "10.56"))
+        #expect(Money.rounded(Decimal(string: "0.1")! + Decimal(string: "0.2")!) == Decimal(string: "0.3"))
+    }
+
+    @Test func generatedTradeIdsDoNotCollide() {
+        #expect(TradeIdentity.make() != TradeIdentity.make())
+    }
+
+    @Test func widgetSnapshotExpiresAfterCalendarDayChanges() {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let updatedAt = Date(timeIntervalSince1970: 1_700_000_000)
+        let sameDay = updatedAt.addingTimeInterval(60)
+        let nextDay = updatedAt.addingTimeInterval(86_400)
+
+        #expect(DailyWidgetDataStore.isCurrentDay(updatedAt, now: sameDay, calendar: calendar))
+        #expect(!DailyWidgetDataStore.isCurrentDay(updatedAt, now: nextDay, calendar: calendar))
+        #expect(!DailyWidgetDataStore.isCurrentDay(nil, now: sameDay, calendar: calendar))
     }
 
     @Test func envelopeIdTrimsWhitespaceAndRemovesSpaces() {
@@ -36,10 +58,10 @@ struct CRUDValidationTests {
     }
 
     @Test func firestoreParserHandlesCommonNumericTypes() {
-        #expect(FirestoreValueParser.floatValue(from: Float(1.25)) == 1.25)
-        #expect(FirestoreValueParser.floatValue(from: Double(2.5)) == 2.5)
-        #expect(FirestoreValueParser.floatValue(from: 3) == 3)
-        #expect(FirestoreValueParser.floatValue(from: "4,75") == 4.75)
-        #expect(FirestoreValueParser.floatValue(from: nil) == 0)
+        #expect(FirestoreValueParser.decimalValue(from: Float(1.25)) == Decimal(string: "1.25"))
+        #expect(FirestoreValueParser.decimalValue(from: Double(2.5)) == Decimal(string: "2.5"))
+        #expect(FirestoreValueParser.decimalValue(from: 3) == 3)
+        #expect(FirestoreValueParser.decimalValue(from: "4,75") == Decimal(string: "4.75"))
+        #expect(FirestoreValueParser.decimalValue(from: nil) == 0)
     }
 }

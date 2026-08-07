@@ -1,7 +1,7 @@
 import Foundation
 
 struct DailyWidgetSnapshot {
-    let totalSpent: Float
+    let totalSpent: Double
     let entryCount: Int
     let pendingReflectionCount: Int
     let entries: [DailyWidgetEntry]
@@ -10,7 +10,7 @@ struct DailyWidgetSnapshot {
 struct DailyWidgetEntry: Codable, Identifiable {
     let id: String
     let title: String
-    let value: Float
+    let value: Double
     let date: Date
 }
 
@@ -32,12 +32,12 @@ enum DailyWidgetDataStore {
         let todayTrades = trades
             .filter { calendar.isDateInToday($0.date) }
             .sorted { $0.date > $1.date }
-        let totalSpent = todayTrades.reduce(0) { $0 + $1.value }
+        let totalSpent = todayTrades.reduce(Decimal.zero) { $0 + $1.value }
         let entries = todayTrades.map {
-            DailyWidgetEntry(id: $0.id, title: $0.name, value: $0.value, date: $0.date)
+            DailyWidgetEntry(id: $0.id, title: $0.name, value: NSDecimalNumber(decimal: $0.value).doubleValue, date: $0.date)
         }
 
-        sharedDefaults.set(totalSpent, forKey: totalSpentKey)
+        sharedDefaults.set(NSDecimalNumber(decimal: totalSpent).doubleValue, forKey: totalSpentKey)
         sharedDefaults.set(todayTrades.count, forKey: entryCountKey)
         sharedDefaults.set(trades.filter { !$0.reflectionCompleted }.count, forKey: pendingReflectionCountKey)
         sharedDefaults.set(try? JSONEncoder().encode(entries), forKey: entriesKey)
@@ -45,12 +45,26 @@ enum DailyWidgetDataStore {
     }
 
     static func loadSnapshot() -> DailyWidgetSnapshot {
-        DailyWidgetSnapshot(
-            totalSpent: sharedDefaults.float(forKey: totalSpentKey),
+        guard isCurrentDay(sharedDefaults.object(forKey: updatedAtKey) as? Date) else {
+            return DailyWidgetSnapshot(
+                totalSpent: 0,
+                entryCount: 0,
+                pendingReflectionCount: sharedDefaults.integer(forKey: pendingReflectionCountKey),
+                entries: []
+            )
+        }
+
+        return DailyWidgetSnapshot(
+            totalSpent: sharedDefaults.double(forKey: totalSpentKey),
             entryCount: sharedDefaults.integer(forKey: entryCountKey),
             pendingReflectionCount: sharedDefaults.integer(forKey: pendingReflectionCountKey),
             entries: loadEntries()
         )
+    }
+
+    static func isCurrentDay(_ date: Date?, now: Date = Date(), calendar: Calendar = .current) -> Bool {
+        guard let date else { return false }
+        return calendar.isDate(date, inSameDayAs: now)
     }
 
     private static func loadEntries() -> [DailyWidgetEntry] {

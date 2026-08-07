@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Firebase
+import FirebaseAuth
 
 struct LoginView: View {
     @State private var email = ""
@@ -68,7 +68,7 @@ struct LoginView: View {
             Spacer()
         }
                 .onAppear(){
-                    Auth.auth().addStateDidChangeListener { auth, user in
+                    _ = Auth.auth().addStateDidChangeListener { _, user in
                         if user != nil {
                             userIsLoggedIn.toggle()
                         }

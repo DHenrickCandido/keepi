@@ -64,7 +64,7 @@ struct MostTradesView: View {
         .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
     }
 
-    private func envelopeBars(totalValueSpent: Float) -> some View {
+    private func envelopeBars(totalValueSpent: Decimal) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             ForEach(valueSpentByEnvelope(list: interactor.listTrades).sorted(by: { $0.value > $1.value }), id: \.key) { envelopeID, value in
                 HStack(spacing: 10) {
@@ -79,7 +79,7 @@ struct MostTradesView: View {
                     GeometryReader { geometry in
                         Rectangle()
                             .fill(Color("graph3"))
-                            .frame(width: max(CGFloat(value / totalValueSpent) * geometry.size.width, 8), height: 20)
+                            .frame(width: max(CGFloat(NSDecimalNumber(decimal: value / totalValueSpent).doubleValue) * geometry.size.width, 8), height: 20)
                             .cornerRadius(10)
                     }
                     .frame(height: 20)
@@ -145,8 +145,8 @@ private func mostFrequentValue<Value: Hashable>(_ values: [Value]) -> Value? {
         .key
 }
 
-func valueSpentByEnvelope(list: [TradeModel]) -> [String: Float] {
-    var totalByEnvelope: [String: Float] = [:]
+func valueSpentByEnvelope(list: [TradeModel]) -> [String: Decimal] {
+    var totalByEnvelope: [String: Decimal] = [:]
 
     for trade in list {
         totalByEnvelope[trade.envelopeId, default: 0] += trade.value
@@ -155,7 +155,7 @@ func valueSpentByEnvelope(list: [TradeModel]) -> [String: Float] {
     return totalByEnvelope
 }
 
-func totalValueSpend(list: [TradeModel]) -> Float {
+func totalValueSpend(list: [TradeModel]) -> Decimal {
     list.reduce(0) { $0 + $1.value }
 }
 

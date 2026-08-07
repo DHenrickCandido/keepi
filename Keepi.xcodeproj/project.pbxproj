@@ -25,6 +25,7 @@
 		8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */; };
 		8B4E8EEA2A98D9F200D3A6F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */; };
 		8B4E8EED2A98D9F200D3A6F1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B4E8EEC2A98D9F200D3A6F1 /* Preview Assets.xcassets */; };
+		8B56110B302655A70011A884 /* KeepiStoreConfig.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 8B56110A302655A70011A884 /* KeepiStoreConfig.storekit */; };
 		8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC12A9F7AD500FDA36D /* HomeView.swift */; };
 		8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */; };
 		8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */; };
@@ -38,10 +39,10 @@
 		8B83EEF52FE610BC00A9F84E /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83EEF42FE610BC00A9F84E /* WidgetKit.framework */; };
 		8B83EEF72FE610BC00A9F84E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B83EEF62FE610BC00A9F84E /* SwiftUI.framework */; };
 		8B83EF082FE610BE00A9F84E /* keepiWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8B83EEF22FE610BC00A9F84E /* keepiWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8B83F1012FE7000000A9F84E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8B83F1002FE7000000A9F84E /* PrivacyInfo.xcprivacy */; };
+		8B83F1102FE7000000A9F84E /* CRUDValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B83EEE12FE5D23B00A9F84E /* CRUDValidationTests.swift */; };
 		8B91F8012AA591E2005F5728 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8002AA591E2005F5728 /* FirebaseAuth */; };
-		8B91F8032AA591E2005F5728 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8022AA591E2005F5728 /* FirebaseAuthCombine-Community */; };
 		8B91F8052AA591E2005F5728 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8042AA591E2005F5728 /* FirebaseFirestore */; };
-		8B91F8072AA591E2005F5728 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8B91F8062AA591E2005F5728 /* FirebaseFirestoreSwift */; };
 		8B91F80B2AA5A3A1005F5728 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B91F80A2AA5A3A1005F5728 /* LoginView.swift */; };
 		8BB460302AA223BE00258E7F /* NewEnvelopeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */; };
 		907FB3DE2AA74EBD000754FA /* Onboarding1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FB3DD2AA74EBD000754FA /* Onboarding1View.swift */; };
@@ -65,6 +66,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8B83EEF12FE610BC00A9F84E;
 			remoteInfo = keepiWidgetExtension;
+		};
+		8B83F1122FE7000000A9F84E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B4E8EDA2A98D9F100D3A6F1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8B4E8EE12A98D9F100D3A6F1;
+			remoteInfo = Keepi;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -102,6 +110,7 @@
 		8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8B4E8EE92A98D9F200D3A6F1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8B4E8EEC2A98D9F200D3A6F1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8B56110A302655A70011A884 /* KeepiStoreConfig.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = KeepiStoreConfig.storekit; sourceTree = "<group>"; };
 		8B598DC12A9F7AD500FDA36D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeCardView.swift; sourceTree = "<group>"; };
 		8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEnvelopeButtonView.swift; sourceTree = "<group>"; };
@@ -117,6 +126,9 @@
 		8B83EEF22FE610BC00A9F84E /* keepiWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = keepiWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B83EEF42FE610BC00A9F84E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		8B83EEF62FE610BC00A9F84E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		8B83F1002FE7000000A9F84E /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		8B83F1022FE7000000A9F84E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8B83F1112FE7000000A9F84E /* KeepiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KeepiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B91F80A2AA5A3A1005F5728 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8BB4602F2AA223BE00258E7F /* NewEnvelopeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEnvelopeView.swift; sourceTree = "<group>"; };
 		907FB3DD2AA74EBD000754FA /* Onboarding1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding1View.swift; sourceTree = "<group>"; };
@@ -153,9 +165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B91F8012AA591E2005F5728 /* FirebaseAuth in Frameworks */,
-				8B91F8032AA591E2005F5728 /* FirebaseAuthCombine-Community in Frameworks */,
 				8B91F8052AA591E2005F5728 /* FirebaseFirestore in Frameworks */,
-				8B91F8072AA591E2005F5728 /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,6 +175,13 @@
 			files = (
 				8B83EEF72FE610BC00A9F84E /* SwiftUI.framework in Frameworks */,
 				8B83EEF52FE610BC00A9F84E /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8B83F1132FE7000000A9F84E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,6 +245,7 @@
 		8B4E8ED92A98D9F100D3A6F1 = {
 			isa = PBXGroup;
 			children = (
+				8B56110A302655A70011A884 /* KeepiStoreConfig.storekit */,
 				8B4E8EE42A98D9F100D3A6F1 /* Keepi */,
 				8B83EEF82FE610BC00A9F84E /* KeepiWidget */,
 				8B83EEF32FE610BC00A9F84E /* Frameworks */,
@@ -241,6 +259,7 @@
 			children = (
 				8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */,
 				8B83EEF22FE610BC00A9F84E /* keepiWidgetExtension.appex */,
+				8B83F1112FE7000000A9F84E /* KeepiTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -262,6 +281,8 @@
 				8B4E8EEB2A98D9F200D3A6F1 /* Preview Content */,
 				8B83EEEA2FE60EE600A9F84E /* Shared */,
 				8B83EEED2FE60FA100A9F84E /* Keepi.entitlements */,
+				8B83F1022FE7000000A9F84E /* Info.plist */,
+				8B83F1002FE7000000A9F84E /* PrivacyInfo.xcprivacy */,
 			);
 			path = Keepi;
 			sourceTree = "<group>";
@@ -350,9 +371,7 @@
 			name = Keepi;
 			packageProductDependencies = (
 				8B91F8002AA591E2005F5728 /* FirebaseAuth */,
-				8B91F8022AA591E2005F5728 /* FirebaseAuthCombine-Community */,
 				8B91F8042AA591E2005F5728 /* FirebaseFirestore */,
-				8B91F8062AA591E2005F5728 /* FirebaseFirestoreSwift */,
 			);
 			productName = Keepi;
 			productReference = 8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */;
@@ -380,6 +399,26 @@
 			productReference = 8B83EEF22FE610BC00A9F84E /* keepiWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		8B83F1162FE7000000A9F84E /* KeepiTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8B83F11A2FE7000000A9F84E /* Build configuration list for PBXNativeTarget "KeepiTests" */;
+			buildPhases = (
+				8B83F1142FE7000000A9F84E /* Sources */,
+				8B83F1132FE7000000A9F84E /* Frameworks */,
+				8B83F1152FE7000000A9F84E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8B83F1172FE7000000A9F84E /* PBXTargetDependency */,
+			);
+			name = KeepiTests;
+			packageProductDependencies = (
+			);
+			productName = KeepiTests;
+			productReference = 8B83F1112FE7000000A9F84E /* KeepiTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -395,6 +434,10 @@
 					};
 					8B83EEF12FE610BC00A9F84E = {
 						CreatedOnToolsVersion = 27.0;
+					};
+					8B83F1162FE7000000A9F84E = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 8B4E8EE12A98D9F100D3A6F1;
 					};
 				};
 			};
@@ -416,6 +459,7 @@
 			targets = (
 				8B4E8EE12A98D9F100D3A6F1 /* Keepi */,
 				8B83EEF12FE610BC00A9F84E /* keepiWidgetExtension */,
+				8B83F1162FE7000000A9F84E /* KeepiTests */,
 			);
 		};
 /* End PBXProject section */
@@ -428,10 +472,19 @@
 				8B4E8EED2A98D9F200D3A6F1 /* Preview Assets.xcassets in Resources */,
 				8B4E8EEA2A98D9F200D3A6F1 /* Assets.xcassets in Resources */,
 				8B68B0EA2AA6020600B32296 /* GoogleService-Info.plist in Resources */,
+				8B83F1012FE7000000A9F84E /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8B83EEF02FE610BC00A9F84E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B56110B302655A70011A884 /* KeepiStoreConfig.storekit in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8B83F1152FE7000000A9F84E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -446,11 +499,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */,
-				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
 				8B83EEEC2FE60EE600A9F84E /* DailyWidgetDataStore.swift in Sources */,
 				5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */,
 				5AE47BE22AA759ED00EE90D5 /* EnvelopeModel.swift in Sources */,
-				8B598DC22A9F7AD500FDA36D /* HomeView.swift in Sources */,
 				5A3A488A2AA004CF0094F751 /* TagComponent.swift in Sources */,
 				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,
@@ -496,6 +547,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8B83F1142FE7000000A9F84E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8B83F1102FE7000000A9F84E /* CRUDValidationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -503,6 +562,11 @@
 			isa = PBXTargetDependency;
 			target = 8B83EEF12FE610BC00A9F84E /* keepiWidgetExtension */;
 			targetProxy = 8B83EF062FE610BE00A9F84E /* PBXContainerItemProxy */;
+		};
+		8B83F1172FE7000000A9F84E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8B4E8EE12A98D9F100D3A6F1 /* Keepi */;
+			targetProxy = 8B83F1122FE7000000A9F84E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -626,17 +690,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Keepi/Keepi.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Keepi/Preview Content\"";
 				DEVELOPMENT_TEAM = JZNPKB7CRS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Keepi/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -655,17 +721,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Keepi/Keepi.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Keepi/Preview Content\"";
 				DEVELOPMENT_TEAM = JZNPKB7CRS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Keepi/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -685,8 +753,9 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = KeepiWidget/KeepiWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = JZNPKB7CRS;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -694,14 +763,14 @@
 				INFOPLIST_FILE = keepiWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = keepiWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = candidohdiego.Keepi.keepiWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -721,8 +790,9 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = KeepiWidget/KeepiWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = JZNPKB7CRS;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -730,14 +800,14 @@
 				INFOPLIST_FILE = keepiWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = keepiWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = candidohdiego.Keepi.keepiWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -747,6 +817,44 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8B83F1182FE7000000A9F84E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JZNPKB7CRS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = candidohdiego.KeepiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Keepi.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Keepi";
+			};
+			name = Debug;
+		};
+		8B83F1192FE7000000A9F84E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JZNPKB7CRS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = candidohdiego.KeepiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Keepi.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Keepi";
 			};
 			name = Release;
 		};
@@ -780,6 +888,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		8B83F11A2FE7000000A9F84E /* Build configuration list for PBXNativeTarget "KeepiTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8B83F1182FE7000000A9F84E /* Debug */,
+				8B83F1192FE7000000A9F84E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -788,7 +905,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 10.0.0;
+				minimumVersion = 12.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -799,20 +916,10 @@
 			package = 8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
 		};
-		8B91F8022AA591E2005F5728 /* FirebaseAuthCombine-Community */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = "FirebaseAuthCombine-Community";
-		};
 		8B91F8042AA591E2005F5728 /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
-		};
-		8B91F8062AA591E2005F5728 /* FirebaseFirestoreSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8B91F7FF2AA591E2005F5728 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestoreSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

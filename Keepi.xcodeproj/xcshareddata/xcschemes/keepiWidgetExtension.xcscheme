@@ -18,6 +18,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8B83EEF12FE610BC00A9F84E"
                BuildableName = "keepiWidgetExtension.appex"
+               BlueprintName = "keepiWidgetExtension"
                ReferencedContainer = "container:Keepi.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -31,6 +32,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8B4E8EE12A98D9F100D3A6F1"
                BuildableName = "Keepi.app"
+               BlueprintName = "Keepi"
                ReferencedContainer = "container:Keepi.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -63,6 +65,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8B83EEF12FE610BC00A9F84E"
             BuildableName = "keepiWidgetExtension.appex"
+            BlueprintName = "keepiWidgetExtension"
             ReferencedContainer = "container:Keepi.xcodeproj">
          </BuildableReference>
       </RemoteRunnable>
@@ -71,6 +74,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8B4E8EE12A98D9F100D3A6F1"
             BuildableName = "Keepi.app"
+            BlueprintName = "Keepi"
             ReferencedContainer = "container:Keepi.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -106,6 +110,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8B4E8EE12A98D9F100D3A6F1"
             BuildableName = "Keepi.app"
+            BlueprintName = "Keepi"
             ReferencedContainer = "container:Keepi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

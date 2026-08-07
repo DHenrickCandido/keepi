@@ -3,7 +3,7 @@ import WidgetKit
 
 struct KeepiDailyEntry: TimelineEntry {
     let date: Date
-    let totalSpent: Float
+    let totalSpent: Double
     let entryCount: Int
     let pendingReflectionCount: Int
     let entries: [KeepiWidgetEntry]
@@ -12,7 +12,7 @@ struct KeepiDailyEntry: TimelineEntry {
 struct KeepiWidgetEntry: Codable, Identifiable {
     let id: String
     let title: String
-    let value: Float
+    let value: Double
     let date: Date
 }
 
@@ -37,18 +37,28 @@ struct KeepiDailyProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<KeepiDailyEntry>) -> Void) {
         let entry = currentEntry()
-        let nextRefresh = Calendar.current.date(byAdding: .minute, value: 30, to: Date()) ?? Date()
+        let now = Date()
+        let regularRefresh = Calendar.current.date(byAdding: .minute, value: 30, to: now) ?? now
+        let midnight = Calendar.current.nextDate(
+            after: now,
+            matching: DateComponents(hour: 0, minute: 0),
+            matchingPolicy: .nextTime
+        ) ?? regularRefresh
+        let nextRefresh = min(regularRefresh, midnight)
         completion(Timeline(entries: [entry], policy: .after(nextRefresh)))
     }
 
     private func currentEntry() -> KeepiDailyEntry {
         let defaults = UserDefaults(suiteName: "group.candidohdiego.Keepi") ?? .standard
+        let updatedAt = defaults.object(forKey: "dailyWidget.updatedAt") as? Date
+        let isCurrentDay = updatedAt.map(Calendar.current.isDateInToday) ?? false
+
         return KeepiDailyEntry(
             date: Date(),
-            totalSpent: defaults.float(forKey: "dailyWidget.totalSpent"),
-            entryCount: defaults.integer(forKey: "dailyWidget.entryCount"),
+            totalSpent: isCurrentDay ? defaults.double(forKey: "dailyWidget.totalSpent") : 0,
+            entryCount: isCurrentDay ? defaults.integer(forKey: "dailyWidget.entryCount") : 0,
             pendingReflectionCount: defaults.integer(forKey: "dailyWidget.pendingReflectionCount"),
-            entries: loadEntries(from: defaults)
+            entries: isCurrentDay ? loadEntries(from: defaults) : []
         )
     }
 
@@ -151,7 +161,7 @@ struct KeepiWidgetEntryView: View {
 }
 
 private enum WidgetFormat {
-    static func currency(_ value: Float) -> String {
+    static func currency(_ value: Double) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = .current

@@ -26,6 +26,7 @@ struct NewTradeView: View {
     @State var stepsIndicator: steps = .firstStep
     @State var showAlert = false
     @State private var showNewEnvelope = false
+    @State private var isSaving = false
     @State private var alertMessage = "Enter a valid title and amount before continuing."
     
     init(showNewTrade: Binding<Bool>, interactor: HomeInteractor, tagManager: Tags = Tags(), tradeTitle: String = "", value: String = "", selectedFeeling: Int = 2, selectedTags: [Tag] = [], todayDate: Date = Date()) {
@@ -44,17 +45,17 @@ struct NewTradeView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 40){
-            
-            if(stepsIndicator == .firstStep){
-                FirstStep()
-                    
-            } else if (stepsIndicator == .secondStep ) {
-                SecondStep()
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 40) {
+                if stepsIndicator == .firstStep {
+                    FirstStep()
+                } else if stepsIndicator == .secondStep {
+                    SecondStep()
+                }
             }
-        
+            .padding(16)
         }
-        .padding(16)
+        .scrollDismissesKeyboard(.interactively)
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Entry incomplete"), message: Text(alertMessage), dismissButton: .default(Text("Got it!")))
         }
@@ -346,16 +347,16 @@ struct NewTradeView: View {
     }
     
     func saveTrade() {
+        guard !isSaving else { return }
         guard let valueFloat = CRUDValidation.normalizedDecimal(value),
-              let baseId = CRUDValidation.envelopeId(from: tradeTitle) else {
+              CRUDValidation.envelopeId(from: tradeTitle) != nil else {
             showAlert = true
             return
         }
-        let id = baseId + TradeListManager.date2string(date: todayDate)
         let envelopeId = selectedEnvelope?.id ?? ""
         
         let compra = TradeModel(
-            id: id,
+            id: TradeIdentity.make(),
             name: tradeTitle,
             value: valueFloat,
             tag: selectedTags,
@@ -364,8 +365,10 @@ struct NewTradeView: View {
             date: todayDate,
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
+        isSaving = true
         interactor.addTrade(trade: compra) { error in
             DispatchQueue.main.async {
+                isSaving = false
                 if let error {
                     alertMessage = error.localizedDescription
                     showAlert = true
@@ -380,20 +383,24 @@ struct NewTradeView: View {
     func AddTradeButton() -> some View {
         HStack {
             Spacer()
-            
-            Text("Save trade")
-                .font(.body)
-                .fontWeight(.bold)
+
+            Button(action: saveTrade) {
+                HStack(spacing: 8) {
+                    if isSaving {
+                        ProgressView()
+                            .tint(.white)
+                    }
+                    Text(isSaving ? "Saving..." : "Save trade")
+                        .font(.body)
+                        .fontWeight(.bold)
+                }
                 .foregroundColor(.white)
                 .frame(width: 150, height: 54)
                 .background(Color("darkGreenKeepi"))
                 .cornerRadius(16)
-                .onTapGesture {
-                    saveTrade()
-                }
-            
+            }
+            .disabled(isSaving)
         }
-        
     }
     
     func EmotionOption(active: Bool, feeling: Feeling) -> some View {

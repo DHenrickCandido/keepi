@@ -83,6 +83,7 @@ function App() {
         <nav className="nav-links" aria-label="Page sections">
           <a href="#how-it-works">How it works</a>
           <a href="#insights">Insights</a>
+          <a href="#privacy">Privacy</a>
           <a href="#download">Download</a>
         </nav>
         <a className="header-cta" href="#download">
@@ -96,11 +97,12 @@ function App() {
         <HowItWorks />
         <Insights />
         <Download />
+        <Privacy />
       </main>
 
       <footer className="site-footer">
         <span>Keepi</span>
-        <span>Built with SwiftUI and Firebase</span>
+        <a href="#privacy">Privacy policy</a>
         <span>{currentYear}</span>
       </footer>
     </>
@@ -249,6 +251,29 @@ function Download() {
       <a className="button primary dark" href="mailto:candidohdiego@gmail.com?subject=Keepi%20App%20Store%20link">
         Ask for the App Store link
       </a>
+    </section>
+  );
+}
+
+function Privacy() {
+  return (
+    <section className="privacy" id="privacy" aria-labelledby="privacy-title">
+      <div>
+        <p className="eyebrow dark">Privacy policy</p>
+        <h2 id="privacy-title">Your financial reflections stay yours.</h2>
+      </div>
+      <div className="privacy-copy">
+        <p>
+          Keepi stores an anonymous account identifier and the entries, envelope budgets, feelings, tags, reflections,
+          notes, and journal text you choose to add. Firebase Authentication and Cloud Firestore provide account access
+          and syncing.
+        </p>
+        <p>
+          Keepi does not sell your data, serve targeted advertising, or track you across other companies' apps and
+          websites. Data remains until you delete it from <strong>Settings &gt; Delete my data</strong> in the app.
+        </p>
+        <a href="mailto:candidohdiego@gmail.com?subject=Keepi%20Privacy">Contact Keepi about privacy</a>
+      </div>
     </section>
   );
 }

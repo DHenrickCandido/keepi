@@ -10,7 +10,7 @@ import SwiftUI
 struct TradeCardComponent: View {
     var date: Date
     var name: String
-    var value: Float
+    var value: Decimal
     var selectedTags: [Tag]
     var envelopeName: String
     var feeling: Int

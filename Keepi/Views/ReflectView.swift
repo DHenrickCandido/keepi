@@ -8,6 +8,9 @@ struct ReflectView: View {
     @State private var selectedTags: [Tag] = []
     @State private var worthIt = true
     @State private var journalEntry = ""
+    @State private var isSaving = false
+    @State private var showSaveError = false
+    @State private var saveErrorMessage = ""
 
     private var pendingEntries: [TradeModel] {
         interactor.listTrades
@@ -78,6 +81,11 @@ struct ReflectView: View {
                     selectedPendingIndex = max(pendingEntries.count - 1, 0)
                 }
                 loadCurrentEntry()
+            }
+            .alert("Couldn't save reflection", isPresented: $showSaveError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(saveErrorMessage)
             }
         }
     }
@@ -298,14 +306,21 @@ struct ReflectView: View {
 
     private func primaryButton(title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(title)
-                .font(.body)
-                .fontWeight(.bold)
+            HStack(spacing: 8) {
+                if isSaving {
+                    ProgressView()
+                        .tint(.white)
+                }
+                Text(isSaving ? "Saving..." : title)
+                    .font(.body)
+                    .fontWeight(.bold)
+            }
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity, minHeight: 54)
                 .background(Color("darkGreenKeepi"))
                 .cornerRadius(16)
         }
+        .disabled(isSaving)
     }
 
     private func secondaryButton(title: String, action: @escaping () -> Void) -> some View {
@@ -337,6 +352,7 @@ struct ReflectView: View {
     }
 
     private func saveReflection(for entry: TradeModel) {
+        guard !isSaving else { return }
         let updatedEntry = TradeModel(
             id: entry.id,
             name: entry.name,
@@ -351,8 +367,18 @@ struct ReflectView: View {
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
 
-        interactor.updateTrade(trade: updatedEntry)
-        moveToNextEntry()
+        isSaving = true
+        interactor.updateTrade(trade: updatedEntry) { error in
+            DispatchQueue.main.async {
+                isSaving = false
+                if let error {
+                    saveErrorMessage = error.localizedDescription
+                    showSaveError = true
+                    return
+                }
+                moveToNextEntry()
+            }
+        }
     }
 
     private func moveToNextEntry() {

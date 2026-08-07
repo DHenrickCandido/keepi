@@ -1,10 +1,10 @@
 import Foundation
 
 enum CRUDValidation {
-    static func normalizedDecimal(_ text: String) -> Float? {
+    static func normalizedDecimal(_ text: String) -> Decimal? {
         let normalized = text.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: ",", with: ".")
-        guard let value = Float(normalized), value > 0 else { return nil }
-        return value
+        guard let value = Decimal(string: normalized, locale: Locale(identifier: "en_US_POSIX")), value > 0 else { return nil }
+        return Money.rounded(value)
     }
 
     static func envelopeId(from name: String) -> String? {
@@ -20,12 +20,41 @@ enum CRUDValidation {
 }
 
 enum KeepiFormat {
-    static func currency(_ value: Float) -> String {
+    static func currency(_ value: Decimal) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = .current
         formatter.maximumFractionDigits = 2
         formatter.minimumFractionDigits = 2
-        return formatter.string(from: NSNumber(value: value)) ?? String(format: "$%.2f", value)
+        return formatter.string(from: NSDecimalNumber(decimal: value)) ?? "$\(editableAmount(value))"
+    }
+
+    static func editableAmount(_ value: Decimal) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = .current
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        formatter.usesGroupingSeparator = false
+        return formatter.string(from: NSDecimalNumber(decimal: value)) ?? NSDecimalNumber(decimal: value).stringValue
+    }
+}
+
+enum Money {
+    static func rounded(_ value: Decimal) -> Decimal {
+        var input = value
+        var result = Decimal()
+        NSDecimalRound(&result, &input, 2, .plain)
+        return result
+    }
+
+    static func firestoreNumber(_ value: Decimal) -> NSDecimalNumber {
+        NSDecimalNumber(decimal: rounded(value))
+    }
+}
+
+enum TradeIdentity {
+    static func make() -> String {
+        UUID().uuidString
     }
 }

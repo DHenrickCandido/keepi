@@ -12,7 +12,7 @@ class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
     @Published var id: String
     @Published var name: String
     @Published var envelopeId: String
-    @Published var value: Float
+    @Published var value: Decimal
     @Published var date: Date
     @Published var tag: [Tag]
     @Published var feeling: Int // Int de 0 a 4 - vai definir o icon
@@ -28,7 +28,7 @@ class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
     init(
         id: String,
         name: String,
-        value: Float,
+        value: Decimal,
         tag: [Tag],
         envelopeId: String = "",
         feeling: Int = 0,
@@ -51,4 +51,3 @@ class TradeModel: Identifiable, ObservableObject, CustomStringConvertible {
         self.journalEntry = journalEntry
     }
 }
-

@@ -6,7 +6,8 @@
 //
 
 import Combine
-import Firebase
+import FirebaseAuth
+import FirebaseFirestore
 
 class EnvelopeListManager {
     var listaEnvelope: [EnvelopeModel] = []
@@ -25,21 +26,23 @@ class EnvelopeListManager {
         removeEnvelope(envelopeId: listaEnvelope[indexItem].id)
     }
 
-    func removeEnvelope(envelopeId: String) {
+    func removeEnvelope(envelopeId: String, completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("Cannot remove envelope without an authenticated user.")
+            completion?(NSError(domain: "Keepi", code: 401, userInfo: [NSLocalizedDescriptionKey: "Cannot delete an envelope without an authenticated user."]))
             return
         }
 
         db.collection("Users").document(userID).collection("Envelopes").document(envelopeId).delete { error in
             if let error {
                 print("Error removing envelope: \(error.localizedDescription)")
+                completion?(error)
                 return
             }
 
             self.listaEnvelope.removeAll { $0.id == envelopeId }
             self.subject.send(self.listaEnvelope)
+            completion?(nil)
         }
     }
 
@@ -49,18 +52,18 @@ class EnvelopeListManager {
         return dateFormatter.string(from: date)
     }
 
-    func fetchEnvelopes() {
+    func fetchEnvelopes(completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("Cannot fetch envelopes without an authenticated user.")
+            completion?(NSError(domain: "Keepi", code: 401, userInfo: [NSLocalizedDescriptionKey: "Cannot load envelopes without an authenticated user."]))
             return
         }
 
         let ref = db.collection("Users").document(userID).collection("Envelopes")
 
         ref.getDocuments { snapshot, error in
-            guard error == nil else {
-                print(error!.localizedDescription)
+            if let error {
+                completion?(error)
                 return
             }
 
@@ -70,6 +73,7 @@ class EnvelopeListManager {
                 Self.makeEnvelope(from: document)
             }
             self.subject.send(self.listaEnvelope)
+            completion?(nil)
         }
     }
 
@@ -122,10 +126,10 @@ class EnvelopeListManager {
         return "Deleted envelope"
     }
 
-    func updateEnvelope(envelope: EnvelopeModel) {
+    func updateEnvelope(envelope: EnvelopeModel, completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("Cannot update envelope without an authenticated user.")
+            completion?(NSError(domain: "Keepi", code: 401, userInfo: [NSLocalizedDescriptionKey: "Cannot update an envelope without an authenticated user."]))
             return
         }
 
@@ -133,6 +137,7 @@ class EnvelopeListManager {
         ref.updateData(Self.makeEnvelopeData(from: envelope)) { error in
             if let error {
                 print("Error updating envelope: \(error.localizedDescription)")
+                completion?(error)
                 return
             }
 
@@ -142,6 +147,7 @@ class EnvelopeListManager {
                 self.listaEnvelope.insert(envelope, at: 0)
             }
             self.subject.send(self.listaEnvelope)
+            completion?(nil)
         }
     }
 
@@ -149,7 +155,7 @@ class EnvelopeListManager {
         let data = document.data()
         let id = data["id"] as? String ?? document.documentID
         let name = data["name"] as? String ?? ""
-        let budget = FirestoreValueParser.floatValue(from: data["budget"])
+        let budget = FirestoreValueParser.decimalValue(from: data["budget"])
         let icon = data["icon"] as? String ?? ""
 
         guard !id.isEmpty else { return nil }
@@ -159,7 +165,7 @@ class EnvelopeListManager {
     static func makeEnvelopeData(from envelope: EnvelopeModel) -> [String: Any] {
         [
             "name": envelope.name,
-            "budget": envelope.budget,
+            "budget": Money.firestoreNumber(envelope.budget),
             "id": envelope.id,
             "icon": envelope.icon
         ]

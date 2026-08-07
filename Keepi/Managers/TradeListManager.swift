@@ -6,7 +6,8 @@
 //
 
 import Combine
-import Firebase
+import FirebaseAuth
+import FirebaseFirestore
 
 class TradeListManager {
     var lista: [TradeModel] = []
@@ -16,15 +17,15 @@ class TradeListManager {
         self.subject.eraseToAnyPublisher()
     }
 
-    func removeTrade(indexItem: Int) {
+    func removeTrade(indexItem: Int, completion: ((Error?) -> Void)? = nil) {
         guard lista.indices.contains(indexItem) else {
-            print("Invalid trade index: \(indexItem)")
+            completion?(Self.error(code: 404, message: "Selected entry no longer exists."))
             return
         }
 
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("Cannot remove trade without an authenticated user.")
+            completion?(Self.error(code: 401, message: "Cannot delete an entry without an authenticated user."))
             return
         }
 
@@ -32,8 +33,24 @@ class TradeListManager {
         let tradeRef = db.collection("Users").document(userID).collection("Trades").document(trade.id)
 
         db.runTransaction({ transaction, errorPointer in
-            if !trade.envelopeId.isEmpty {
-                let envelopeRef = db.collection("Users").document(userID).collection("Envelopes").document(trade.envelopeId)
+            let tradeSnapshot: DocumentSnapshot
+            do {
+                tradeSnapshot = try transaction.getDocument(tradeRef)
+            } catch let error as NSError {
+                errorPointer?.pointee = error
+                return nil
+            }
+
+            guard tradeSnapshot.exists else {
+                errorPointer?.pointee = Self.error(code: 404, message: "Selected entry no longer exists.")
+                return nil
+            }
+
+            let storedEnvelopeId = tradeSnapshot.data()?["envelopeId"] as? String ?? ""
+            let storedValue = FirestoreValueParser.decimalValue(from: tradeSnapshot.data()?["value"])
+
+            if !storedEnvelopeId.isEmpty {
+                let envelopeRef = db.collection("Users").document(userID).collection("Envelopes").document(storedEnvelopeId)
                 let envelopeSnapshot: DocumentSnapshot
 
                 do {
@@ -43,8 +60,10 @@ class TradeListManager {
                     return nil
                 }
 
-                let envelopeBudget = FirestoreValueParser.floatValue(from: envelopeSnapshot.data()?["budget"])
-                transaction.updateData(["budget": envelopeBudget + trade.value], forDocument: envelopeRef)
+                if envelopeSnapshot.exists {
+                    let envelopeBudget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
+                    transaction.updateData(["budget": Money.firestoreNumber(envelopeBudget + storedValue)], forDocument: envelopeRef)
+                }
             }
 
             transaction.deleteDocument(tradeRef)
@@ -52,6 +71,7 @@ class TradeListManager {
         }, completion: { _, error in
             if let error {
                 print("Error removing trade: \(error.localizedDescription)")
+                completion?(error)
                 return
             }
 
@@ -62,6 +82,7 @@ class TradeListManager {
             }
             self.sortTradesNewestFirst()
             self.subject.send(self.lista)
+            completion?(nil)
         })
     }
 
@@ -71,18 +92,18 @@ class TradeListManager {
         return dateFormatter.string(from: date)
     }
 
-    func fetchTrades() {
+    func fetchTrades(completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("Cannot fetch trades without an authenticated user.")
+            completion?(Self.error(code: 401, message: "Cannot load entries without an authenticated user."))
             return
         }
 
         let ref = db.collection("Users").document(userID).collection("Trades").order(by: "date", descending: true)
 
         ref.getDocuments { snapshot, error in
-            guard error == nil else {
-                print(error!.localizedDescription)
+            if let error {
+                completion?(error)
                 return
             }
 
@@ -93,6 +114,7 @@ class TradeListManager {
             }
             self.sortTradesNewestFirst()
             self.subject.send(self.lista)
+            completion?(nil)
         }
     }
 
@@ -109,6 +131,19 @@ class TradeListManager {
         let tradeData = Self.makeTradeData(from: trade)
 
         db.runTransaction({ transaction, errorPointer in
+            let existingTrade: DocumentSnapshot
+            do {
+                existingTrade = try transaction.getDocument(tradeRef)
+            } catch let error as NSError {
+                errorPointer?.pointee = error
+                return nil
+            }
+
+            guard !existingTrade.exists else {
+                errorPointer?.pointee = Self.error(code: 409, message: "This entry was already saved.")
+                return nil
+            }
+
             if !trade.envelopeId.isEmpty {
                 let envelopeRef = db.collection("Users").document(userID).collection("Envelopes").document(trade.envelopeId)
                 let envelopeSnapshot: DocumentSnapshot
@@ -121,12 +156,12 @@ class TradeListManager {
                 }
 
                 guard envelopeSnapshot.exists else {
-                    errorPointer?.pointee = NSError(domain: "Keepi", code: 404, userInfo: [NSLocalizedDescriptionKey: "Selected envelope does not exist."])
+                    errorPointer?.pointee = Self.error(code: 404, message: "Selected envelope does not exist.")
                     return nil
                 }
 
-                let envelopeBudget = FirestoreValueParser.floatValue(from: envelopeSnapshot.data()?["budget"])
-                transaction.updateData(["budget": envelopeBudget - trade.value], forDocument: envelopeRef)
+                let envelopeBudget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
+                transaction.updateData(["budget": Money.firestoreNumber(envelopeBudget - trade.value)], forDocument: envelopeRef)
             }
 
             transaction.setData(tradeData, forDocument: tradeRef)
@@ -146,10 +181,10 @@ class TradeListManager {
         })
     }
 
-    func updateTrade(trade: TradeModel) {
+    func updateTrade(trade: TradeModel, completion: ((Error?) -> Void)? = nil) {
         let db = Firestore.firestore()
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("Cannot update trade without an authenticated user.")
+            completion?(Self.error(code: 401, message: "Cannot update an entry without an authenticated user."))
             return
         }
 
@@ -168,13 +203,13 @@ class TradeListManager {
             }
 
             guard tradeSnapshot.exists else {
-                errorPointer?.pointee = NSError(domain: "Keepi", code: 404, userInfo: [NSLocalizedDescriptionKey: "Trade does not exist."])
+                errorPointer?.pointee = Self.error(code: 404, message: "Entry does not exist.")
                 return nil
             }
 
             let oldEnvelopeId = tradeSnapshot.data()?["envelopeId"] as? String ?? ""
             let newEnvelopeId = trade.envelopeId
-            let oldValue = FirestoreValueParser.floatValue(from: tradeSnapshot.data()?["value"])
+            let oldValue = FirestoreValueParser.decimalValue(from: tradeSnapshot.data()?["value"])
 
             let oldEnvelopeRef = oldEnvelopeId.isEmpty ? nil : envelopesCollection.document(oldEnvelopeId)
             let newEnvelopeRef = newEnvelopeId.isEmpty ? nil : envelopesCollection.document(newEnvelopeId)
@@ -196,24 +231,24 @@ class TradeListManager {
             }
 
             if newEnvelopeRef != nil, newEnvelopeSnapshot?.exists != true {
-                errorPointer?.pointee = NSError(domain: "Keepi", code: 404, userInfo: [NSLocalizedDescriptionKey: "Selected envelope does not exist."])
+                errorPointer?.pointee = Self.error(code: 404, message: "Selected envelope does not exist.")
                 return nil
             }
 
             if oldEnvelopeId == newEnvelopeId {
                 if let envelopeRef = newEnvelopeRef, let envelopeSnapshot = newEnvelopeSnapshot {
-                    let budget = FirestoreValueParser.floatValue(from: envelopeSnapshot.data()?["budget"])
-                    transaction.updateData(["budget": budget + oldValue - trade.value], forDocument: envelopeRef)
+                    let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
+                    transaction.updateData(["budget": Money.firestoreNumber(budget + oldValue - trade.value)], forDocument: envelopeRef)
                 }
             } else {
                 if let envelopeRef = oldEnvelopeRef, let envelopeSnapshot = oldEnvelopeSnapshot {
-                    let budget = FirestoreValueParser.floatValue(from: envelopeSnapshot.data()?["budget"])
-                    transaction.updateData(["budget": budget + oldValue], forDocument: envelopeRef)
+                    let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
+                    transaction.updateData(["budget": Money.firestoreNumber(budget + oldValue)], forDocument: envelopeRef)
                 }
 
                 if let envelopeRef = newEnvelopeRef, let envelopeSnapshot = newEnvelopeSnapshot {
-                    let budget = FirestoreValueParser.floatValue(from: envelopeSnapshot.data()?["budget"])
-                    transaction.updateData(["budget": budget - trade.value], forDocument: envelopeRef)
+                    let budget = FirestoreValueParser.decimalValue(from: envelopeSnapshot.data()?["budget"])
+                    transaction.updateData(["budget": Money.firestoreNumber(budget - trade.value)], forDocument: envelopeRef)
                 }
             }
 
@@ -222,6 +257,7 @@ class TradeListManager {
         }, completion: { _, error in
             if let error {
                 print("Error updating trade: \(error.localizedDescription)")
+                completion?(error)
                 return
             }
 
@@ -230,6 +266,7 @@ class TradeListManager {
             }
             self.sortTradesNewestFirst()
             self.subject.send(self.lista)
+            completion?(nil)
         })
     }
 
@@ -243,7 +280,7 @@ class TradeListManager {
         let data = document.data()
         let id = data["id"] as? String ?? document.documentID
         let name = data["name"] as? String ?? ""
-        let value = FirestoreValueParser.floatValue(from: data["value"])
+        let value = FirestoreValueParser.decimalValue(from: data["value"])
         let envelopeId = data["envelopeId"] as? String ?? ""
         let feeling = data["feeling"] as? Int ?? 0
         let listTagNames = data["tags"] as? [String] ?? []
@@ -274,7 +311,7 @@ class TradeListManager {
         let listTagNames = trade.tag.map { $0.name }
         var data: [String: Any] = [
             "name": trade.name,
-            "value": trade.value,
+            "value": Money.firestoreNumber(trade.value),
             "id": trade.id,
             "tags": listTagNames,
             "envelopeId": trade.envelopeId,
@@ -293,21 +330,28 @@ class TradeListManager {
 
         return data
     }
+
+    private static func error(code: Int, message: String) -> NSError {
+        NSError(domain: "Keepi", code: code, userInfo: [NSLocalizedDescriptionKey: message])
+    }
 }
 
 enum FirestoreValueParser {
-    static func floatValue(from value: Any?) -> Float {
+    static func decimalValue(from value: Any?) -> Decimal {
         switch value {
-        case let value as Float:
-            return value
-        case let value as Double:
-            return Float(value)
+        case let value as Decimal:
+            return Money.rounded(value)
         case let value as Int:
-            return Float(value)
+            return Decimal(value)
         case let value as NSNumber:
-            return value.floatValue
+            return Money.rounded(value.decimalValue)
+        case let value as Double:
+            return Money.rounded(Decimal(value))
+        case let value as Float:
+            return Money.rounded(Decimal(Double(value)))
         case let value as String:
-            return Float(value.replacingOccurrences(of: ",", with: ".")) ?? 0
+            let normalized = value.replacingOccurrences(of: ",", with: ".")
+            return Decimal(string: normalized, locale: Locale(identifier: "en_US_POSIX")).map(Money.rounded) ?? 0
         default:
             return 0
         }

@@ -28,6 +28,8 @@ struct EditTradeView: View {
     @State private var showAlert = false
     @State private var showNewEnvelope = false
     @State private var alertMessage = "Enter a valid title and amount before continuing."
+    @State private var isSaving = false
+    @State private var showDeleteConfirmation = false
     @Binding var selectedIndex: Int
 
     init(showEditTrade: Binding<Bool>, index: Int, trade: Binding<TradeModel>, selectedIndex: Binding<Int>){
@@ -38,7 +40,7 @@ struct EditTradeView: View {
         self._selectedIndex = selectedIndex
         
         self.tradeTitle = self.trade.name
-        self.value = String(format: "%.2f", self.trade.value)
+        self.value = KeepiFormat.editableAmount(self.trade.value)
         self.selectedTags = self.trade.tag
         self.selectedFeeling = self.trade.feeling
         self.journalEntry = self.trade.journalEntry
@@ -46,16 +48,17 @@ struct EditTradeView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 40){
-            if(stepsIndicator == .firstStep){
-                FirstStep()
-                    
-            } else if (stepsIndicator == .secondStep ) {
-                SecondStep()
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 40) {
+                if stepsIndicator == .firstStep {
+                    FirstStep()
+                } else if stepsIndicator == .secondStep {
+                    SecondStep()
+                }
             }
-        
+            .padding(16)
         }
-        .padding(16)
+        .scrollDismissesKeyboard(.interactively)
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Entry incomplete"), message: Text(alertMessage), dismissButton: .default(Text("Got it!")))
         }
@@ -64,6 +67,14 @@ struct EditTradeView: View {
                 .environmentObject(interactor)
                 .presentationDetents([.fraction(0.9)])
                 .interactiveDismissDisabled()
+        }
+        .confirmationDialog("Delete this entry?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+            Button("Delete entry", role: .destructive) {
+                deleteTrade()
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("This cannot be undone, and its amount will be returned to the envelope.")
         }
  
     }
@@ -137,7 +148,7 @@ struct EditTradeView: View {
         }
         .onAppear{
             self.tradeTitle = self.trade.name
-            self.value = String(format: "%.2f", self.trade.value)
+            self.value = KeepiFormat.editableAmount(self.trade.value)
             self.selectedTags = self.trade.tag
             self.selectedFeeling = self.trade.feeling
             self.journalEntry = self.trade.journalEntry
@@ -227,21 +238,36 @@ struct EditTradeView: View {
     }
     
     func DeleteIcon() -> some View {
-        Image(systemName: "trash")
-            .font(.title)
-            .foregroundColor(.red)
-            .padding(16)
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(lineWidth: 2)
-                    .foregroundColor(.red)
-                    .frame(width: 60, height: 54)
-            
-            )
-            .onTapGesture {
-                interactor.removeTrade(indexItem: index)
-                showEditTrade.toggle()
+        Button {
+            showDeleteConfirmation = true
+        } label: {
+            Image(systemName: "trash")
+                .font(.title)
+                .foregroundColor(.red)
+                .frame(width: 60, height: 54)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(lineWidth: 2)
+                        .foregroundColor(.red)
+                )
+        }
+        .disabled(isSaving)
+    }
+
+    private func deleteTrade() {
+        guard !isSaving else { return }
+        isSaving = true
+        interactor.removeTrade(indexItem: index) { error in
+            DispatchQueue.main.async {
+                isSaving = false
+                if let error {
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                    return
+                }
+                showEditTrade = false
             }
+        }
     }
     
     func NoEnvelopeCard() -> some View {
@@ -379,6 +405,7 @@ struct EditTradeView: View {
     
     
     func saveTrade(){
+        guard !isSaving else { return }
         func date2string(date: Date) -> String {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyyMMddHHmmss"
@@ -412,10 +439,18 @@ struct EditTradeView: View {
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
         
-        interactor.updateTrade(trade: compra)
-        
-
-        showEditTrade.toggle()
+        isSaving = true
+        interactor.updateTrade(trade: compra) { error in
+            DispatchQueue.main.async {
+                isSaving = false
+                if let error {
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                    return
+                }
+                showEditTrade = false
+            }
+        }
     }
     
     func AddTradeButton() -> some View {
@@ -424,17 +459,22 @@ struct EditTradeView: View {
             
             Spacer()
             
-            Text("Save trade")
-                .font(.body)
-                .fontWeight(.bold)
+            Button(action: saveTrade) {
+                HStack(spacing: 8) {
+                    if isSaving {
+                        ProgressView()
+                            .tint(.white)
+                    }
+                    Text(isSaving ? "Saving..." : "Save trade")
+                        .font(.body)
+                        .fontWeight(.bold)
+                }
                 .foregroundColor(.white)
                 .frame(width: 150, height: 54)
                 .background(Color("darkGreenKeepi"))
                 .cornerRadius(16)
-                .onTapGesture {
-                    saveTrade()
-
-                }
+            }
+            .disabled(isSaving)
         }
         
     }

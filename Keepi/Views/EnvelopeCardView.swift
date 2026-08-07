@@ -10,7 +10,7 @@ import SwiftUI
 struct EnvelopeCardView: View {
     var icon: String
     var name: String
-    var budget: Float
+    var budget: Decimal
 
     private var statusText: String {
         if budget < 0 {

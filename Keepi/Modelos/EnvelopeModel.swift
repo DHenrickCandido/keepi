@@ -11,14 +11,14 @@ class EnvelopeModel: Identifiable, ObservableObject, Equatable, CustomStringConv
 //    let id = UUID()
     @Published var id: String
     @Published var name: String
-    @Published var budget: Float
+    @Published var budget: Decimal
     @Published var icon: String
     
     var description: String {
         return "id: \(id), name: \(name), budget: \(budget), icon: \(icon)"
     }
     
-    init(id: String, name: String, budget: Float, icon: String){
+    init(id: String, name: String, budget: Decimal, icon: String){
         self.id = id
         self.name = name
         self.budget = budget
@@ -31,4 +31,3 @@ class EnvelopeModel: Identifiable, ObservableObject, Equatable, CustomStringConv
         return lhs.id == rhs.id
     }
 }
-

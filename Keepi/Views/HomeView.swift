@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Firebase
+import FirebaseAuth
 
 struct HomeView: View {
     @StateObject var tradeModel: TradeModel

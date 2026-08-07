@@ -13,6 +13,9 @@ struct EditEnvelopeView: View {
     @State var envelopeBudget: String = ""
     @State private var originalEnvelopeId: String = ""
     @State private var selectedTheme = "Dark"
+    @State private var isSaving = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     let columns = [GridItem(), GridItem(), GridItem(), GridItem()]
     
@@ -124,7 +127,7 @@ struct EditEnvelopeView: View {
                 
                 Spacer()
                 
-                Text("Save envelope")
+                Text(isSaving ? "Saving..." : "Save envelope")
                     .font(.body)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
@@ -144,20 +147,34 @@ struct EditEnvelopeView: View {
             originalEnvelopeId = envelope.id
             iconSelected = envelope.icon
             envelopeName = envelope.name
-            envelopeBudget = String(format: "%.2f", envelope.budget)
+            envelopeBudget = KeepiFormat.editableAmount(envelope.budget)
+        }
+        .alert("Couldn't save envelope", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(alertMessage)
         }
     }
     
     func saveEnvelope() {
+        guard !isSaving else { return }
         guard let valueFloat = CRUDValidation.normalizedDecimal(envelopeBudget),
               !envelopeName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               !originalEnvelopeId.isEmpty else { return }
 
         let envelope = EnvelopeModel(id: originalEnvelopeId, name: envelopeName, budget: valueFloat, icon: iconSelected)
-        envelopeListManager.updateEnvelope(envelope: envelope)
-
-        // Fechar a modal
-        showNewEnvelope.toggle()
+        isSaving = true
+        envelopeListManager.updateEnvelope(envelope: envelope) { error in
+            DispatchQueue.main.async {
+                isSaving = false
+                if let error {
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                    return
+                }
+                showNewEnvelope = false
+            }
+        }
     }
 
 
