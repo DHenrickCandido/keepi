@@ -15,7 +15,7 @@ struct LoginView: View {
 
     var body: some View {
         if userIsLoggedIn {
-            HomeView(transactionModel: TransactionModel(id: "34", name: "Comida", value: 25, envelopeId: "envelope-1", feeling: 2, date: Date(), isPlanned: true, type: .expense, journalEntry: ""))
+            HomeView(transactionModel: TransactionModel(id: "34", name: "Comida", value: 25, envelopeId: "envelope-1", feeling: 2, date: Date(), spendingIntent: .planned, type: .expense, journalEntry: ""))
         } else {
             content
         }

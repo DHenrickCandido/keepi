@@ -13,6 +13,7 @@ import FirebaseFirestore
 class HomeInteractor: ObservableObject {
     private let transactionListManager: TransactionListManager
     let envelopeListManager: EnvelopeListManager
+    let rulesListManager: RulesListManager
     private let aggregationService: EntryAggregationService
 
     @Published var listTransactions: [TransactionModel] = []
@@ -20,13 +21,16 @@ class HomeInteractor: ObservableObject {
     // Review inbox is now managed by DraftManager
     
     @Published var listEnvelopes: [Envelope] = []
+    @Published var merchantRules: [MerchantEnvelopeRule] = []
+    @Published var categoryMappings: [ExternalCategoryMapping] = []
     @Published var errorMessage: String?
 
     private var cancellables: [AnyCancellable] = []
 
-    init(transactionListManager: TransactionListManager, envelopeListManager: EnvelopeListManager, aggregationService: EntryAggregationService = DefaultEntryAggregationService()) {
+    init(transactionListManager: TransactionListManager, envelopeListManager: EnvelopeListManager, rulesListManager: RulesListManager = RulesListManager(), aggregationService: EntryAggregationService = DefaultEntryAggregationService()) {
         self.transactionListManager = transactionListManager
         self.envelopeListManager = envelopeListManager
+        self.rulesListManager = rulesListManager
         self.aggregationService = aggregationService
 
         cancellables.append(contentsOf: [
@@ -44,6 +48,14 @@ class HomeInteractor: ObservableObject {
                 }
             }, receiveValue: { list in
                 self.listEnvelopes = list
+            }),
+            
+            rulesListManager.$merchantRules.sink(receiveValue: { rules in
+                self.merchantRules = rules
+            }),
+            
+            rulesListManager.$categoryMappings.sink(receiveValue: { mappings in
+                self.categoryMappings = mappings
             })
         ])
     }

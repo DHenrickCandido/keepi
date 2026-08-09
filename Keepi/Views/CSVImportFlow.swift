@@ -153,7 +153,7 @@ struct CSVColumnMappingView: View {
             let draft = ImportedEntryDraft(
                 id: UUID(),
                 originalTitle: title,
-                normalizedMerchant: nil,
+                normalizedMerchant: MerchantNormalizer.normalize(title),
                 amount: decimalAmount,
                 date: date,
                 originalCategory: category,

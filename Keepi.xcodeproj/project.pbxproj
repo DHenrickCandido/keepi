@@ -9,6 +9,19 @@
 /* Begin PBXBuildFile section */
 		5A3A48882A9F7A4F0094F751 /* TransactionCardComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A48872A9F7A4F0094F751 /* TransactionCardComponent.swift */; };
 		5A5BAF8F2A98EFAD00CBF7E3 /* TransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8E2A98EFAD00CBF7E3 /* TransactionModel.swift */; };
+		5AE47D382AA75B2900EE90F2 /* EmotionalAnalyticsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D372AA75B2900EE90F1 /* EmotionalAnalyticsEngine.swift */; };
+		5AE47D3A2AA75B2900EE90F4 /* EmotionalAnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D392AA75B2900EE90F3 /* EmotionalAnalyticsView.swift */; };
+		5AE47D302AA75B2900EE90EA /* WeeklyReflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D2F2AA75B2900EE90E9 /* WeeklyReflection.swift */; };
+		5AE47D322AA75B2900EE90EC /* ReflectionRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D312AA75B2900EE90EB /* ReflectionRule.swift */; };
+		5AE47D342AA75B2900EE90EE /* WeeklyReflectionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D332AA75B2900EE90ED /* WeeklyReflectionEngine.swift */; };
+		5AE47D362AA75B2900EE90F0 /* WeeklyReflectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D352AA75B2900EE90EF /* WeeklyReflectionView.swift */; };
+		5AE47D282AA75B2900EE90E2 /* MerchantEnvelopeRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D272AA75B2900EE90E1 /* MerchantEnvelopeRule.swift */; };
+		5AE47D2A2AA75B2900EE90E4 /* ExternalCategoryMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D292AA75B2900EE90E3 /* ExternalCategoryMapping.swift */; };
+		5AE47D2C2AA75B2900EE90E6 /* ImportMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D2B2AA75B2900EE90E5 /* ImportMetadata.swift */; };
+		5AE47D2E2AA75B2900EE90E8 /* RulesListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D2D2AA75B2900EE90E7 /* RulesListManager.swift */; };
+		5AE47D242AA75B2900EE90EA /* MerchantNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D232AA75B2900EE90E9 /* MerchantNormalizer.swift */; };
+		5AE47D262AA75B2900EE90EC /* SmartMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D252AA75B2900EE90EB /* SmartMatcher.swift */; };
+		5AE47D222AA75B2900EE90E9 /* SpendingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D212AA75B2900EE90E9 /* SpendingIntent.swift */; };
 		5A68A7A02AB0955B009637C8 /* EnvelopeFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */; };
 		5A8739EE2AA0C235008127A3 /* NewTradeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */; };
 		5A92C73C2A9CE1C200F9C29A /* ListaCompra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */; };
@@ -105,6 +118,19 @@
 /* Begin PBXFileReference section */
 		5A3A48872A9F7A4F0094F751 /* TransactionCardComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCardComponent.swift; sourceTree = "<group>"; };
 		5A5BAF8E2A98EFAD00CBF7E3 /* TransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionModel.swift; sourceTree = "<group>"; };
+		5AE47D372AA75B2900EE90F1 /* EmotionalAnalyticsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionalAnalyticsEngine.swift; sourceTree = "<group>"; };
+		5AE47D392AA75B2900EE90F3 /* EmotionalAnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionalAnalyticsView.swift; sourceTree = "<group>"; };
+		5AE47D2F2AA75B2900EE90E9 /* WeeklyReflection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReflection.swift; sourceTree = "<group>"; };
+		5AE47D312AA75B2900EE90EB /* ReflectionRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectionRule.swift; sourceTree = "<group>"; };
+		5AE47D332AA75B2900EE90ED /* WeeklyReflectionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReflectionEngine.swift; sourceTree = "<group>"; };
+		5AE47D352AA75B2900EE90EF /* WeeklyReflectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReflectionView.swift; sourceTree = "<group>"; };
+		5AE47D272AA75B2900EE90E1 /* MerchantEnvelopeRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantEnvelopeRule.swift; sourceTree = "<group>"; };
+		5AE47D292AA75B2900EE90E3 /* ExternalCategoryMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalCategoryMapping.swift; sourceTree = "<group>"; };
+		5AE47D2B2AA75B2900EE90E5 /* ImportMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportMetadata.swift; sourceTree = "<group>"; };
+		5AE47D2D2AA75B2900EE90E7 /* RulesListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesListManager.swift; sourceTree = "<group>"; };
+		5AE47D232AA75B2900EE90E9 /* MerchantNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantNormalizer.swift; sourceTree = "<group>"; };
+		5AE47D252AA75B2900EE90EB /* SmartMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartMatcher.swift; sourceTree = "<group>"; };
+		5AE47D212AA75B2900EE90E9 /* SpendingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpendingIntent.swift; sourceTree = "<group>"; };
 		5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeFilterView.swift; sourceTree = "<group>"; };
 		5A8739ED2AA0C235008127A3 /* NewTradeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTradeButton.swift; sourceTree = "<group>"; };
 		5A92C73B2A9CE1C200F9C29A /* ListaCompra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaCompra.swift; sourceTree = "<group>"; };
@@ -227,6 +253,11 @@
 			isa = PBXGroup;
 			children = (
 				5A5BAF8E2A98EFAD00CBF7E3 /* TransactionModel.swift */,
+				5AE47D2F2AA75B2900EE90E9 /* WeeklyReflection.swift */,
+				5AE47D272AA75B2900EE90E1 /* MerchantEnvelopeRule.swift */,
+				5AE47D292AA75B2900EE90E3 /* ExternalCategoryMapping.swift */,
+				5AE47D2B2AA75B2900EE90E5 /* ImportMetadata.swift */,
+				5AE47D212AA75B2900EE90E9 /* SpendingIntent.swift */,
 				5AE47BE12AA759ED00EE90D5 /* Envelope.swift */,
 				5AE47D012AA75B2900EE90E3 /* PremiumFeature.swift */,
 				5AE47D192AA75B2900EE90E5 /* ImportedEntryDraft.swift */,
@@ -239,6 +270,8 @@
 			children = (
 				8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
 				8B598DC12A9F7AD500FDA36D /* HomeView.swift */,
+				5AE47D392AA75B2900EE90F3 /* EmotionalAnalyticsView.swift */,
+				5AE47D352AA75B2900EE90EF /* WeeklyReflectionView.swift */,
 				5AE47D1F2AA75B2900EE90E8 /* ReviewInboxView.swift */,
 				8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */,
 				5AE47BF52AA75B2900EE90E2 /* EnvelopeDetailSheet.swift */,
@@ -262,6 +295,12 @@
 			isa = PBXGroup;
 			children = (
 				5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */,
+				5AE47D372AA75B2900EE90F1 /* EmotionalAnalyticsEngine.swift */,
+				5AE47D312AA75B2900EE90EB /* ReflectionRule.swift */,
+				5AE47D332AA75B2900EE90ED /* WeeklyReflectionEngine.swift */,
+				5AE47D2D2AA75B2900EE90E7 /* RulesListManager.swift */,
+				5AE47D232AA75B2900EE90E9 /* MerchantNormalizer.swift */,
+				5AE47D252AA75B2900EE90EB /* SmartMatcher.swift */,
 				5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */,
 				5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */,
 				5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */,
@@ -582,6 +621,19 @@
 				5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */,
 				8B91F80B2AA5A3A1005F5728 /* LoginView.swift in Sources */,
 				5A5BAF8F2A98EFAD00CBF7E3 /* TransactionModel.swift in Sources */,
+				5AE47D382AA75B2900EE90F2 /* EmotionalAnalyticsEngine.swift in Sources */,
+				5AE47D3A2AA75B2900EE90F4 /* EmotionalAnalyticsView.swift in Sources */,
+				5AE47D302AA75B2900EE90EA /* WeeklyReflection.swift in Sources */,
+				5AE47D322AA75B2900EE90EC /* ReflectionRule.swift in Sources */,
+				5AE47D342AA75B2900EE90EE /* WeeklyReflectionEngine.swift in Sources */,
+				5AE47D362AA75B2900EE90F0 /* WeeklyReflectionView.swift in Sources */,
+				5AE47D282AA75B2900EE90E2 /* MerchantEnvelopeRule.swift in Sources */,
+				5AE47D2A2AA75B2900EE90E4 /* ExternalCategoryMapping.swift in Sources */,
+				5AE47D2C2AA75B2900EE90E6 /* ImportMetadata.swift in Sources */,
+				5AE47D2E2AA75B2900EE90E8 /* RulesListManager.swift in Sources */,
+				5AE47D242AA75B2900EE90EA /* MerchantNormalizer.swift in Sources */,
+				5AE47D262AA75B2900EE90EC /* SmartMatcher.swift in Sources */,
+				5AE47D222AA75B2900EE90E9 /* SpendingIntent.swift in Sources */,
 				5A68A7A02AB0955B009637C8 /* EnvelopeFilterView.swift in Sources */,
 				5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */,
 			);

@@ -6,12 +6,7 @@ enum ImportReviewStatus: String, Codable {
     case skipped
 }
 
-enum SpendingIntent: String, Codable {
-    case needs
-    case wants
-    case savings
-    case unplanned
-}
+
 
 struct ImportedEntryDraft: Identifiable, Codable {
     let id: UUID

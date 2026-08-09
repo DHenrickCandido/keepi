@@ -57,8 +57,33 @@ struct ReportView: View {
             
             
             ScrollView{
-                MeaningfulPatternsView()
-                    .environmentObject(interactor)
+                VStack(spacing: 16) {
+                    MeaningfulPatternsView()
+                        .environmentObject(interactor)
+                    
+                    let analytics = EmotionalAnalyticsEngine.generateAnalytics(from: interactor.listTransactions, envelopes: interactor.listEnvelopes)
+                    
+                    NavigationLink(destination: EmotionalAnalyticsView(analytics: analytics)) {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("Emotional Insights")
+                                    .font(.headline)
+                                Text("Understand your spending feelings")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.gray)
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                        .padding(.horizontal, 16)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
             }
             .padding(.top, 154)
         }

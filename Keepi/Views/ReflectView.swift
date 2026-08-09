@@ -6,7 +6,7 @@ struct ReflectView: View {
     @State private var selectedPendingIndex = 0
     @State private var selectedFeeling = 2
     @State private var worthIt = true
-    @State private var isPlanned = false
+    @State private var spendingIntent: SpendingIntent? = nil
     @State private var journalEntry = ""
     @State private var isSaving = false
     @State private var showSaveError = false
@@ -226,12 +226,16 @@ struct ReflectView: View {
                 .fontWeight(.bold)
 
             HStack(spacing: 12) {
-                choiceButton(title: "Yes", isSelected: isPlanned) {
-                    isPlanned = true
+                choiceButton(title: "Planned", isSelected: spendingIntent == .planned) {
+                    spendingIntent = .planned
                 }
-
-                choiceButton(title: "No", isSelected: !isPlanned) {
-                    isPlanned = false
+                
+                choiceButton(title: "Impulsive", isSelected: spendingIntent == .impulsive) {
+                    spendingIntent = .impulsive
+                }
+                
+                choiceButton(title: "Not sure", isSelected: spendingIntent == .unsure) {
+                    spendingIntent = .unsure
                 }
             }
         }
@@ -246,7 +250,7 @@ struct ReflectView: View {
             HStack(spacing: 12) {
                 choiceButton(title: "Yes", isSelected: worthIt) {
                     worthIt = true
-            isPlanned = false
+            spendingIntent = nil
                 }
 
                 choiceButton(title: "No", isSelected: !worthIt) {
@@ -345,14 +349,14 @@ struct ReflectView: View {
         guard let entry = currentEntry else {
             selectedFeeling = 2
                         worthIt = true
-            isPlanned = false
+            spendingIntent = nil
             journalEntry = ""
             return
         }
 
         selectedFeeling = entry.feeling
                 worthIt = entry.worthIt ?? true
-        isPlanned = entry.isPlanned ?? false
+        spendingIntent = entry.spendingIntent
         journalEntry = entry.journalEntry.isEmpty ? entry.note : entry.journalEntry
     }
 
@@ -367,7 +371,7 @@ struct ReflectView: View {
             date: entry.date,
             reflectionCompleted: true,
             worthIt: worthIt,
-            isPlanned: isPlanned,
+            spendingIntent: spendingIntent,
             note: entry.note,
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )

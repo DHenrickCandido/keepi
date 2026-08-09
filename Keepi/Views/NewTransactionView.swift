@@ -19,7 +19,7 @@ struct NewTransactionView: View {
     @State var value: String = ""
     @State var selectedFeeling: Int = 2
     @State var transactionType: TransactionType = .expense
-    @State var isPlanned: Bool = false
+    @State var spendingIntent: SpendingIntent? = nil
     @State var todayDate: Date = Date()
     @State var stepsIndicator: steps = .firstStep
     @State var showAlert = false
@@ -178,28 +178,10 @@ struct NewTransactionView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                 
-                HStack(spacing: 12) {
-                    Button(action: { isPlanned = true }) {
-                        Text("Yes")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundColor(isPlanned ? .white : Color("darkGreenKeepi"))
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                            .background(isPlanned ? Color("darkGreenKeepi") : .white)
-                            .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
-                    }
-
-                    Button(action: { isPlanned = false }) {
-                        Text("No")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundColor(!isPlanned ? .white : Color("darkGreenKeepi"))
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                            .background(!isPlanned ? Color("darkGreenKeepi") : .white)
-                            .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
-                    }
+                HStack(spacing: 8) {
+                    intentButton(title: "Planned", value: .planned)
+                    intentButton(title: "Impulsive", value: .impulsive)
+                    intentButton(title: "Not sure", value: .unsure)
                 }
             }
             .padding(.bottom, 16)
@@ -404,7 +386,7 @@ struct NewTransactionView: View {
             envelopeId: envelopeId,
             feeling: selectedFeeling,
             date: todayDate,
-            isPlanned: isPlanned,
+            spendingIntent: spendingIntent,
             type: transactionType,
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
@@ -482,5 +464,19 @@ struct NewTransactionView: View {
         
     }
     
+    @ViewBuilder
+    private func intentButton(title: String, value: SpendingIntent) -> some View {
+        Button(action: { spendingIntent = value }) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.bold)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(spendingIntent == value ? Color("darkGreenKeepi") : Color.white)
+                .foregroundColor(spendingIntent == value ? .white : Color("darkGreenKeepi"))
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+        }
+    }
 }
 

@@ -74,13 +74,25 @@ struct ReviewCardView: View {
     @State private var intent: SpendingIntent?
     @State private var note: String
     
+    private let smartMatchId: String?
+    private let smartMatchReason: String?
+    
     init(draft: ImportedEntryDraft, interactor: HomeInteractor, onComplete: @escaping (ReviewAction) -> Void) {
         self.draft = draft
         self.interactor = interactor
         self.onComplete = onComplete
         
+        let matchResult = SmartMatcher.suggestEnvelope(
+            for: draft,
+            history: interactor.listTransactions,
+            merchantRules: interactor.merchantRules,
+            categoryMappings: interactor.categoryMappings
+        )
+        self.smartMatchId = matchResult?.envelopeID
+        self.smartMatchReason = matchResult?.reason
+        
         _title = State(initialValue: draft.originalTitle)
-        _selectedEnvelopeId = State(initialValue: draft.suggestedEnvelopeID ?? (interactor.listEnvelopes.first?.id ?? ""))
+        _selectedEnvelopeId = State(initialValue: draft.suggestedEnvelopeID ?? matchResult?.envelopeID ?? (interactor.listEnvelopes.first?.id ?? ""))
         _feeling = State(initialValue: 0)
         _intent = State(initialValue: draft.spendingIntent)
         _note = State(initialValue: draft.description ?? "")
@@ -107,19 +119,43 @@ struct ReviewCardView: View {
                 
                 // Envelope
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Envelope")
-                        .font(.headline)
-                    
-                    Picker("Envelope", selection: $selectedEnvelopeId) {
-                        ForEach(interactor.listEnvelopes) { env in
-                            Text(env.name).tag(env.id)
+                    if let smartMatchId = smartMatchId, draft.suggestedEnvelopeID == nil, selectedEnvelopeId == smartMatchId {
+                        Text("Suggested:")
+                            .font(.headline)
+                        if let reason = smartMatchReason {
+                            Text(reason)
+                                .font(.caption)
+                                .foregroundColor(.gray)
                         }
+                    } else {
+                        Text("Envelope")
+                            .font(.headline)
                     }
-                    .pickerStyle(.menu)
-                    .padding(8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(8)
+                    
+                    Menu {
+                        Picker("Envelope", selection: $selectedEnvelopeId) {
+                            ForEach(interactor.listEnvelopes) { env in
+                                Text(env.name).tag(env.id)
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            if let envName = interactor.listEnvelopes.first(where: { $0.id == selectedEnvelopeId })?.name {
+                                Text(envName)
+                            } else {
+                                Text("Select Envelope")
+                            }
+                            Spacer()
+                            Text("Change")
+                                .font(.footnote)
+                                .foregroundColor(.blue)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(8)
+                    }
+                    .foregroundColor(.primary)
                 }
                 
                 // Feeling
@@ -140,9 +176,9 @@ struct ReviewCardView: View {
                         .font(.headline)
                     
                     HStack {
-                        intentButton(title: "Planned", value: .needs)
-                        intentButton(title: "Impulsive", value: .unplanned)
-                        intentButton(title: "Not sure", value: .wants)
+                        intentButton(title: "Planned", value: .planned)
+                        intentButton(title: "Impulsive", value: .impulsive)
+                        intentButton(title: "Not sure", value: .unsure)
                     }
                 }
                 
@@ -184,11 +220,43 @@ struct ReviewCardView: View {
                             date: draft.date,
                             type: isExpense ? .expense : .income,
                             note: note,
-                            sourceFingerprint: draft.sourceFingerprint
+                            importMetadata: ImportMetadata(
+                                sourceType: "csv",
+                                sourceFingerprint: draft.sourceFingerprint,
+                                originalTitle: draft.originalTitle,
+                                importedAt: Date()
+                            )
                         )
                         
-                        if intent == .needs || intent == .wants { transaction.isPlanned = true }
-                        if intent == .unplanned { transaction.isPlanned = false }
+                        // Create/Update Merchant Rule
+                        let normalizedTitle = MerchantNormalizer.normalize(draft.originalTitle)
+                        if let existingRule = interactor.merchantRules.first(where: { $0.pattern == normalizedTitle && $0.matchType == .normalizedExact }) {
+                            var updatedRule = existingRule
+                            updatedRule.envelopeID = selectedEnvelopeId
+                            updatedRule.useCount += 1
+                            updatedRule.lastUsedAt = Date()
+                            interactor.rulesListManager.saveRule(updatedRule)
+                        } else {
+                            let newRule = MerchantEnvelopeRule(
+                                id: UUID().uuidString,
+                                pattern: normalizedTitle,
+                                matchType: .normalizedExact,
+                                envelopeID: selectedEnvelopeId,
+                                useCount: 1,
+                                lastUsedAt: Date()
+                            )
+                            interactor.rulesListManager.saveRule(newRule)
+                        }
+                        
+                        // Create Category Mapping if there was an original category
+                        if let category = draft.originalCategory {
+                            if !interactor.categoryMappings.contains(where: { $0.sourceCategory == category }) {
+                                let mapping = ExternalCategoryMapping(sourceCategory: category, envelopeID: selectedEnvelopeId)
+                                interactor.rulesListManager.saveMapping(mapping)
+                            }
+                        }
+                        
+                        transaction.spendingIntent = intent
                         if feeling == 0 { transaction.worthIt = true }
                         if feeling == 3 { transaction.worthIt = false }
                         

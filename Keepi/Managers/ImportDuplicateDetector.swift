@@ -26,7 +26,7 @@ class ImportDuplicateDetector {
         var existingFingerprints = Set<String>()
         
         for tx in existingTransactions {
-            if let fp = tx.sourceFingerprint {
+            if let fp = tx.importMetadata?.sourceFingerprint {
                 existingFingerprints.insert(fp)
             }
         }

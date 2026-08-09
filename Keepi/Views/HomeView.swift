@@ -143,6 +143,32 @@ struct HomeView: View {
                         .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
                     }
                     
+                    if let reflection = WeeklyReflectionEngine.generateReflection(
+                        for: interactor.listTransactions,
+                        unreviewedDraftsCount: draftManager.drafts.count,
+                        envelopes: interactor.listEnvelopes
+                    ) {
+                        NavigationLink(destination: WeeklyReflectionView(reflection: reflection)) {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text("Your week with money")
+                                        .font(.headline)
+                                    Text("See last week's reflection")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.gray)
+                            }
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(16)
+                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    
                     VStack {
                         //Inicio cabecalho trocas
                         HStack {

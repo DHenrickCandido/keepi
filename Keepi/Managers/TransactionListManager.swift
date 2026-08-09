@@ -160,17 +160,44 @@ class TransactionListManager {
         let envelopeId = data["envelopeId"] as? String ?? ""
         let feeling = data["feeling"] as? Int ?? 0
         
-        // Migration: Default to expense if missing
-        let typeString = data["type"] as? String ?? TransactionType.expense.rawValue
-        let type = TransactionType(rawValue: typeString) ?? .expense
-        
         let date = (data["date"] as? Timestamp)?.dateValue() ?? Date()
         let reflectionCompleted = data["reflectionCompleted"] as? Bool ?? true
         let worthIt = data["worthIt"] as? Bool
-        let isPlanned = data["isPlanned"] as? Bool
+        var finalSpendingIntent: SpendingIntent? = nil
+        if let intentRaw = data["spendingIntent"] as? String, let intent = SpendingIntent(rawValue: intentRaw) {
+            finalSpendingIntent = intent
+        } else if let isPlanned = data["isPlanned"] as? Bool {
+            finalSpendingIntent = isPlanned ? .planned : .impulsive
+        }
+        
+        let typeString = data["type"] as? String ?? "expense"
+        let type = TransactionType(rawValue: typeString) ?? .expense
         let note = data["note"] as? String ?? ""
         let journalEntry = data["journalEntry"] as? String ?? ""
-        let sourceFingerprint = data["sourceFingerprint"] as? String
+        // Handle ImportMetadata
+        var importMetadata: ImportMetadata? = nil
+        
+        if let metadataDict = data["importMetadata"] as? [String: Any],
+           let sourceType = metadataDict["sourceType"] as? String,
+           let sourceFingerprint = metadataDict["sourceFingerprint"] as? String,
+           let originalTitle = metadataDict["originalTitle"] as? String,
+           let importedAtTimestamp = metadataDict["importedAt"] as? Timestamp {
+            
+            importMetadata = ImportMetadata(
+                sourceType: sourceType,
+                sourceFingerprint: sourceFingerprint,
+                originalTitle: originalTitle,
+                importedAt: importedAtTimestamp.dateValue()
+            )
+        } else if let legacyFingerprint = data["sourceFingerprint"] as? String {
+            // Auto-migrate legacy fingerprint
+            importMetadata = ImportMetadata(
+                sourceType: "legacy",
+                sourceFingerprint: legacyFingerprint,
+                originalTitle: name,
+                importedAt: date
+            )
+        }
 
         guard !id.isEmpty else { return nil }
         return TransactionModel(
@@ -182,11 +209,11 @@ class TransactionListManager {
             date: date,
             reflectionCompleted: reflectionCompleted,
             worthIt: worthIt,
-            isPlanned: isPlanned,
+            spendingIntent: finalSpendingIntent,
             type: type,
             note: note,
             journalEntry: journalEntry,
-            sourceFingerprint: sourceFingerprint
+            importMetadata: importMetadata
         )
     }
 
@@ -204,20 +231,24 @@ class TransactionListManager {
             "journalEntry": transaction.journalEntry
         ]
         
-        if let sourceFingerprint = transaction.sourceFingerprint {
-            data["sourceFingerprint"] = sourceFingerprint
+        if let importMetadata = transaction.importMetadata {
+            data["importMetadata"] = [
+                "sourceType": importMetadata.sourceType,
+                "sourceFingerprint": importMetadata.sourceFingerprint,
+                "originalTitle": importMetadata.originalTitle,
+                "importedAt": importMetadata.importedAt
+            ]
         }
-
         if let worthIt = transaction.worthIt {
             data["worthIt"] = worthIt
         } else {
             data["worthIt"] = NSNull()
         }
         
-        if let isPlanned = transaction.isPlanned {
-            data["isPlanned"] = isPlanned
+        if let spendingIntent = transaction.spendingIntent {
+            data["spendingIntent"] = spendingIntent.rawValue
         } else {
-            data["isPlanned"] = NSNull()
+            data["spendingIntent"] = NSNull()
         }
 
         return data

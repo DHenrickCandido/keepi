@@ -65,7 +65,7 @@ private func generatePatterns(list: [TransactionModel]) -> [String] {
     var patterns: [String] = []
     
     // Pattern 1: Unplanned and regretted purchases
-    let unplanned = list.filter { $0.isPlanned == false }
+    let unplanned = list.filter { $0.spendingIntent == .impulsive }
     let unplannedReflected = unplanned.filter { $0.worthIt != nil }
     if !unplannedReflected.isEmpty {
         let regretted = unplannedReflected.filter { $0.worthIt == false }.count

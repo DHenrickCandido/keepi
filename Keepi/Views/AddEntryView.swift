@@ -8,7 +8,7 @@ struct AddEntryView: View {
     @State private var selectedEnvelope: Envelope?
     @State private var selectedFeeling = 2
     @State private var transactionType: TransactionType = .expense
-    @State private var isPlanned: Bool = false
+    @State private var spendingIntent: SpendingIntent? = nil
     @State private var journalEntry = ""
     @State private var selectedPresetTitle: String?
     @State private var step: AddEntryStep = .details
@@ -214,28 +214,10 @@ struct AddEntryView: View {
                     .font(.headline)
                     .fontWeight(.bold)
 
-                HStack(spacing: 12) {
-                    Button(action: { isPlanned = true }) {
-                        Text("Yes")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundColor(isPlanned ? .white : Color("darkGreenKeepi"))
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                            .background(isPlanned ? Color("darkGreenKeepi") : .white)
-                            .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
-                    }
-
-                    Button(action: { isPlanned = false }) {
-                        Text("No")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundColor(!isPlanned ? .white : Color("darkGreenKeepi"))
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                            .background(!isPlanned ? Color("darkGreenKeepi") : .white)
-                            .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
-                    }
+                HStack(spacing: 8) {
+                    intentButton(title: "Planned", value: .planned)
+                    intentButton(title: "Impulsive", value: .impulsive)
+                    intentButton(title: "Not sure", value: .unsure)
                 }
             }
 
@@ -475,7 +457,7 @@ struct AddEntryView: View {
         title = preset.title
         selectedPresetTitle = preset.title
         selectedEnvelope = matchingEnvelope(for: preset)
-        isPlanned = preset.isPlanned
+        spendingIntent = preset.spendingIntent
     }
 
     private func matchingEnvelope(for preset: EntryPreset) -> Envelope? {
@@ -523,7 +505,7 @@ struct AddEntryView: View {
             feeling: selectedFeeling,
             date: date,
             reflectionCompleted: reflectionCompleted,
-            isPlanned: isPlanned,
+            spendingIntent: spendingIntent,
             type: transactionType,
             journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
         )
@@ -549,7 +531,7 @@ struct AddEntryView: View {
         title = ""
         selectedEnvelope = nil
         selectedFeeling = 2
-        isPlanned = false
+        spendingIntent = nil
         transactionType = .expense
         journalEntry = ""
         selectedPresetTitle = nil
@@ -566,20 +548,37 @@ private struct EntryPreset: Identifiable {
     let title: String
     let systemImage: String
     let envelopeKeywords: [String]
-    let isPlanned: Bool
+    let spendingIntent: SpendingIntent?
 
     var id: String { title }
 
     static let defaults: [EntryPreset] = [
-        EntryPreset(title: "Coffee", systemImage: "cup.and.saucer.fill", envelopeKeywords: ["coffee", "food", "cafe", "meal"], isPlanned: false),
-        EntryPreset(title: "Lunch", systemImage: "fork.knife", envelopeKeywords: ["lunch", "food", "meal", "restaurant"], isPlanned: true),
-        EntryPreset(title: "Groceries", systemImage: "cart.fill", envelopeKeywords: ["groceries", "grocery", "market", "food"], isPlanned: true),
-        EntryPreset(title: "Delivery", systemImage: "takeoutbag.and.cup.and.straw.fill", envelopeKeywords: ["delivery", "ifood", "food", "restaurant"], isPlanned: false),
-        EntryPreset(title: "Transport", systemImage: "bus.fill", envelopeKeywords: ["transport", "transportation", "uber", "bus", "car"], isPlanned: true),
-        EntryPreset(title: "Bill", systemImage: "doc.text.fill", envelopeKeywords: ["bill", "bills", "home", "utilities"], isPlanned: true),
-        EntryPreset(title: "Gift", systemImage: "gift.fill", envelopeKeywords: ["gift", "gifts", "friends"], isPlanned: true),
-        EntryPreset(title: "Fun", systemImage: "sparkles", envelopeKeywords: ["fun", "entertainment", "leisure", "hobby"], isPlanned: false)
+        EntryPreset(title: "Coffee", systemImage: "cup.and.saucer.fill", envelopeKeywords: ["coffee", "food", "cafe", "meal"], spendingIntent: .impulsive),
+        EntryPreset(title: "Lunch", systemImage: "fork.knife", envelopeKeywords: ["lunch", "food", "meal", "restaurant"], spendingIntent: .planned),
+        EntryPreset(title: "Groceries", systemImage: "cart.fill", envelopeKeywords: ["groceries", "grocery", "market", "food"], spendingIntent: .planned),
+        EntryPreset(title: "Delivery", systemImage: "takeoutbag.and.cup.and.straw.fill", envelopeKeywords: ["delivery", "ifood", "food", "restaurant"], spendingIntent: .impulsive),
+        EntryPreset(title: "Transport", systemImage: "bus.fill", envelopeKeywords: ["transport", "transportation", "uber", "bus", "car"], spendingIntent: .planned),
+        EntryPreset(title: "Bill", systemImage: "doc.text.fill", envelopeKeywords: ["bill", "bills", "home", "utilities"], spendingIntent: .planned),
+        EntryPreset(title: "Gift", systemImage: "gift.fill", envelopeKeywords: ["gift", "gifts", "friends"], spendingIntent: .planned),
+        EntryPreset(title: "Fun", systemImage: "sparkles", envelopeKeywords: ["fun", "entertainment", "leisure", "hobby"], spendingIntent: .impulsive)
     ]
+}
+
+extension AddEntryView {
+    @ViewBuilder
+    private func intentButton(title: String, value: SpendingIntent) -> some View {
+        Button(action: { spendingIntent = value }) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.bold)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(spendingIntent == value ? Color("darkGreenKeepi") : Color.white)
+                .foregroundColor(spendingIntent == value ? .white : Color("darkGreenKeepi"))
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+        }
+    }
 }
 
 struct AddEntryView_Previews: PreviewProvider {
