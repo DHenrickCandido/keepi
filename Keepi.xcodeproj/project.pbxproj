@@ -18,6 +18,11 @@
 		5AE47D042AA75B2900EE90E4 /* PremiumAccessProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D032AA75B2900EE90E4 /* PremiumAccessProviding.swift */; };
 		5AE47D062AA75B2900EE90E5 /* StoreKitPremiumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D052AA75B2900EE90E5 /* StoreKitPremiumManager.swift */; };
 		5AE47D122AA75B2900EE90E1 /* CSVParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D112AA75B2900EE90E1 /* CSVParser.swift */; };
+		5AE47D162AA75B2900EE90E3 /* AmountParserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D152AA75B2900EE90E3 /* AmountParserService.swift */; };
+		5AE47D182AA75B2900EE90E4 /* DateParserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D172AA75B2900EE90E4 /* DateParserService.swift */; };
+		5AE47D1A2AA75B2900EE90E5 /* ImportedEntryDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D192AA75B2900EE90E5 /* ImportedEntryDraft.swift */; };
+		5AE47D1C2AA75B2900EE90E6 /* ImportDuplicateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D1B2AA75B2900EE90E6 /* ImportDuplicateDetector.swift */; };
+		5AE47D1E2AA75B2900EE90E7 /* DraftManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D1D2AA75B2900EE90E7 /* DraftManager.swift */; };
 		5AE47D142AA75B2900EE90E2 /* CSVImportFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D132AA75B2900EE90E2 /* CSVImportFlow.swift */; };
 		5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */; };
 		5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */; };
@@ -105,9 +110,14 @@
 		5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionListManager.swift; sourceTree = "<group>"; };
 		5AE47BE12AA759ED00EE90D5 /* Envelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Envelope.swift; sourceTree = "<group>"; };
 		5AE47D012AA75B2900EE90E3 /* PremiumFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumFeature.swift; sourceTree = "<group>"; };
+		5AE47D192AA75B2900EE90E5 /* ImportedEntryDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedEntryDraft.swift; sourceTree = "<group>"; };
 		5AE47D032AA75B2900EE90E4 /* PremiumAccessProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumAccessProviding.swift; sourceTree = "<group>"; };
 		5AE47D052AA75B2900EE90E5 /* StoreKitPremiumManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitPremiumManager.swift; sourceTree = "<group>"; };
 		5AE47D112AA75B2900EE90E1 /* CSVParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVParser.swift; sourceTree = "<group>"; };
+		5AE47D152AA75B2900EE90E3 /* AmountParserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountParserService.swift; sourceTree = "<group>"; };
+		5AE47D172AA75B2900EE90E4 /* DateParserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParserService.swift; sourceTree = "<group>"; };
+		5AE47D1B2AA75B2900EE90E6 /* ImportDuplicateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportDuplicateDetector.swift; sourceTree = "<group>"; };
+		5AE47D1D2AA75B2900EE90E7 /* DraftManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraftManager.swift; sourceTree = "<group>"; };
 		5AE47D132AA75B2900EE90E2 /* CSVImportFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keepi/Views/CSVImportFlow.swift; sourceTree = "<group>"; };
 		5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeListManager.swift; sourceTree = "<group>"; };
 		5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryAggregationService.swift; sourceTree = "<group>"; };
@@ -217,6 +227,7 @@
 				5A5BAF8E2A98EFAD00CBF7E3 /* TransactionModel.swift */,
 				5AE47BE12AA759ED00EE90D5 /* Envelope.swift */,
 				5AE47D012AA75B2900EE90E3 /* PremiumFeature.swift */,
+				5AE47D192AA75B2900EE90E5 /* ImportedEntryDraft.swift */,
 			);
 			path = Modelos;
 			sourceTree = "<group>";
@@ -255,6 +266,10 @@
 				5AE47D032AA75B2900EE90E4 /* PremiumAccessProviding.swift */,
 				5AE47D052AA75B2900EE90E5 /* StoreKitPremiumManager.swift */,
 				5AE47D112AA75B2900EE90E1 /* CSVParser.swift */,
+				5AE47D152AA75B2900EE90E3 /* AmountParserService.swift */,
+				5AE47D172AA75B2900EE90E4 /* DateParserService.swift */,
+				5AE47D1B2AA75B2900EE90E6 /* ImportDuplicateDetector.swift */,
+				5AE47D1D2AA75B2900EE90E7 /* DraftManager.swift */,
 				8B83EEDE2FE5D23A00A9F84E /* CRUDValidation.swift */,
 			);
 			path = Managers;
@@ -526,6 +541,11 @@
 				5AE47D042AA75B2900EE90E4 /* PremiumAccessProviding.swift in Sources */,
 				5AE47D062AA75B2900EE90E5 /* StoreKitPremiumManager.swift in Sources */,
 				5AE47D122AA75B2900EE90E1 /* CSVParser.swift in Sources */,
+				5AE47D162AA75B2900EE90E3 /* AmountParserService.swift in Sources */,
+				5AE47D182AA75B2900EE90E4 /* DateParserService.swift in Sources */,
+				5AE47D1A2AA75B2900EE90E5 /* ImportedEntryDraft.swift in Sources */,
+				5AE47D1C2AA75B2900EE90E6 /* ImportDuplicateDetector.swift in Sources */,
+				5AE47D1E2AA75B2900EE90E7 /* DraftManager.swift in Sources */,
 				5AE47D142AA75B2900EE90E2 /* CSVImportFlow.swift in Sources */,
 				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,

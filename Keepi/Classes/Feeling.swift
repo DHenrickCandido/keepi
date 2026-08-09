@@ -1,6 +1,6 @@
 import Foundation
 
-struct Feeling: Identifiable, Hashable {
+struct Feeling: Identifiable, Hashable, Codable {
     let id = UUID()
     let name: String
     let icon: String

@@ -7,14 +7,13 @@ struct CSVImportFlow: View {
     let fileURL: URL
     
     @State private var parsedData: [[String: String]] = []
-    @State private var mappedTransactions: [TransactionModel] = []
+    @State private var mappedDrafts: [ImportedEntryDraft] = []
     @State private var step: ImportStep = .parsing
     @State private var errorMessage: String?
     
     enum ImportStep {
         case parsing
         case mapping
-        case importing
     }
     
     var body: some View {
@@ -32,11 +31,10 @@ struct CSVImportFlow: View {
                     case .mapping:
                         CSVColumnMappingView(
                             parsedData: parsedData,
-                            onImport: importTransactions,
+                            interactor: interactor,
+                            onImport: importDrafts,
                             onCancel: { dismiss() }
                         )
-                    case .importing:
-                        ProgressView("Importing entries into Review Inbox...")
                     }
                 }
             }
@@ -77,34 +75,16 @@ struct CSVImportFlow: View {
     
 
     
-    private func importTransactions(transactions: [TransactionModel]) {
-        self.mappedTransactions = transactions
-        step = .importing
-        
-        // Save recursively to avoid overwhelming Firebase/Combine
-        var itemsToSave = transactions
-        
-        func saveNext() {
-            guard !itemsToSave.isEmpty else {
-                DispatchQueue.main.async {
-                    dismiss()
-                }
-                return
-            }
-            
-            let item = itemsToSave.removeFirst()
-            interactor.addTransaction(transaction: item) { _ in
-                saveNext()
-            }
-        }
-        
-        saveNext()
+    private func importDrafts(drafts: [ImportedEntryDraft]) {
+        DraftManager.shared.addDrafts(drafts)
+        dismiss()
     }
 }
 
 struct CSVColumnMappingView: View {
     let parsedData: [[String: String]]
-    let onImport: ([TransactionModel]) -> Void
+    let interactor: HomeInteractor
+    let onImport: ([ImportedEntryDraft]) -> Void
     let onCancel: () -> Void
     
     @State private var selectedDate = ""
@@ -112,9 +92,9 @@ struct CSVColumnMappingView: View {
     @State private var selectedAmount = ""
     @State private var selectedCategory = ""
     @State private var selectedDescription = ""
-    @State private var dateFormat = "dd/MM/yyyy"
-    
-    let dateFormats = ["dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd"]
+    @State private var negativeIsExpense = true
+    @State private var dateAmbiguity: DateFormatAmbiguity = .invalid
+    @State private var resolvedDateFormat: String = ""
     
     var headers: [String] {
         if let keys = parsedData.first?.keys {
@@ -123,13 +103,35 @@ struct CSVColumnMappingView: View {
         return []
     }
     
-    var mappedTransactions: [TransactionModel] {
-        guard !selectedDate.isEmpty, !selectedTitle.isEmpty, !selectedAmount.isEmpty else { return [] }
+    private func updateDateAmbiguity() {
+        guard !selectedDate.isEmpty else {
+            dateAmbiguity = .invalid
+            resolvedDateFormat = ""
+            return
+        }
+        let dateStrings = parsedData.compactMap { $0[selectedDate] }
+        let result = DateParserService.detectFormat(from: dateStrings)
+        dateAmbiguity = result
+        
+        switch result {
+        case .unambiguous(let format):
+            resolvedDateFormat = format
+        case .ambiguous(let options, _):
+            resolvedDateFormat = options.first ?? ""
+        case .invalid:
+            resolvedDateFormat = ""
+        }
+    }
+    
+    var mappedRows: [ProcessedImportRow] {
+        guard !selectedDate.isEmpty, !selectedTitle.isEmpty, !selectedAmount.isEmpty, !resolvedDateFormat.isEmpty else { return [] }
         
         let formatter = DateFormatter()
-        formatter.dateFormat = dateFormat
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = resolvedDateFormat
         
-        var transactions: [TransactionModel] = []
+        var generatedDrafts: [ImportedEntryDraft] = []
+        var totalRowsProcessed = 0
         
         for row in parsedData {
             guard let dateString = row[selectedDate],
@@ -137,29 +139,40 @@ struct CSVColumnMappingView: View {
                   let title = row[selectedTitle], !title.isEmpty,
                   let amountString = row[selectedAmount] else { continue }
             
-            let normalizedAmount = amountString.replacingOccurrences(of: ",", with: ".")
-                .replacingOccurrences(of: "[^0-9.-]", with: "", options: .regularExpression)
+            guard let amountValue = AmountParserService.parseAmount(amountString) else { continue }
             
-            guard let amount = Double(normalizedAmount) else { continue }
-            let decimalAmount = Decimal(abs(amount))
-            let type: TransactionType = amount < 0 ? .expense : .income
+            let isExpense = negativeIsExpense ? (amountValue < 0) : (amountValue > 0)
+            let type: TransactionType = isExpense ? .expense : .income
+            let decimalAmount = isExpense ? Decimal(abs(amountValue)) * -1 : Decimal(abs(amountValue))
             
             let category = selectedCategory.isEmpty ? "" : (row[selectedCategory] ?? "")
             let desc = selectedDescription.isEmpty ? "" : (row[selectedDescription] ?? "")
             
-            let model = TransactionModel(
-                id: TradeIdentity.make(),
-                name: title,
-                value: decimalAmount,
+            let fingerprint = ImportDuplicateDetector.generateFingerprint(date: date, amount: decimalAmount, title: title)
+            
+            let draft = ImportedEntryDraft(
+                id: UUID(),
+                originalTitle: title,
+                normalizedMerchant: nil,
+                amount: decimalAmount,
                 date: date,
-                type: type,
-                isReviewed: false,
-                note: category,
-                journalEntry: desc
+                originalCategory: category,
+                description: desc,
+                suggestedEnvelopeID: nil,
+                feeling: nil,
+                spendingIntent: nil,
+                reviewStatus: .pending,
+                sourceFingerprint: fingerprint
             )
-            transactions.append(model)
+            generatedDrafts.append(draft)
+            totalRowsProcessed += 1
         }
-        return transactions
+        
+        return ImportDuplicateDetector.filterDuplicates(
+            drafts: generatedDrafts,
+            existingTransactions: interactor.listTransactions,
+            existingDrafts: DraftManager.shared.drafts
+        )
     }
     
     var body: some View {
@@ -168,32 +181,71 @@ struct CSVColumnMappingView: View {
                 Section(header: Text("Map your columns").font(.headline)) {
                     mappingPicker(title: "Transaction title", selection: $selectedTitle)
                     mappingPicker(title: "Date", selection: $selectedDate)
-                    
-                    Picker("Date Format", selection: $dateFormat) {
-                        ForEach(dateFormats, id: \.self) { Text($0).tag($0) }
-                    }
-                    
                     mappingPicker(title: "Amount", selection: $selectedAmount)
                     mappingPicker(title: "Category", selection: $selectedCategory, optional: true)
                     mappingPicker(title: "Description", selection: $selectedDescription, optional: true)
                 }
                 
-                let previewItems = mappedTransactions
-                if !previewItems.isEmpty {
-                    Section(header: Text("Preview (\(previewItems.count) entries)")) {
-                        ForEach(previewItems.prefix(5)) { t in
+                Section(header: Text("How does this file represent expenses?")) {
+                    Picker("Expense Direction", selection: $negativeIsExpense) {
+                        Text("Negative values are expenses").tag(true)
+                        Text("Positive values are expenses").tag(false)
+                    }
+                    .pickerStyle(.inline)
+                    .labelsHidden()
+                }
+                
+                if case let .ambiguous(options, sample) = dateAmbiguity {
+                    Section(header: Text("Is \(sample) ...")) {
+                        Picker("Resolve Ambiguity", selection: $resolvedDateFormat) {
+                            ForEach(options, id: \.self) { format in
+                                Text(formattedSample(format: format, sample: sample)).tag(format)
+                            }
+                        }
+                        .pickerStyle(.inline)
+                        .labelsHidden()
+                    }
+                }
+                
+                let processedRows = mappedRows
+                let newDrafts = processedRows.filter { !$0.isDuplicate }.map { $0.draft }
+                let duplicatesCount = processedRows.filter { $0.isDuplicate }.count
+                let totalFound = processedRows.count
+                let invalidCount = parsedData.count - totalFound
+                
+                if totalFound > 0 {
+                    Section(header: Text("Preview")) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("\(totalFound) rows found")
+                                .font(.headline)
+                            
+                            HStack {
+                                Text("\(newDrafts.count) new")
+                                    .foregroundColor(.green)
+                                Spacer()
+                                Text("\(duplicatesCount) possible duplicates")
+                                    .foregroundColor(.orange)
+                                Spacer()
+                                Text("\(invalidCount) invalid")
+                                    .foregroundColor(.red)
+                            }
+                            .font(.caption)
+                        }
+                        .padding(.vertical, 4)
+                        
+                        ForEach(newDrafts.prefix(5)) { t in
                             HStack {
                                 VStack(alignment: .leading) {
-                                    Text(t.name).font(.headline)
+                                    Text(t.originalTitle).font(.headline)
                                     Text(t.date, style: .date).font(.caption).foregroundColor(.gray)
                                 }
                                 Spacer()
-                                Text(KeepiFormat.currency(t.value))
-                                    .foregroundColor(t.type == .expense ? .red : .green)
+                                Text(KeepiFormat.currency(t.amount))
+                                    .foregroundColor(t.amount < 0 ? .red : .green)
                             }
                         }
-                        if previewItems.count > 5 {
-                            Text("... and \(previewItems.count - 5) more")
+                        if newDrafts.count > 5 {
+                            Text("... and \(newDrafts.count - 5) more")
                                 .foregroundColor(.gray)
                                 .font(.caption)
                         }
@@ -201,16 +253,18 @@ struct CSVColumnMappingView: View {
                 }
             }
             
-            let previewItems = mappedTransactions
-            Button("Import \(previewItems.count) Entries") {
-                onImport(previewItems)
+            let processedRows = mappedRows
+            let newDrafts = processedRows.filter { !$0.isDuplicate }.map { $0.draft }
+            
+            Button("Import \(newDrafts.count) Entries") {
+                onImport(newDrafts)
             }
-            .disabled(previewItems.isEmpty)
+            .disabled(newDrafts.isEmpty)
             .font(.headline)
             .foregroundColor(.white)
             .padding()
             .frame(maxWidth: .infinity)
-            .background(previewItems.isEmpty ? Color.gray : Color("darkGreenKeepi"))
+            .background(newDrafts.isEmpty ? Color.gray : Color("darkGreenKeepi"))
             .cornerRadius(10)
             .padding()
         }
@@ -218,6 +272,10 @@ struct CSVColumnMappingView: View {
             if let first = headers.first { selectedDate = first }
             if headers.count > 1 { selectedTitle = headers[1] }
             if headers.count > 2 { selectedAmount = headers[2] }
+            updateDateAmbiguity()
+        }
+        .onChange(of: selectedDate) { _ in
+            updateDateAmbiguity()
         }
     }
     
@@ -248,5 +306,17 @@ struct CSVColumnMappingView: View {
             .cornerRadius(8)
         }
         .padding(.vertical, 4)
+    }
+    
+    private func formattedSample(format: String, sample: String) -> String {
+        let sampleFormatter = DateFormatter()
+        sampleFormatter.locale = Locale(identifier: "en_US_POSIX")
+        sampleFormatter.dateFormat = format
+        if let date = sampleFormatter.date(from: sample) {
+            let displayFormatter = DateFormatter()
+            displayFormatter.dateStyle = .long
+            return displayFormatter.string(from: date)
+        }
+        return format
     }
 }

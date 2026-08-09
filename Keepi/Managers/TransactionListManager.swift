@@ -170,7 +170,7 @@ class TransactionListManager {
         let isPlanned = data["isPlanned"] as? Bool
         let note = data["note"] as? String ?? ""
         let journalEntry = data["journalEntry"] as? String ?? ""
-        let isReviewed = data["isReviewed"] as? Bool ?? true
+        let sourceFingerprint = data["sourceFingerprint"] as? String
 
         guard !id.isEmpty else { return nil }
         return TransactionModel(
@@ -184,9 +184,9 @@ class TransactionListManager {
             worthIt: worthIt,
             isPlanned: isPlanned,
             type: type,
-            isReviewed: isReviewed,
             note: note,
-            journalEntry: journalEntry
+            journalEntry: journalEntry,
+            sourceFingerprint: sourceFingerprint
         )
     }
 
@@ -200,10 +200,13 @@ class TransactionListManager {
             "feeling": transaction.feeling,
             "reflectionCompleted": transaction.reflectionCompleted,
             "type": transaction.type.rawValue,
-            "isReviewed": transaction.isReviewed,
             "note": transaction.note,
             "journalEntry": transaction.journalEntry
         ]
+        
+        if let sourceFingerprint = transaction.sourceFingerprint {
+            data["sourceFingerprint"] = sourceFingerprint
+        }
 
         if let worthIt = transaction.worthIt {
             data["worthIt"] = worthIt
