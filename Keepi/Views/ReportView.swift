@@ -83,6 +83,29 @@ struct ReportView: View {
                         .padding(.horizontal, 16)
                     }
                     .buttonStyle(PlainButtonStyle())
+                    
+                    let intentAnalytics = IntentAnalyticsEngine.generateAnalytics(from: interactor.listTransactions, envelopes: interactor.listEnvelopes)
+                    
+                    NavigationLink(destination: IntentAnalyticsView(analytics: intentAnalytics)) {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("Intent Insights")
+                                    .font(.headline)
+                                Text("Planned vs impulsive spending")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.gray)
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                        .padding(.horizontal, 16)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .padding(.top, 154)

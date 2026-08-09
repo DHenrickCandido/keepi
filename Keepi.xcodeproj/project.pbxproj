@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		5A3A48882A9F7A4F0094F751 /* TransactionCardComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A48872A9F7A4F0094F751 /* TransactionCardComponent.swift */; };
 		5A5BAF8F2A98EFAD00CBF7E3 /* TransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8E2A98EFAD00CBF7E3 /* TransactionModel.swift */; };
+		5AE47D3C2AA75B2900EE90F6 /* IntentAnalyticsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D3B2AA75B2900EE90F5 /* IntentAnalyticsEngine.swift */; };
+		5AE47D3E2AA75B2900EE90F8 /* IntentAnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D3D2AA75B2900EE90F7 /* IntentAnalyticsView.swift */; };
 		5AE47D382AA75B2900EE90F2 /* EmotionalAnalyticsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D372AA75B2900EE90F1 /* EmotionalAnalyticsEngine.swift */; };
 		5AE47D3A2AA75B2900EE90F4 /* EmotionalAnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D392AA75B2900EE90F3 /* EmotionalAnalyticsView.swift */; };
 		5AE47D302AA75B2900EE90EA /* WeeklyReflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D2F2AA75B2900EE90E9 /* WeeklyReflection.swift */; };
@@ -118,6 +120,8 @@
 /* Begin PBXFileReference section */
 		5A3A48872A9F7A4F0094F751 /* TransactionCardComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCardComponent.swift; sourceTree = "<group>"; };
 		5A5BAF8E2A98EFAD00CBF7E3 /* TransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionModel.swift; sourceTree = "<group>"; };
+		5AE47D3B2AA75B2900EE90F5 /* IntentAnalyticsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentAnalyticsEngine.swift; sourceTree = "<group>"; };
+		5AE47D3D2AA75B2900EE90F7 /* IntentAnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentAnalyticsView.swift; sourceTree = "<group>"; };
 		5AE47D372AA75B2900EE90F1 /* EmotionalAnalyticsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionalAnalyticsEngine.swift; sourceTree = "<group>"; };
 		5AE47D392AA75B2900EE90F3 /* EmotionalAnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionalAnalyticsView.swift; sourceTree = "<group>"; };
 		5AE47D2F2AA75B2900EE90E9 /* WeeklyReflection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReflection.swift; sourceTree = "<group>"; };
@@ -270,6 +274,7 @@
 			children = (
 				8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
 				8B598DC12A9F7AD500FDA36D /* HomeView.swift */,
+				5AE47D3D2AA75B2900EE90F7 /* IntentAnalyticsView.swift */,
 				5AE47D392AA75B2900EE90F3 /* EmotionalAnalyticsView.swift */,
 				5AE47D352AA75B2900EE90EF /* WeeklyReflectionView.swift */,
 				5AE47D1F2AA75B2900EE90E8 /* ReviewInboxView.swift */,
@@ -295,6 +300,7 @@
 			isa = PBXGroup;
 			children = (
 				5A92C7402A9E2E7C00F9C29A /* TransactionListManager.swift */,
+				5AE47D3B2AA75B2900EE90F5 /* IntentAnalyticsEngine.swift */,
 				5AE47D372AA75B2900EE90F1 /* EmotionalAnalyticsEngine.swift */,
 				5AE47D312AA75B2900EE90EB /* ReflectionRule.swift */,
 				5AE47D332AA75B2900EE90ED /* WeeklyReflectionEngine.swift */,
@@ -621,6 +627,8 @@
 				5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */,
 				8B91F80B2AA5A3A1005F5728 /* LoginView.swift in Sources */,
 				5A5BAF8F2A98EFAD00CBF7E3 /* TransactionModel.swift in Sources */,
+				5AE47D3C2AA75B2900EE90F6 /* IntentAnalyticsEngine.swift in Sources */,
+				5AE47D3E2AA75B2900EE90F8 /* IntentAnalyticsView.swift in Sources */,
 				5AE47D382AA75B2900EE90F2 /* EmotionalAnalyticsEngine.swift in Sources */,
 				5AE47D3A2AA75B2900EE90F4 /* EmotionalAnalyticsView.swift in Sources */,
 				5AE47D302AA75B2900EE90EA /* WeeklyReflection.swift in Sources */,
