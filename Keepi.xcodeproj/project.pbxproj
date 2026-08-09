@@ -23,6 +23,7 @@
 		5AE47D1A2AA75B2900EE90E5 /* ImportedEntryDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D192AA75B2900EE90E5 /* ImportedEntryDraft.swift */; };
 		5AE47D1C2AA75B2900EE90E6 /* ImportDuplicateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D1B2AA75B2900EE90E6 /* ImportDuplicateDetector.swift */; };
 		5AE47D1E2AA75B2900EE90E7 /* DraftManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D1D2AA75B2900EE90E7 /* DraftManager.swift */; };
+		5AE47D202AA75B2900EE90E8 /* ReviewInboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D1F2AA75B2900EE90E8 /* ReviewInboxView.swift */; };
 		5AE47D142AA75B2900EE90E2 /* CSVImportFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D132AA75B2900EE90E2 /* CSVImportFlow.swift */; };
 		5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */; };
 		5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */; };
@@ -118,6 +119,7 @@
 		5AE47D172AA75B2900EE90E4 /* DateParserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParserService.swift; sourceTree = "<group>"; };
 		5AE47D1B2AA75B2900EE90E6 /* ImportDuplicateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportDuplicateDetector.swift; sourceTree = "<group>"; };
 		5AE47D1D2AA75B2900EE90E7 /* DraftManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraftManager.swift; sourceTree = "<group>"; };
+		5AE47D1F2AA75B2900EE90E8 /* ReviewInboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewInboxView.swift; sourceTree = "<group>"; };
 		5AE47D132AA75B2900EE90E2 /* CSVImportFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keepi/Views/CSVImportFlow.swift; sourceTree = "<group>"; };
 		5AE47BE32AA75B2900EE90D5 /* EnvelopeListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeListManager.swift; sourceTree = "<group>"; };
 		5AE47BF32AA75B2900EE90E1 /* EntryAggregationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryAggregationService.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 			children = (
 				8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
 				8B598DC12A9F7AD500FDA36D /* HomeView.swift */,
+				5AE47D1F2AA75B2900EE90E8 /* ReviewInboxView.swift */,
 				8B598DC32A9F7F4F00FDA36D /* EnvelopeCardView.swift */,
 				5AE47BF52AA75B2900EE90E2 /* EnvelopeDetailSheet.swift */,
 				A745E5552A9F7B8C00240832 /* NewTransactionView.swift */,
@@ -546,6 +549,7 @@
 				5AE47D1A2AA75B2900EE90E5 /* ImportedEntryDraft.swift in Sources */,
 				5AE47D1C2AA75B2900EE90E6 /* ImportDuplicateDetector.swift in Sources */,
 				5AE47D1E2AA75B2900EE90E7 /* DraftManager.swift in Sources */,
+				5AE47D202AA75B2900EE90E8 /* ReviewInboxView.swift in Sources */,
 				5AE47D142AA75B2900EE90E2 /* CSVImportFlow.swift in Sources */,
 				907FB3E62AA76124000754FA /* Onboarding4View.swift in Sources */,
 				8B598DC42A9F7F4F00FDA36D /* EnvelopeCardView.swift in Sources */,

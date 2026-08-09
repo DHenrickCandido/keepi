@@ -36,4 +36,9 @@ class DraftManager: ObservableObject {
         drafts = []
         saveDrafts()
     }
+    
+    func removeDraft(id: UUID) {
+        drafts.removeAll { $0.id == id }
+        saveDrafts()
+    }
 }

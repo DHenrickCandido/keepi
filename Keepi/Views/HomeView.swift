@@ -14,7 +14,10 @@ struct HomeView: View {
     
     @State private var showNewTransaction: Bool = false
     @State private var showEditTransaction: Bool = false
+    @State private var showReviewInbox: Bool = false
     @State var selectedTransaction: Int = 0
+    
+    @ObservedObject var draftManager = DraftManager.shared
     
     @State private var showNewEnvelope: Bool = false
     @State private var selectedEnvelope: Int = 0
@@ -114,6 +117,32 @@ struct HomeView: View {
                     .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
                     //Fim box envelope
                     
+                    if draftManager.drafts.count > 0 {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("\(draftManager.drafts.count) purchases")
+                                    .font(.headline)
+                                Text("waiting for reflection")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
+                            Spacer()
+                            Button("Review") {
+                                showReviewInbox = true
+                            }
+                            .font(.headline)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color("darkGreenKeepi"))
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                    }
+                    
                     VStack {
                         //Inicio cabecalho trocas
                         HStack {
@@ -198,6 +227,9 @@ struct HomeView: View {
                 NewTransactionView(showNewTrade: $showNewTransaction, interactor: interactor)
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
+            }
+            .fullScreenCover(isPresented: $showReviewInbox) {
+                ReviewInboxView(interactor: interactor)
             }
             .sheet(isPresented: $showEditTransaction){
                 if interactor.listTransactions.indices.contains(selectedTransaction) {
