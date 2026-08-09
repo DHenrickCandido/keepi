@@ -390,44 +390,8 @@ private struct InsightsTabView: View {
     @EnvironmentObject var interactor: HomeInteractor
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color("lightGrayKeepi")
-                    .ignoresSafeArea()
-
-                ScrollView(showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Insights")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(Color("blackKeepi"))
-
-                        // MeaningfulPatternsView expects non-empty spending totals, so show a stable empty state first.
-                        if interactor.listTransactions.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("No insights yet")
-                                    .font(.headline)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color("blackKeepi"))
-
-                                Text("Add a few entries and reflections to see spending, feeling, and motivation patterns.")
-                                    .font(.subheadline)
-                                    .foregroundColor(Color(.systemGray))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(16)
-                            .background(.white)
-                            .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
-                        } else {
-                            MeaningfulPatternsView()
-                        }
-                    }
-                    .padding(16)
-                }
-            }
-            .navigationBarHidden(true)
-        }
+        PremiumInsightsView()
+            .environmentObject(interactor)
     }
 }
 
@@ -448,6 +412,7 @@ struct SettingsView: View {
     @State private var showDeletionError = false
     @State private var showFileImporter = false
     @State private var selectedCSV: URL?
+    @State private var showPaywall = false
     
     @EnvironmentObject private var premiumManager: StoreKitPremiumManager
 
@@ -461,6 +426,8 @@ struct SettingsView: View {
                     Button {
                         if premiumManager.canUse(.csvImport) {
                             showFileImporter = true
+                        } else {
+                            showPaywall = true
                         }
                     } label: {
                         HStack {
@@ -543,6 +510,9 @@ struct SettingsView: View {
                     CSVImportFlow(fileURL: url)
                         .environmentObject(interactor)
                 }
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
         }
     }

@@ -11,10 +11,12 @@ import FirebaseAuth
 struct HomeView: View {
     @StateObject var transactionModel: TransactionModel
     @EnvironmentObject var interactor: HomeInteractor
+    @EnvironmentObject var premiumManager: StoreKitPremiumManager
     
     @State private var showNewTransaction: Bool = false
     @State private var showEditTransaction: Bool = false
     @State private var showReviewInbox: Bool = false
+    @State private var showPaywall: Bool = false
     @State var selectedTransaction: Int = 0
     
     @ObservedObject var draftManager = DraftManager.shared
@@ -119,16 +121,20 @@ struct HomeView: View {
                     
                     if draftManager.drafts.count > 0 {
                         HStack {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 4) {
                                 Text("\(draftManager.drafts.count) purchases")
                                     .font(.headline)
-                                Text("waiting for reflection")
+                                Text("need reflection")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
                             Spacer()
                             Button("Review") {
-                                showReviewInbox = true
+                                if premiumManager.canUse(.reviewInbox) {
+                                    showReviewInbox = true
+                                } else {
+                                    showPaywall = true
+                                }
                             }
                             .font(.headline)
                             .padding(.horizontal, 16)
@@ -148,25 +154,55 @@ struct HomeView: View {
                         unreviewedDraftsCount: draftManager.drafts.count,
                         envelopes: interactor.listEnvelopes
                     ) {
-                        NavigationLink(destination: WeeklyReflectionView(reflection: reflection)) {
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Your week with money")
-                                        .font(.headline)
-                                    Text("See last week's reflection")
-                                        .font(.subheadline)
+                        if premiumManager.canUse(.weeklyReflection) {
+                            NavigationLink(destination: WeeklyReflectionView(reflection: reflection)) {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Your weekly reflection is ready")
+                                            .font(.headline)
+                                            .foregroundColor(Color("blackKeepi"))
+                                        Text("See your week")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
                                         .foregroundColor(.gray)
                                 }
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.gray)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
                             }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                            .buttonStyle(PlainButtonStyle())
+                        } else {
+                            Button {
+                                showPaywall = true
+                            } label: {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Your weekly reflection is ready")
+                                            .font(.headline)
+                                            .foregroundColor(Color("blackKeepi"))
+                                        HStack(spacing: 4) {
+                                            Image(systemName: "lock.fill")
+                                                .font(.caption)
+                                            Text("Premium")
+                                        }
+                                        .font(.subheadline)
+                                        .foregroundColor(Color("darkGreenKeepi"))
+                                    }
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .foregroundColor(.gray)
+                                }
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
-                        .buttonStyle(PlainButtonStyle())
                     }
                     
                     VStack {
@@ -255,7 +291,7 @@ struct HomeView: View {
                     .interactiveDismissDisabled()
             }
             .fullScreenCover(isPresented: $showReviewInbox) {
-                ReviewInboxView(interactor: interactor)
+                ReviewInboxView()
             }
             .sheet(isPresented: $showEditTransaction){
                 if interactor.listTransactions.indices.contains(selectedTransaction) {
@@ -271,7 +307,9 @@ struct HomeView: View {
             .sheet(isPresented: $showNewEnvelope){
                 NewEnvelopeView(showNewEnvelope: $showNewEnvelope)
                     .presentationDetents([.fraction(0.9)])
-                    .interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $showPaywall){
+                PaywallView()
             }
             .onAppear(){
                 anonymous()

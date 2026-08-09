@@ -3,7 +3,8 @@ import SwiftUI
 struct ReviewInboxView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var draftManager = DraftManager.shared
-    @ObservedObject var interactor: HomeInteractor
+    @EnvironmentObject var interactor: HomeInteractor
+    @EnvironmentObject var premiumManager: StoreKitPremiumManager
     
     var body: some View {
         NavigationView {
@@ -11,7 +12,7 @@ struct ReviewInboxView: View {
                 Color("lightGrayKeepi").ignoresSafeArea()
                 
                 if let currentDraft = draftManager.drafts.first {
-                    ReviewCardView(draft: currentDraft, interactor: interactor) { action in
+                    ReviewCardView(draft: currentDraft, interactor: interactor, hasSmartMatchPremium: premiumManager.canUse(.smartCategorization)) { action in
                         switch action {
                         case .save(let finalizedModel):
                             interactor.addTransaction(transaction: finalizedModel)
@@ -77,22 +78,27 @@ struct ReviewCardView: View {
     private let smartMatchId: String?
     private let smartMatchReason: String?
     
-    init(draft: ImportedEntryDraft, interactor: HomeInteractor, onComplete: @escaping (ReviewAction) -> Void) {
+    init(draft: ImportedEntryDraft, interactor: HomeInteractor, hasSmartMatchPremium: Bool, onComplete: @escaping (ReviewAction) -> Void) {
         self.draft = draft
         self.interactor = interactor
         self.onComplete = onComplete
         
-        let matchResult = SmartMatcher.suggestEnvelope(
-            for: draft,
-            history: interactor.listTransactions,
-            merchantRules: interactor.merchantRules,
-            categoryMappings: interactor.categoryMappings
-        )
-        self.smartMatchId = matchResult?.envelopeID
-        self.smartMatchReason = matchResult?.reason
+        if hasSmartMatchPremium {
+            let matchResult = SmartMatcher.suggestEnvelope(
+                for: draft,
+                history: interactor.listTransactions,
+                merchantRules: interactor.merchantRules,
+                categoryMappings: interactor.categoryMappings
+            )
+            self.smartMatchId = matchResult?.envelopeID
+            self.smartMatchReason = matchResult?.reason
+        } else {
+            self.smartMatchId = nil
+            self.smartMatchReason = nil
+        }
         
         _title = State(initialValue: draft.originalTitle)
-        _selectedEnvelopeId = State(initialValue: draft.suggestedEnvelopeID ?? matchResult?.envelopeID ?? (interactor.listEnvelopes.first?.id ?? ""))
+        _selectedEnvelopeId = State(initialValue: draft.suggestedEnvelopeID ?? self.smartMatchId ?? (interactor.listEnvelopes.first?.id ?? ""))
         _feeling = State(initialValue: 0)
         _intent = State(initialValue: draft.spendingIntent)
         _note = State(initialValue: draft.description ?? "")

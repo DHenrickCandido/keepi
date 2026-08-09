@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5A3A48882A9F7A4F0094F751 /* TransactionCardComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3A48872A9F7A4F0094F751 /* TransactionCardComponent.swift */; };
 		5A5BAF8F2A98EFAD00CBF7E3 /* TransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5BAF8E2A98EFAD00CBF7E3 /* TransactionModel.swift */; };
+		5AE47D402AA75B2900EE90FA /* PremiumInsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D3F2AA75B2900EE90F9 /* PremiumInsightsView.swift */; };
 		5AE47D3C2AA75B2900EE90F6 /* IntentAnalyticsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D3B2AA75B2900EE90F5 /* IntentAnalyticsEngine.swift */; };
 		5AE47D3E2AA75B2900EE90F8 /* IntentAnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D3D2AA75B2900EE90F7 /* IntentAnalyticsView.swift */; };
 		5AE47D382AA75B2900EE90F2 /* EmotionalAnalyticsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47D372AA75B2900EE90F1 /* EmotionalAnalyticsEngine.swift */; };
@@ -47,7 +48,6 @@
 		5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */; };
 		5AE47BE92AA8A14600EE90D5 /* Icons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE47BE82AA8A14600EE90D5 /* Icons.swift */; };
 		8B49CB502AB1E0B100883808 /* HomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */; };
-		8B49CB522AB3ECD900883808 /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB512AB3ECD900883808 /* ReportView.swift */; };
 		8B49CB542AB3F1B900883808 /* MeaningfulPatternsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B49CB532AB3F1B900883808 /* MeaningfulPatternsView.swift */; };
 		8B4E8EE62A98D9F100D3A6F1 /* KeepiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */; };
 		8B4E8EE82A98D9F100D3A6F1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4E8EE72A98D9F100D3A6F1 /* ContentView.swift */; };
@@ -84,6 +84,7 @@
 		A745E5522A9E32CC00240832 /* Feeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5512A9E32CC00240832 /* Feeling.swift */; };
 		A745E5562A9F7B8C00240832 /* NewTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745E5552A9F7B8C00240832 /* NewTransactionView.swift */; };
 		A76AD9332AB0D6AA00F647CA /* EditEnvelopeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */; };
+		000000002000000000000011 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000002000000000000010 /* PaywallView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,6 +121,7 @@
 /* Begin PBXFileReference section */
 		5A3A48872A9F7A4F0094F751 /* TransactionCardComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCardComponent.swift; sourceTree = "<group>"; };
 		5A5BAF8E2A98EFAD00CBF7E3 /* TransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionModel.swift; sourceTree = "<group>"; };
+		5AE47D3F2AA75B2900EE90F9 /* PremiumInsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumInsightsView.swift; sourceTree = "<group>"; };
 		5AE47D3B2AA75B2900EE90F5 /* IntentAnalyticsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentAnalyticsEngine.swift; sourceTree = "<group>"; };
 		5AE47D3D2AA75B2900EE90F7 /* IntentAnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentAnalyticsView.swift; sourceTree = "<group>"; };
 		5AE47D372AA75B2900EE90F1 /* EmotionalAnalyticsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionalAnalyticsEngine.swift; sourceTree = "<group>"; };
@@ -158,7 +160,6 @@
 		5AE47BE52AA75BFA00EE90D5 /* ListaEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListaEnvelope.swift; sourceTree = "<group>"; };
 		5AE47BE82AA8A14600EE90D5 /* Icons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icons.swift; sourceTree = "<group>"; };
 		8B49CB4F2AB1E0B100883808 /* HomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeInteractor.swift; sourceTree = "<group>"; };
-		8B49CB512AB3ECD900883808 /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
 		8B49CB532AB3F1B900883808 /* MeaningfulPatternsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeaningfulPatternsView.swift; sourceTree = "<group>"; };
 		8B4E8EE22A98D9F100D3A6F1 /* Keepi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Keepi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B4E8EE52A98D9F100D3A6F1 /* KeepiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepiApp.swift; sourceTree = "<group>"; };
@@ -197,6 +198,7 @@
 		A745E5512A9E32CC00240832 /* Feeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feeling.swift; sourceTree = "<group>"; };
 		A745E5552A9F7B8C00240832 /* NewTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTransactionView.swift; sourceTree = "<group>"; };
 		A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEnvelopeView.swift; sourceTree = "<group>"; };
+		000000002000000000000010 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -272,8 +274,10 @@
 		5A92C73F2A9CE2D600F9C29A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
+						000000002000000000000010 /* PaywallView.swift */,
+8B598DC52A9F86CC00FDA36D /* NewEnvelopeButtonView.swift */,
 				8B598DC12A9F7AD500FDA36D /* HomeView.swift */,
+				5AE47D3F2AA75B2900EE90F9 /* PremiumInsightsView.swift */,
 				5AE47D3D2AA75B2900EE90F7 /* IntentAnalyticsView.swift */,
 				5AE47D392AA75B2900EE90F3 /* EmotionalAnalyticsView.swift */,
 				5AE47D352AA75B2900EE90EF /* WeeklyReflectionView.swift */,
@@ -286,7 +290,6 @@
 				A76AD9322AB0D6AA00F647CA /* EditEnvelopeView.swift */,
 				8B91F80A2AA5A3A1005F5728 /* LoginView.swift */,
 				5A68A79F2AB0955B009637C8 /* EnvelopeFilterView.swift */,
-				8B49CB512AB3ECD900883808 /* ReportView.swift */,
 				8B49CB532AB3F1B900883808 /* MeaningfulPatternsView.swift */,
 				8B83EEE22FE5D67500A9F84E /* MainTabView.swift */,
 				8B83EEE42FE5D7BC00A9F84E /* TodayView.swift */,
@@ -578,7 +581,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */,
+						000000002000000000000011 /* PaywallView.swift in Sources */,
+907FB3E02AA75BEB000754FA /* Onboarding2View.swift in Sources */,
 				8B83EEEC2FE60EE600A9F84E /* DailyWidgetDataStore.swift in Sources */,
 				5AE47BE42AA75B2900EE90D5 /* EnvelopeListManager.swift in Sources */,
 				5AE47BF42AA75B2900EE90E1 /* EntryAggregationService.swift in Sources */,
@@ -619,7 +623,6 @@
 				5A92C7412A9E2E7C00F9C29A /* TransactionListManager.swift in Sources */,
 				8B83EEE92FE5DD4300A9F84E /* ReflectView.swift in Sources */,
 				907FB3E42AA7605A000754FA /* Onboarding3View.swift in Sources */,
-				8B49CB522AB3ECD900883808 /* ReportView.swift in Sources */,
 				A76AD9332AB0D6AA00F647CA /* EditEnvelopeView.swift in Sources */,
 				8B598DC62A9F86CC00FDA36D /* NewEnvelopeButtonView.swift in Sources */,
 				8BB460302AA223BE00258E7F /* NewEnvelopeView.swift in Sources */,
@@ -627,6 +630,7 @@
 				5AE47BE62AA75BFA00EE90D5 /* ListaEnvelope.swift in Sources */,
 				8B91F80B2AA5A3A1005F5728 /* LoginView.swift in Sources */,
 				5A5BAF8F2A98EFAD00CBF7E3 /* TransactionModel.swift in Sources */,
+				5AE47D402AA75B2900EE90FA /* PremiumInsightsView.swift in Sources */,
 				5AE47D3C2AA75B2900EE90F6 /* IntentAnalyticsEngine.swift in Sources */,
 				5AE47D3E2AA75B2900EE90F8 /* IntentAnalyticsView.swift in Sources */,
 				5AE47D382AA75B2900EE90F2 /* EmotionalAnalyticsEngine.swift in Sources */,
