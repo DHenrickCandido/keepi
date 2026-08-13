@@ -10,7 +10,7 @@ class RulesListManager: ObservableObject {
     private var rulesListener: ListenerRegistration?
     private var mappingsListener: ListenerRegistration?
     
-    let userId: String
+    private(set) var userId: String
     
     init() {
         if let uid = Auth.auth().currentUser?.uid {
@@ -22,12 +22,20 @@ class RulesListManager: ObservableObject {
         }
     }
     
+    func refreshUserIdIfNeeded() {
+        guard userId.isEmpty, let uid = Auth.auth().currentUser?.uid else { return }
+        userId = uid
+        fetchRules()
+        fetchMappings()
+    }
+    
     deinit {
         rulesListener?.remove()
         mappingsListener?.remove()
     }
     
     func fetchRules() {
+        guard !userId.isEmpty else { return }
         rulesListener = db.collection("users").document(userId).collection("merchantRules")
             .addSnapshotListener { [weak self] querySnapshot, error in
                 guard let documents = querySnapshot?.documents else { return }
@@ -56,6 +64,7 @@ class RulesListManager: ObservableObject {
     }
     
     func fetchMappings() {
+        guard !userId.isEmpty else { return }
         mappingsListener = db.collection("users").document(userId).collection("categoryMappings")
             .addSnapshotListener { [weak self] querySnapshot, error in
                 guard let documents = querySnapshot?.documents else { return }
@@ -72,6 +81,15 @@ class RulesListManager: ObservableObject {
     }
     
     func saveRule(_ rule: MerchantEnvelopeRule) {
+        refreshUserIdIfNeeded()
+        guard !userId.isEmpty else {
+            print("[RulesListManager] Cannot save rule — no authenticated user.")
+            return
+        }
+        guard !rule.id.isEmpty else {
+            print("[RulesListManager] Cannot save rule — empty rule ID.")
+            return
+        }
         let data: [String: Any] = [
             "pattern": rule.pattern,
             "matchType": rule.matchType.rawValue,
@@ -83,6 +101,15 @@ class RulesListManager: ObservableObject {
     }
     
     func saveMapping(_ mapping: ExternalCategoryMapping) {
+        refreshUserIdIfNeeded()
+        guard !userId.isEmpty else {
+            print("[RulesListManager] Cannot save mapping — no authenticated user.")
+            return
+        }
+        guard !mapping.id.isEmpty else {
+            print("[RulesListManager] Cannot save mapping — empty mapping ID (sourceCategory is empty).")
+            return
+        }
         let data: [String: Any] = [
             "sourceCategory": mapping.sourceCategory,
             "envelopeID": mapping.envelopeID

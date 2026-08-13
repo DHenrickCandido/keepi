@@ -1,11 +1,41 @@
 import SwiftUI
 
+
+enum InsightsTimeFilter: String, CaseIterable {
+    case thisMonth = "This Month"
+    case lastMonth = "Last Month"
+    case thisYear = "This Year"
+    case allTime = "All Time"
+    
+    func isIncluded(_ date: Date) -> Bool {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        switch self {
+        case .thisMonth:
+            return calendar.isDate(date, equalTo: now, toGranularity: .month)
+        case .lastMonth:
+            guard let lastMonth = calendar.date(byAdding: .month, value: -1, to: now) else { return true }
+            return calendar.isDate(date, equalTo: lastMonth, toGranularity: .month)
+        case .thisYear:
+            return calendar.isDate(date, equalTo: now, toGranularity: .year)
+        case .allTime:
+            return true
+        }
+    }
+}
+
 struct PremiumInsightsView: View {
     @EnvironmentObject var interactor: HomeInteractor
     @ObservedObject var draftManager = DraftManager.shared
     
     @EnvironmentObject var premiumManager: StoreKitPremiumManager
     @State private var showPaywall = false
+    @State private var timeFilter: InsightsTimeFilter = .thisMonth
+    
+    private var filteredTransactions: [TransactionModel] {
+        interactor.listTransactions.filter { timeFilter.isIncluded($0.date) }
+    }
     
     var body: some View {
         NavigationView {
@@ -25,18 +55,28 @@ struct PremiumInsightsView: View {
                             
                             Spacer()
                             
-                            HStack(spacing: 4) {
-                                Text("This Month")
-                                    .font(.subheadline)
-                                    .fontWeight(.bold)
-                                Image(systemName: "chevron.down")
-                                    .font(.caption)
+                            Menu {
+                                ForEach(InsightsTimeFilter.allCases, id: \.self) { filter in
+                                    Button(filter.rawValue) {
+                                        timeFilter = filter
+                                    }
+                                }
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Text(timeFilter.rawValue)
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color("blackKeepi"))
+                                    Image(systemName: "chevron.down")
+                                        .font(.caption)
+                                        .foregroundColor(Color("blackKeepi"))
+                                }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(Color.white)
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.05), radius: 4, y: 2)
                             }
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(Color.white)
-                            .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.05), radius: 4, y: 2)
                         }
                         
                         if interactor.listTransactions.isEmpty {
@@ -48,7 +88,7 @@ struct PremiumInsightsView: View {
                                     .font(.headline)
                                     .foregroundColor(.gray)
                                 
-                                Text(KeepiFormat.currency(thisMonthSpending()))
+                                Text(KeepiFormat.currency(totalSpending()))
                                     .font(.system(size: 36, weight: .bold))
                                     .foregroundColor(Color("darkGreenKeepi"))
                             }
@@ -56,7 +96,7 @@ struct PremiumInsightsView: View {
                             Divider()
                             
                             // Planned vs Impulsive
-                            let intentAnalytics = IntentAnalyticsEngine.generateAnalytics(from: interactor.listTransactions, envelopes: interactor.listEnvelopes)
+                            let intentAnalytics = IntentAnalyticsEngine.generateAnalytics(from: filteredTransactions, envelopes: interactor.listEnvelopes)
                             if premiumManager.canUse(.spendingIntentAnalytics) {
                                 NavigationLink(destination: IntentAnalyticsView(analytics: intentAnalytics)) {
                                     insightCard(
@@ -80,7 +120,7 @@ struct PremiumInsightsView: View {
                             Divider()
                             
                             // How Spending Felt
-                            let emotionalAnalytics = EmotionalAnalyticsEngine.generateAnalytics(from: interactor.listTransactions, envelopes: interactor.listEnvelopes)
+                            let emotionalAnalytics = EmotionalAnalyticsEngine.generateAnalytics(from: filteredTransactions, envelopes: interactor.listEnvelopes)
                             if premiumManager.canUse(.emotionalAnalytics) {
                                 NavigationLink(destination: EmotionalAnalyticsView(analytics: emotionalAnalytics)) {
                                     insightCard(
@@ -105,7 +145,7 @@ struct PremiumInsightsView: View {
                             
                             // Envelope Patterns
                             VStack(alignment: .leading, spacing: 12) {
-                                MeaningfulPatternsView()
+                                MeaningfulPatternsView(transactions: filteredTransactions)
                             }
                             
                             Divider()
@@ -194,18 +234,8 @@ struct PremiumInsightsView: View {
         .shadow(color: Color.black.opacity(0.05), radius: 8, y: 4)
     }
     
-    private func thisMonthSpending() -> Decimal {
-        let calendar = Calendar.current
-        let now = Date()
-        let currentMonth = calendar.component(.month, from: now)
-        let currentYear = calendar.component(.year, from: now)
-        
-        let expenses = interactor.listTransactions.filter {
-            $0.type == .expense &&
-            calendar.component(.month, from: $0.date) == currentMonth &&
-            calendar.component(.year, from: $0.date) == currentYear
-        }
-        
+    private func totalSpending() -> Decimal {
+        let expenses = filteredTransactions.filter { $0.type == .expense }
         return expenses.reduce(Decimal(0)) { $0 + $1.value }
     }
 }

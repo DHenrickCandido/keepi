@@ -11,7 +11,7 @@ struct MainTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            TodayView()
+            TodayView(selectedTab: $selectedTab)
                 .tabItem {
                     Label("Today", systemImage: "sun.max.fill")
                 }
@@ -23,11 +23,7 @@ struct MainTabView: View {
                 }
                 .tag(MainTab.entries)
 
-            AddEntryView()
-                .tabItem {
-                    Label("Add", systemImage: "plus.circle.fill")
-                }
-                .tag(MainTab.add)
+
 
             ReflectView()
                 .tabItem {
@@ -99,7 +95,7 @@ struct MainTabView: View {
         guard url.scheme == "keepi" else { return }
 
         if url.host == "add" {
-            selectedTab = .add
+            selectedTab = .today
         }
     }
 
@@ -109,10 +105,9 @@ struct MainTabView: View {
     }
 }
 
-private enum MainTab {
+enum MainTab {
     case today
     case entries
-    case add
     case reflect
     case insights
 }
@@ -253,7 +248,22 @@ private struct EntriesTabView: View {
                 Button {
                     showNewEnvelope = true
                 } label: {
-                    NewEnvelopeButtonView()
+                    VStack(spacing: 8) {
+                        Image(systemName: "plus")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(Color("darkGreenKeepi"))
+                            .frame(width: 48, height: 48)
+                            .background(Color("lightGreenKeepi").opacity(0.3))
+                            .clipShape(Circle())
+                        
+                        Text("New")
+                            .font(.headline)
+                            .foregroundColor(Color("blackKeepi"))
+                    }
+                    .frame(width: 140, height: 160)
+                    .background(Color.white)
+                    .cornerRadius(16)
+                    .shadow(color: Color.black.opacity(0.05), radius: 8, y: 4)
                 }
             }
             .padding(.vertical, 4)

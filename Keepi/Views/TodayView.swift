@@ -7,6 +7,11 @@ struct TodayView: View {
     @State private var showEditTrade = false
     @State private var selectedTrade = 0
     @State private var showSettings = false
+    @State private var showPaywall = false
+    @Binding var selectedTab: MainTab
+
+    @EnvironmentObject var premiumManager: StoreKitPremiumManager
+    @ObservedObject var draftManager = DraftManager.shared
 
     private var todayEntries: [TransactionModel] {
         interactor.listTransactions
@@ -82,6 +87,8 @@ struct TodayView: View {
 
                     todaySummaryCard
 
+
+
                     VStack(spacing: 16) {
                         HStack {
                             Text("Today's entries")
@@ -112,6 +119,95 @@ struct TodayView: View {
 
                         ScrollView(showsIndicators: false) {
                             VStack(spacing: 16) {
+                                if draftManager.drafts.count > 0 {
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("\(draftManager.drafts.count) purchases")
+                                                .font(.headline)
+                                            Text("need reflection")
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                        }
+                                        Spacer()
+                                        Button("Review") {
+                                            if premiumManager.canUse(.reviewInbox) {
+                                                selectedTab = .reflect
+                                            } else {
+                                                showPaywall = true
+                                            }
+                                        }
+                                        .font(.headline)
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                        .background(Color("darkGreenKeepi"))
+                                        .foregroundColor(.white)
+                                        .cornerRadius(12)
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(16)
+                                    .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                                    .padding(.bottom, 8)
+                                }
+                                
+                                if let reflection = WeeklyReflectionEngine.generateReflection(
+                                    for: interactor.listTransactions,
+                                    unreviewedDraftsCount: draftManager.drafts.count,
+                                    envelopes: interactor.listEnvelopes
+                                ) {
+                                    if premiumManager.canUse(.weeklyReflection) {
+                                        NavigationLink(destination: WeeklyReflectionView(reflection: reflection)) {
+                                            HStack {
+                                                VStack(alignment: .leading, spacing: 4) {
+                                                    Text("Your weekly reflection is ready")
+                                                        .font(.headline)
+                                                        .foregroundColor(Color("blackKeepi"))
+                                                    Text("See your week")
+                                                        .font(.subheadline)
+                                                        .foregroundColor(.gray)
+                                                }
+                                                Spacer()
+                                                Image(systemName: "chevron.right")
+                                                    .foregroundColor(.gray)
+                                            }
+                                            .padding()
+                                            .background(Color.white)
+                                            .cornerRadius(16)
+                                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                        .padding(.bottom, 8)
+                                    } else {
+                                        Button {
+                                            showPaywall = true
+                                        } label: {
+                                            HStack {
+                                                VStack(alignment: .leading, spacing: 4) {
+                                                    Text("Your weekly reflection is ready")
+                                                        .font(.headline)
+                                                        .foregroundColor(Color("blackKeepi"))
+                                                    HStack(spacing: 4) {
+                                                        Image(systemName: "lock.fill")
+                                                            .font(.caption)
+                                                        Text("Premium")
+                                                    }
+                                                    .font(.subheadline)
+                                                    .foregroundColor(Color("darkGreenKeepi"))
+                                                }
+                                                Spacer()
+                                                Image(systemName: "chevron.right")
+                                                    .foregroundColor(.gray)
+                                            }
+                                            .padding()
+                                            .background(Color.white)
+                                            .cornerRadius(16)
+                                            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                        .padding(.bottom, 8)
+                                    }
+                                }
+
                                 if todayEntries.isEmpty {
                                     emptyTodayState
                                 } else {
@@ -150,6 +246,9 @@ struct TodayView: View {
             .sheet(isPresented: $showSettings) {
                 SettingsView()
                     .environmentObject(interactor)
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
         }
     }
@@ -296,7 +395,8 @@ struct TodayView: View {
 
 struct TodayView_Previews: PreviewProvider {
     static var previews: some View {
-        TodayView()
+        TodayView(selectedTab: .constant(.today))
             .environmentObject(HomeInteractor(transactionListManager: TransactionListManager(), envelopeListManager: EnvelopeListManager()))
+            .environmentObject(StoreKitPremiumManager())
     }
 }

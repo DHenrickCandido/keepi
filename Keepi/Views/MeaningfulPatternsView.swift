@@ -2,9 +2,10 @@ import SwiftUI
 
 struct MeaningfulPatternsView: View {
     @EnvironmentObject var interactor: HomeInteractor
+    let transactions: [TransactionModel]
 
     var body: some View {
-        let patterns = generatePatterns(list: interactor.listTransactions)
+        let patterns = generatePatterns(list: transactions)
 
         VStack(alignment: .leading, spacing: 18) {
             Text("Meaningful patterns")
@@ -12,7 +13,7 @@ struct MeaningfulPatternsView: View {
                 .fontWeight(.bold)
                 .foregroundColor(.black)
 
-            if interactor.listTransactions.isEmpty {
+            if transactions.isEmpty {
                 Text("Add entries to discover meaningful patterns about your spending.")
                     .font(.subheadline)
                     .foregroundColor(Color(.systemGray))
@@ -114,7 +115,7 @@ private func generatePatterns(list: [TransactionModel]) -> [String] {
 
 struct MeaningfulPatternsView_Previews: PreviewProvider {
     static var previews: some View {
-        MeaningfulPatternsView()
+        MeaningfulPatternsView(transactions: [])
             .environmentObject(HomeInteractor(transactionListManager: TransactionListManager(), envelopeListManager: EnvelopeListManager()))
     }
 }
