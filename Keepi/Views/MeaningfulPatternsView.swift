@@ -8,10 +8,23 @@ struct MeaningfulPatternsView: View {
         let patterns = generatePatterns(list: transactions)
 
         VStack(alignment: .leading, spacing: 18) {
-            Text("Meaningful patterns")
-                .font(.headline)
-                .fontWeight(.bold)
-                .foregroundColor(.black)
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("KEEPI NOTICED")
+                        .font(.caption2.bold())
+                        .tracking(1.3)
+                        .foregroundColor(Color("darkGreenKeepi"))
+                    Text("A pattern worth a pause")
+                        .font(.title2.bold())
+                        .foregroundColor(Color("blackKeepi"))
+                }
+                Spacer()
+                Image(systemName: "sparkles")
+                    .font(.headline)
+                    .foregroundColor(Color("darkGreenKeepi"))
+                    .frame(width: 40, height: 40)
+                    .background(.white.opacity(0.6), in: Circle())
+            }
 
             if transactions.isEmpty {
                 Text("Add entries to discover meaningful patterns about your spending.")
@@ -22,51 +35,61 @@ struct MeaningfulPatternsView: View {
                     .font(.subheadline)
                     .foregroundColor(Color(.systemGray))
             } else {
-                VStack(spacing: 12) {
-                    ForEach(patterns, id: \.self) { pattern in
+                VStack(spacing: 0) {
+                    ForEach(Array(patterns.enumerated()), id: \.element) { index, pattern in
                         insightRow(
                             title: pattern,
-                            systemImage: "sparkles"
+                            number: index + 1
                         )
+                        if index < patterns.count - 1 {
+                            Rectangle()
+                                .fill(Color("darkGreenKeepi").opacity(0.10))
+                                .frame(height: 1)
+                                .padding(.leading, 42)
+                        }
                     }
                 }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 16)
-        .padding(.horizontal, 16)
-        .background(Color(.white))
+        .padding(20)
+        .background(
+            LinearGradient(
+                colors: [Color("lightGreenKeepi").opacity(0.28), Color("lightGreenKeepi").opacity(0.10)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
         .foregroundColor(Color(.systemGray))
-        .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
     }
 
-    private func insightRow(title: String, systemImage: String) -> some View {
+    private func insightRow(title: String, number: Int) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: systemImage)
-                .font(.footnote)
+            Text("\(number)")
+                .font(.caption.bold())
                 .foregroundColor(Color("darkGreenKeepi"))
-                .frame(width: 26, height: 26)
-                .background(Color("lightGrayKeepi"))
+                .frame(width: 28, height: 28)
+                .background(.white.opacity(0.7))
                 .clipShape(Circle())
 
             Text(title)
-                .font(.footnote)
-                .fontWeight(.bold)
+                .font(.subheadline.weight(.semibold))
                 .foregroundColor(Color("blackKeepi"))
-                .lineLimit(2)
-                .minimumScaleFactor(0.8)
+                .fixedSize(horizontal: false, vertical: true)
 
             Spacer()
         }
+        .padding(.vertical, 12)
     }
 }
 
 private func generatePatterns(list: [TransactionModel]) -> [String] {
     var patterns: [String] = []
+    let expenses = list.filter { $0.type == .expense }
     
     // Pattern 1: Unplanned and regretted purchases
-    let unplanned = list.filter { $0.spendingIntent == .impulsive }
+    let unplanned = expenses.filter { $0.spendingIntent == .impulsive }
     let unplannedReflected = unplanned.filter { $0.worthIt != nil }
     if !unplannedReflected.isEmpty {
         let regretted = unplannedReflected.filter { $0.worthIt == false }.count
@@ -78,8 +101,8 @@ private func generatePatterns(list: [TransactionModel]) -> [String] {
     
     // Pattern 2: Feeling and spending
     var spendingByFeeling: [Int: Decimal] = [:]
-    for t in list {
-        spendingByFeeling[t.feeling, default: 0] += t.value
+    for t in expenses {
+        spendingByFeeling[t.feeling, default: 0] += t.spendingAmount
     }
     
     if let highestFeelingIndex = spendingByFeeling.max(by: { $0.value < $1.value })?.key {
@@ -89,7 +112,7 @@ private func generatePatterns(list: [TransactionModel]) -> [String] {
     }
     
     // Pattern 3: Most regretted feeling
-    let reflected = list.filter { $0.worthIt != nil }
+    let reflected = expenses.filter { $0.worthIt != nil }
     var regretsByFeeling: [Int: Int] = [:]
     for t in reflected where t.worthIt == false {
         regretsByFeeling[t.feeling, default: 0] += 1
@@ -101,7 +124,7 @@ private func generatePatterns(list: [TransactionModel]) -> [String] {
     }
     
     // Fallback if patterns is empty but we have some data
-    if patterns.isEmpty && !list.isEmpty {
+    if patterns.isEmpty && !expenses.isEmpty {
         let worthItCount = reflected.filter { $0.worthIt == true }.count
         if !reflected.isEmpty {
             let percentage = Int((Double(worthItCount) / Double(reflected.count)) * 100)

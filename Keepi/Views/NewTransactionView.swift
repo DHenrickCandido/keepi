@@ -69,11 +69,13 @@ struct NewTransactionView: View {
             ZStack {
                 
                 HStack {
-                    Image(systemName: "xmark")
-                        .fontWeight(.bold)
-                        .onTapGesture {
-                            showNewTrade.toggle()
-                        }
+                    Button {
+                        showNewTrade = false
+                    } label: {
+                        Image(systemName: "xmark")
+                            .fontWeight(.bold)
+                    }
+                    .accessibilityLabel("Close")
                     
                     Spacer()
                     
@@ -83,7 +85,7 @@ struct NewTransactionView: View {
                     
                 }
                 
-                Text("New trade")
+                Text("New entry")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
@@ -121,7 +123,7 @@ struct NewTransactionView: View {
             //Fim qual envelope?
         
             TradeField(
-                question: "What's your new trade?",
+                question: "What's this entry?",
                 textPlacer: "Ex. Tea, new shoes...",
                 item: $tradeTitle,
                 keyboardType: .default
@@ -151,11 +153,13 @@ struct NewTransactionView: View {
             ZStack {
                 
                 HStack {
-                    Image(systemName: "xmark")
-                        .fontWeight(.bold)
-                        .onTapGesture {
-                            showNewTrade.toggle()
-                        }
+                    Button {
+                        showNewTrade = false
+                    } label: {
+                        Image(systemName: "xmark")
+                            .fontWeight(.bold)
+                    }
+                    .accessibilityLabel("Close")
                     
                     Spacer()
                     
@@ -165,7 +169,7 @@ struct NewTransactionView: View {
                     
                 }
                 
-                Text("New trade")
+                Text("New entry")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
@@ -252,7 +256,8 @@ struct NewTransactionView: View {
             }
         }
         .padding(8)
-        .frame(width: 142, height: 130)
+        .frame(width: 142)
+        .frame(minHeight: 130)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .overlay(
@@ -297,7 +302,8 @@ struct NewTransactionView: View {
             }
         }
         .padding(8)
-        .frame(width: 142, height: 130)
+        .frame(width: 142)
+        .frame(minHeight: 130)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .overlay(
@@ -330,7 +336,8 @@ struct NewTransactionView: View {
             }
         }
         .padding(8)
-        .frame(width: 142, height: 130)
+        .frame(width: 142)
+        .frame(minHeight: 130)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .onTapGesture {
@@ -339,28 +346,51 @@ struct NewTransactionView: View {
     }
     
     func NextButton() -> some View {
-        HStack {
-            
-            Spacer()
-            
-            Text("Continue")
-                .font(.body)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-                .frame(width: 150, height: 54)
-                .background(Color("darkGreenKeepi"))
-                .cornerRadius(16)
-                .onTapGesture {
-                    guard CRUDValidation.normalizedDecimal(value) != nil,
-                          CRUDValidation.envelopeId(from: tradeTitle) != nil else {
-                        alertMessage = "Enter a valid title and amount before continuing."
-                        showAlert = true
-                        return
+        Group {
+            if transactionType == .expense {
+                HStack(spacing: 12) {
+                    Button("Save for later") {
+                        saveForLater()
                     }
+                    .font(.body)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("darkGreenKeepi"))
+                    .frame(maxWidth: .infinity, minHeight: 54)
+                    .background(Color("lightGrayKeepi"))
+                    .cornerRadius(16)
+                    .disabled(isSaving)
 
-                    stepsIndicator = .secondStep
+                    Button {
+                        guard validateRequiredFields() else { return }
+                        stepsIndicator = .secondStep
+                    } label: {
+                        Text("Continue")
+                            .font(.body)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, minHeight: 54)
+                            .background(Color("darkGreenKeepi"))
+                            .cornerRadius(16)
+                    }
+                    .disabled(isSaving)
                 }
-            
+            } else {
+                Button {
+                    saveNonExpense()
+                } label: {
+                    HStack(spacing: 8) {
+                        if isSaving { ProgressView().tint(.white) }
+                        Text(isSaving ? "Saving..." : "Save entry")
+                    }
+                    .font(.body)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity, minHeight: 54)
+                    .background(Color("darkGreenKeepi"))
+                    .cornerRadius(16)
+                }
+                .disabled(isSaving)
+            }
         }
     }
     
@@ -372,11 +402,7 @@ struct NewTransactionView: View {
     
     func saveTrade() {
         guard !isSaving else { return }
-        guard let valueFloat = CRUDValidation.normalizedDecimal(value),
-              CRUDValidation.envelopeId(from: tradeTitle) != nil else {
-            showAlert = true
-            return
-        }
+        guard validateRequiredFields(), let valueFloat = CRUDValidation.normalizedDecimal(value) else { return }
         let envelopeId = selectedEnvelope?.id ?? ""
         
         let compra = TransactionModel(
@@ -415,7 +441,7 @@ struct NewTransactionView: View {
                         ProgressView()
                             .tint(.white)
                     }
-                    Text(isSaving ? "Saving..." : "Save trade")
+                    Text(isSaving ? "Saving..." : "Save entry")
                         .font(.body)
                         .fontWeight(.bold)
                 }
@@ -426,6 +452,66 @@ struct NewTransactionView: View {
             }
             .disabled(isSaving)
         }
+    }
+
+    private func saveForLater() {
+        guard !isSaving, validateRequiredFields(), let valueFloat = CRUDValidation.normalizedDecimal(value) else { return }
+        let transaction = TransactionModel(
+            id: TradeIdentity.make(),
+            name: tradeTitle.trimmingCharacters(in: .whitespacesAndNewlines),
+            value: valueFloat,
+            envelopeId: selectedEnvelope?.id ?? "",
+            date: todayDate,
+            reflectionCompleted: false,
+            type: transactionType
+        )
+        isSaving = true
+        interactor.addTransaction(transaction: transaction) { error in
+            DispatchQueue.main.async {
+                isSaving = false
+                if let error {
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                } else {
+                    showNewTrade = false
+                }
+            }
+        }
+    }
+
+    private func saveNonExpense() {
+        guard !isSaving, transactionType != .expense, validateRequiredFields(), let valueFloat = CRUDValidation.normalizedDecimal(value) else { return }
+        let transaction = TransactionModel(
+            id: TradeIdentity.make(),
+            name: tradeTitle.trimmingCharacters(in: .whitespacesAndNewlines),
+            value: valueFloat,
+            envelopeId: selectedEnvelope?.id ?? "",
+            date: todayDate,
+            reflectionCompleted: true,
+            type: transactionType
+        )
+        isSaving = true
+        interactor.addTransaction(transaction: transaction) { error in
+            DispatchQueue.main.async {
+                isSaving = false
+                if let error {
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                } else {
+                    showNewTrade = false
+                }
+            }
+        }
+    }
+
+    private func validateRequiredFields() -> Bool {
+        guard CRUDValidation.normalizedDecimal(value) != nil,
+              CRUDValidation.envelopeId(from: tradeTitle) != nil else {
+            alertMessage = "Enter a valid title and amount before continuing."
+            showAlert = true
+            return false
+        }
+        return true
     }
     
     func EmotionOption(active: Bool, feeling: Feeling) -> some View {
@@ -479,4 +565,3 @@ struct NewTransactionView: View {
         }
     }
 }
-

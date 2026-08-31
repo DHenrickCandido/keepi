@@ -2,11 +2,8 @@ import SwiftUI
 
 struct WeeklyReflectionView: View {
     let reflection: WeeklyReflection
-    @Environment(\.dismiss) var dismiss
-    
     var body: some View {
-        NavigationView {
-            ScrollView {
+        ScrollView {
                 VStack(spacing: 24) {
                     
                     // Header Stats
@@ -92,15 +89,8 @@ struct WeeklyReflectionView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Your week with money")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        dismiss()
-                    }
-                }
-            }
-        }
+        .background(Color("lightGrayKeepi").ignoresSafeArea())
+        .navigationTitle("Your week with money")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

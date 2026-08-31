@@ -8,7 +8,9 @@ struct TodayView: View {
     @State private var selectedTrade = 0
     @State private var showSettings = false
     @State private var showPaywall = false
+    @AppStorage("didDismissCSVImportDiscovery") private var didDismissCSVImportDiscovery = false
     @Binding var selectedTab: MainTab
+    let addEntryRequest: UUID
 
     @EnvironmentObject var premiumManager: StoreKitPremiumManager
     @ObservedObject var draftManager = DraftManager.shared
@@ -20,7 +22,7 @@ struct TodayView: View {
     }
 
     private var totalSpentToday: Decimal {
-        todayEntries.reduce(0) { $0 + $1.value }
+        todayEntries.reduce(0) { $0 + $1.spendingAmount }
     }
 
 
@@ -97,6 +99,17 @@ struct TodayView: View {
 
                             Spacer()
 
+                            CSVImportLauncherButton {
+                                Image(systemName: "arrow.down.doc.fill")
+                                    .font(.headline)
+                                    .foregroundColor(Color("darkGreenKeepi"))
+                                    .frame(width: 44, height: 44)
+                                    .background(Color("lightGreenKeepi").opacity(0.28))
+                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Import statement")
+
                             Button {
                                 showNewTrade.toggle()
                             } label: {
@@ -119,6 +132,10 @@ struct TodayView: View {
 
                         ScrollView(showsIndicators: false) {
                             VStack(spacing: 16) {
+                                if interactor.listTransactions.count < 5 && !didDismissCSVImportDiscovery {
+                                    importDiscoveryCard
+                                }
+
                                 if draftManager.drafts.count > 0 {
                                     HStack {
                                         VStack(alignment: .leading, spacing: 4) {
@@ -250,6 +267,9 @@ struct TodayView: View {
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
             }
+            .onChange(of: addEntryRequest) { _ in
+                showNewTrade = true
+            }
         }
     }
 
@@ -302,7 +322,7 @@ struct TodayView: View {
                 .fontWeight(.bold)
                 .foregroundColor(Color("blackKeepi"))
 
-            Text("Add one now, then decide whether to reflect right away or later.")
+            Text("Add one now, then reflect right away or save it for later.")
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(.systemGray))
@@ -321,6 +341,70 @@ struct TodayView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 24)
+    }
+
+    private var importDiscoveryCard: some View {
+        HStack(alignment: .top, spacing: 8) {
+            CSVImportLauncherButton {
+                HStack(spacing: 16) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .fill(.white.opacity(0.72))
+                            .frame(width: 64, height: 64)
+
+                        Image(systemName: "doc.text.fill")
+                            .font(.system(size: 27, weight: .semibold))
+                            .foregroundColor(Color("darkGreenKeepi"))
+
+                        Image(systemName: "arrow.down.circle.fill")
+                            .font(.system(size: 18))
+                            .foregroundColor(Color("darkGreenKeepi"))
+                            .background(.white, in: Circle())
+                            .offset(x: 22, y: 22)
+                    }
+
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Bring your spending into Keepi")
+                            .font(.headline)
+                            .foregroundColor(Color("blackKeepi"))
+
+                        Text("Import a CSV statement, review it, then reflect at your own pace.")
+                            .font(.footnote)
+                            .foregroundColor(Color("blackKeepi").opacity(0.66))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Choose a CSV file from your bank or finance app")
+
+            Button {
+                withAnimation(.easeOut(duration: 0.2)) {
+                    didDismissCSVImportDiscovery = true
+                }
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.caption.bold())
+                    .foregroundColor(Color("blackKeepi").opacity(0.62))
+                    .frame(width: 32, height: 32)
+                    .background(.white.opacity(0.72), in: Circle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Dismiss import suggestion")
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color("lightGreenKeepi").opacity(0.36),
+                    Color("lightGreenKeepi").opacity(0.16)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
     }
 
     private func summaryMetric(title: String, value: String) -> some View {
@@ -359,6 +443,7 @@ struct TodayView: View {
                             date: entry.date,
                             name: entry.name,
                             value: entry.value,
+                            type: entry.type,
                             envelopeName: interactor.getEnvelopeNameById(id: entry.envelopeId),
                             feeling: entry.feeling,
                             journalEntry: entry.journalEntry
@@ -395,7 +480,7 @@ struct TodayView: View {
 
 struct TodayView_Previews: PreviewProvider {
     static var previews: some View {
-        TodayView(selectedTab: .constant(.today))
+        TodayView(selectedTab: .constant(.today), addEntryRequest: UUID())
             .environmentObject(HomeInteractor(transactionListManager: TransactionListManager(), envelopeListManager: EnvelopeListManager()))
             .environmentObject(StoreKitPremiumManager())
     }

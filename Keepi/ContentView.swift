@@ -8,15 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
-    @AppStorage("notFirstTime") var notFirstTime: Bool = false
+    @EnvironmentObject private var premiumManager: StoreKitPremiumManager
+    @AppStorage("notFirstTime") private var notFirstTime = false
+    @AppStorage("hasSeenOnboardingPaywall") private var hasSeenOnboardingPaywall = false
+    @State private var showOnboardingPaywall = false
 
     var body: some View {
-        if !notFirstTime {
-            OnboardingTabView(notFirstTime: $notFirstTime)
-        } else {
-            MainTabView()
-                .navigationBarBackButtonHidden(true)
-                .preferredColorScheme(.light)
+        Group {
+            if !notFirstTime {
+                OnboardingTabView(notFirstTime: $notFirstTime)
+            } else {
+                MainTabView()
+                    .navigationBarBackButtonHidden(true)
+                    .preferredColorScheme(.light)
+            }
+        }
+        .onChange(of: notFirstTime) { completedOnboarding in
+            guard completedOnboarding, !hasSeenOnboardingPaywall else { return }
+            hasSeenOnboardingPaywall = true
+
+            if !premiumManager.hasPremium {
+                showOnboardingPaywall = true
+            }
+        }
+        .fullScreenCover(isPresented: $showOnboardingPaywall) {
+            PaywallView()
         }
     }
 }
@@ -32,5 +48,6 @@ func loadIsFirstTime() -> Bool {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(StoreKitPremiumManager())
     }
 }

@@ -6,6 +6,7 @@ import Combine
 class StoreKitPremiumManager: ObservableObject, PremiumAccessProviding {
     @Published var hasPremium: Bool = false
     @Published var subscriptions: [Product] = []
+    @Published var productLoadError: String?
     
     private var updateListenerTask: Task<Void, Never>?
     private let productId = "premiumMonthly"
@@ -41,11 +42,15 @@ class StoreKitPremiumManager: ObservableObject, PremiumAccessProviding {
     }
     
     func fetchProducts() async {
+        productLoadError = nil
         do {
             let storeProducts = try await Product.products(for: [productId])
             self.subscriptions = storeProducts
+            if storeProducts.isEmpty {
+                productLoadError = "The subscription is currently unavailable."
+            }
         } catch {
-            print("Failed to fetch products: \(error)")
+            productLoadError = "Keepi couldn't load subscription options."
         }
     }
     
@@ -80,6 +85,12 @@ class StoreKitPremiumManager: ObservableObject, PremiumAccessProviding {
         @unknown default:
             return false
         }
+    }
+
+    func restorePurchases() async throws -> Bool {
+        try await AppStore.sync()
+        await updateCustomerProductStatus()
+        return hasPremium
     }
     
     private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {

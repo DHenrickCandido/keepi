@@ -4,6 +4,7 @@ struct TransactionCardComponent: View {
     var date: Date
     var name: String
     var value: Decimal
+    var type: TransactionType = .expense
     var envelopeName: String
     var feeling: Int
     var journalEntry: String = ""
@@ -59,10 +60,10 @@ struct TransactionCardComponent: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 HStack(spacing: 24) {
-                    Text(KeepiFormat.currency(value))
+                    Text(type == .income ? "+\(KeepiFormat.currency(value))" : KeepiFormat.currency(value))
                         .font(.footnote)
                         .fontWeight(.semibold)
-                        .foregroundColor(Color("darkGreenKeepi"))
+                        .foregroundColor(type == .income ? .green : Color("darkGreenKeepi"))
                         .frame(width: 96, alignment: .leading)
                     
                     HStack(spacing: 4) {
@@ -96,6 +97,7 @@ struct TransactionCardComponent: View {
         .foregroundColor(Color(.systemGray))
         .cornerRadius(16)
         .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+        .accessibilityValue("\(type.rawValue.capitalized), \(KeepiFormat.currency(value))")
     }
 }
 

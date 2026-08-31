@@ -66,7 +66,7 @@ struct Onboarding3View: View {
                 Image("envelopes")
                     .offset(y: -50)
                 
-                Text("Use the envelopes to define the budget for each type of transaction.")
+                Text("Use envelopes to create a thoughtful budget for each kind of entry.")
                     .font(.system(size: 24))
                     .bold()
                     .foregroundColor(.white)

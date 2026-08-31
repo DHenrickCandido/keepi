@@ -5,25 +5,25 @@ class WeeklyReflectionEngine {
     static func generateReflection(
         for entries: [TransactionModel],
         unreviewedDraftsCount: Int,
-        envelopes: [Envelope]
+        envelopes: [Envelope],
+        now: Date = Date(),
+        calendar baseCalendar: Calendar = .current
     ) -> WeeklyReflection? {
-        
-        let now = Date()
-        var calendar = Calendar.current
+
+        var calendar = baseCalendar
         calendar.firstWeekday = 1 // Sunday
         
         // Find previous completed week (Sunday to Saturday)
         guard let startOfThisWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)),
-              let startOfLastWeek = calendar.date(byAdding: .day, value: -7, to: startOfThisWeek),
-              let endOfLastWeek = calendar.date(byAdding: .day, value: 6, to: startOfLastWeek) else {
+              let startOfLastWeek = calendar.date(byAdding: .day, value: -7, to: startOfThisWeek) else {
             return nil
         }
         
-        let weekEntries = entries.filter { $0.date >= startOfLastWeek && $0.date <= endOfLastWeek && $0.type == .expense }
+        let weekEntries = entries.filter { $0.date >= startOfLastWeek && $0.date < startOfThisWeek && $0.type == .expense }
         
         guard !weekEntries.isEmpty else { return nil }
         
-        let totalSpent = weekEntries.reduce(Decimal(0)) { $0 + $1.value }
+        let totalSpent = weekEntries.reduce(Decimal(0)) { $0 + $1.spendingAmount }
         let transactionCount = weekEntries.count
         let reflectedCount = weekEntries.filter { $0.reflectionCompleted }.count
         
@@ -34,18 +34,18 @@ class WeeklyReflectionEngine {
         var merchantMap: [String: Decimal] = [:]
         
         for tx in weekEntries {
-            envelopeMap[tx.envelopeId, default: (0, 0)].amount += tx.value
+            envelopeMap[tx.envelopeId, default: (0, 0)].amount += tx.spendingAmount
             envelopeMap[tx.envelopeId, default: (0, 0)].count += 1
             
-            feelingMap[tx.feeling, default: (0, 0)].amount += tx.value
+            feelingMap[tx.feeling, default: (0, 0)].amount += tx.spendingAmount
             feelingMap[tx.feeling, default: (0, 0)].count += 1
             
             if let intent = tx.spendingIntent {
-                intentMap[intent, default: (0, 0)].amount += tx.value
+                intentMap[intent, default: (0, 0)].amount += tx.spendingAmount
                 intentMap[intent, default: (0, 0)].count += 1
             }
             
-            merchantMap[tx.name, default: 0] += tx.value
+            merchantMap[tx.name, default: 0] += tx.spendingAmount
         }
         
         let envelopeBreakdown = envelopeMap.map { key, value in
@@ -87,7 +87,7 @@ class WeeklyReflectionEngine {
         
         return WeeklyReflection(
             startDate: startOfLastWeek,
-            endDate: endOfLastWeek,
+            endDate: calendar.date(byAdding: .second, value: -1, to: startOfThisWeek) ?? startOfThisWeek,
             totalSpent: totalSpent,
             transactionCount: transactionCount,
             reflectedCount: reflectedCount,

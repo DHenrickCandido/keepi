@@ -41,7 +41,9 @@ struct DefaultEntryAggregationService: EntryAggregationService {
             return envelopeEntries.filter { calendar.isDate($0.date, inSameDayAs: date) }
         case .month(let date):
             guard let interval = calendar.dateInterval(of: .month, for: date) else { return [] }
-            return envelopeEntries.filter { interval.contains($0.date) }
+            return envelopeEntries.filter {
+                $0.date >= interval.start && $0.date < interval.end
+            }
         }
     }
     
@@ -51,6 +53,6 @@ struct DefaultEntryAggregationService: EntryAggregationService {
         period: EntryPeriod
     ) -> Decimal {
         return self.entries(from: entries, envelopeID: envelopeID, period: period)
-            .reduce(0) { $0 + $1.value }
+            .reduce(0) { $0 + $1.spendingAmount }
     }
 }

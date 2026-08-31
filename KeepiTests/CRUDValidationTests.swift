@@ -41,19 +41,19 @@ struct CRUDValidationTests {
     }
 
     @Test func cannotDeleteEnvelopeWithExistingTrades() {
-        let trade = TradeModel(id: "1", name: "Tea", value: 10, tag: [], envelopeId: "food")
+        let trade = TransactionModel(id: "1", name: "Tea", value: 10, envelopeId: "food")
         #expect(CRUDValidation.canDeleteEnvelope(envelopeId: "food", trades: [trade]) == false)
         #expect(CRUDValidation.canDeleteEnvelope(envelopeId: "travel", trades: [trade]) == true)
     }
 
     @Test func entriesWithoutEnvelopeDoNotBlockEnvelopeDeletion() {
-        let trade = TradeModel(id: "1", name: "Tea", value: 10, tag: [], envelopeId: "")
+        let trade = TransactionModel(id: "1", name: "Tea", value: 10, envelopeId: "")
         #expect(CRUDValidation.canDeleteEnvelope(envelopeId: "food", trades: [trade]) == true)
     }
 
     @Test func tradeDataPreservesEmptyEnvelopeId() {
-        let trade = TradeModel(id: "1", name: "Tea", value: 10, tag: [], envelopeId: "")
-        let data = TradeListManager.makeTradeData(from: trade)
+        let trade = TransactionModel(id: "1", name: "Tea", value: 10, envelopeId: "")
+        let data = TransactionListManager.makeTransactionData(from: trade)
         #expect(data["envelopeId"] as? String == "")
     }
 

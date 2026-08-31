@@ -23,7 +23,9 @@ class RulesListManager: ObservableObject {
     }
     
     func refreshUserIdIfNeeded() {
-        guard userId.isEmpty, let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = Auth.auth().currentUser?.uid, userId != uid else { return }
+        rulesListener?.remove()
+        mappingsListener?.remove()
         userId = uid
         fetchRules()
         fetchMappings()
@@ -36,7 +38,8 @@ class RulesListManager: ObservableObject {
     
     func fetchRules() {
         guard !userId.isEmpty else { return }
-        rulesListener = db.collection("users").document(userId).collection("merchantRules")
+        rulesListener?.remove()
+        rulesListener = db.collection("Users").document(userId).collection("merchantRules")
             .addSnapshotListener { [weak self] querySnapshot, error in
                 guard let documents = querySnapshot?.documents else { return }
                 
@@ -65,7 +68,8 @@ class RulesListManager: ObservableObject {
     
     func fetchMappings() {
         guard !userId.isEmpty else { return }
-        mappingsListener = db.collection("users").document(userId).collection("categoryMappings")
+        mappingsListener?.remove()
+        mappingsListener = db.collection("Users").document(userId).collection("categoryMappings")
             .addSnapshotListener { [weak self] querySnapshot, error in
                 guard let documents = querySnapshot?.documents else { return }
                 
@@ -97,7 +101,7 @@ class RulesListManager: ObservableObject {
             "useCount": rule.useCount,
             "lastUsedAt": rule.lastUsedAt
         ]
-        db.collection("users").document(userId).collection("merchantRules").document(rule.id).setData(data)
+        db.collection("Users").document(userId).collection("merchantRules").document(rule.id).setData(data)
     }
     
     func saveMapping(_ mapping: ExternalCategoryMapping) {
@@ -114,6 +118,11 @@ class RulesListManager: ObservableObject {
             "sourceCategory": mapping.sourceCategory,
             "envelopeID": mapping.envelopeID
         ]
-        db.collection("users").document(userId).collection("categoryMappings").document(mapping.id).setData(data)
+        db.collection("Users").document(userId).collection("categoryMappings").document(mapping.id).setData(data)
+    }
+
+    func clearLocalState() {
+        merchantRules = []
+        categoryMappings = []
     }
 }

@@ -66,7 +66,7 @@ struct UnreviewedCountRule: ReflectionRule {
     func evaluate(entries: [TransactionModel], context: ReflectionContext) -> ReflectionObservation? {
         guard unreviewedCount > 0 else { return nil }
         return ReflectionObservation(
-            text: "You have \(unreviewedCount) unreviewed imported transactions from this week.",
+            text: "You have \(unreviewedCount) unreviewed imported transactions.",
             highlight: "Unreviewed Imports"
         )
     }

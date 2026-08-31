@@ -54,7 +54,7 @@ struct Onboarding4View: View {
                     .offset(y: -50)
               
                     
-                    Text("Register and reflect on what motivated you to make a transaction.")
+                    Text("Reflect on what motivated each entry and notice your patterns.")
                         .font(.system(size: 24))
                         .bold()
                         .foregroundColor(.white)

@@ -6,10 +6,7 @@ final class MerchantMatchingTests: XCTestCase {
     func testMerchantNormalization() {
         XCTAssertEqual(MerchantNormalizer.normalize("UBER *TRIP 1234"), "uber trip")
         XCTAssertEqual(MerchantNormalizer.normalize("Uber Trip"), "uber trip")
-        XCTAssertEqual(MerchantNormalizer.normalize("UBER*TRIP"), "ubertrip") // Assuming it just lowercases and removes spaces, wait, the implementation might be different. Let's just assume basic lowercasing and trimming for now based on typical behavior.
-        
-        // The prompt says: "UBER*TRIP" might normalize toward: "uber trip". 
-        // We'll trust the actual implementation. But to write a robust test:
+        XCTAssertEqual(MerchantNormalizer.normalize("UBER*TRIP"), "uber trip")
         let normalized = MerchantNormalizer.normalize("  McDonald's  ")
         XCTAssertEqual(normalized, "mcdonald's")
     }
@@ -21,13 +18,17 @@ final class MerchantMatchingTests: XCTestCase {
         
         let draft = ImportedEntryDraft(
             id: UUID(),
-            date: Date(),
             originalTitle: "UBER *TRIP",
+            normalizedMerchant: "uber trip",
             amount: -15.0,
+            date: Date(),
             originalCategory: "Transport",
-            suggestedEnvelopeID: nil,
             description: nil,
-            spendingIntent: nil
+            suggestedEnvelopeID: nil,
+            feeling: nil,
+            spendingIntent: nil,
+            reviewStatus: .pending,
+            sourceFingerprint: "fingerprint"
         )
         
         // Exact rule
@@ -53,7 +54,7 @@ final class MerchantMatchingTests: XCTestCase {
         // Prefix rule
         let prefixRule = MerchantEnvelopeRule(
             id: UUID().uuidString,
-            pattern: "UBER",
+            pattern: "uber",
             matchType: .prefix,
             envelopeID: env3,
             useCount: 1,
@@ -61,23 +62,23 @@ final class MerchantMatchingTests: XCTestCase {
         )
         
         // If we have an exact rule, it should match env1
-        let match1 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [prefixRule, normalizedRule, exactRule], categoryMappings: [:])
+        let match1 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [prefixRule, normalizedRule, exactRule], categoryMappings: [])
         XCTAssertEqual(match1?.envelopeID, env1)
         
         // Without exact rule, it should match normalized (env2)
-        let match2 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [prefixRule, normalizedRule], categoryMappings: [:])
+        let match2 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [prefixRule, normalizedRule], categoryMappings: [])
         XCTAssertEqual(match2?.envelopeID, env2)
         
         // Without normalized rule, it should match prefix (env3)
-        let match3 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [prefixRule], categoryMappings: [:])
+        let match3 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [prefixRule], categoryMappings: [])
         XCTAssertEqual(match3?.envelopeID, env3)
         
         // Category fallback
-        let match4 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [], categoryMappings: ["Transport": "env4"])
+        let match4 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [], categoryMappings: [ExternalCategoryMapping(sourceCategory: "Transport", envelopeID: "env4")])
         XCTAssertEqual(match4?.envelopeID, "env4")
         
         // No match
-        let match5 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [], categoryMappings: [:])
+        let match5 = SmartMatcher.suggestEnvelope(for: draft, history: [], merchantRules: [], categoryMappings: [])
         XCTAssertNil(match5)
     }
 }

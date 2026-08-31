@@ -16,9 +16,24 @@ struct SmartMatcher {
         let originalTitle = draft.originalTitle
         let normalizedIncoming = MerchantNormalizer.normalize(originalTitle)
         
-        // 1. Exact learned merchant rule
+        // 1. Explicit learned rules
+        if let rule = merchantRules.first(where: { $0.matchType == .exact && $0.pattern.caseInsensitiveCompare(originalTitle) == .orderedSame }) {
+            return SmartMatchResult(envelopeID: rule.envelopeID, reason: "\(originalTitle) is being suggested because you explicitly classified it that way before.")
+        }
+
         if let rule = merchantRules.first(where: { $0.pattern == normalizedIncoming && $0.matchType == .normalizedExact }) {
             return SmartMatchResult(envelopeID: rule.envelopeID, reason: "\(originalTitle) is being suggested because you explicitly classified it that way before.")
+        }
+
+        if let rule = merchantRules.first(where: {
+            let pattern = MerchantNormalizer.normalize($0.pattern)
+            switch $0.matchType {
+            case .prefix: return normalizedIncoming.hasPrefix(pattern)
+            case .contains: return normalizedIncoming.contains(pattern)
+            default: return false
+            }
+        }) {
+            return SmartMatchResult(envelopeID: rule.envelopeID, reason: "\(originalTitle) is being suggested because it matches a categorization rule.")
         }
         
         // 2. Exact normalized merchant match in history

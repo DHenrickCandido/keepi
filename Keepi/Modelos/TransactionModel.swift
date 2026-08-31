@@ -31,6 +31,11 @@ class TransactionModel: Identifiable, ObservableObject, CustomStringConvertible 
     var description: String {
         return "id: \(id), name: \(name), value: \(value), envelopeId: \(envelopeId)"
     }
+
+    var spendingAmount: Decimal {
+        guard type == .expense else { return 0 }
+        return value < 0 ? -value : value
+    }
     
     init(
         id: String,

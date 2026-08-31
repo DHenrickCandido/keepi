@@ -8,10 +8,12 @@ struct MainTabView: View {
         envelopeListManager: EnvelopeListManager()
     )
     @State private var selectedTab: MainTab = .today
+    @State private var addEntryRequest = UUID()
+    @ObservedObject private var draftManager = DraftManager.shared
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            TodayView(selectedTab: $selectedTab)
+            TodayView(selectedTab: $selectedTab, addEntryRequest: addEntryRequest)
                 .tabItem {
                     Label("Today", systemImage: "sun.max.fill")
                 }
@@ -29,6 +31,7 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Reflect", systemImage: "sparkles")
                 }
+                .badge(draftManager.drafts.count)
                 .tag(MainTab.reflect)
 
             InsightsTabView()
@@ -96,6 +99,7 @@ struct MainTabView: View {
 
         if url.host == "add" {
             selectedTab = .today
+            addEntryRequest = UUID()
         }
     }
 
@@ -120,6 +124,7 @@ private struct EntriesTabView: View {
     @State private var searchText = ""
     @State private var selectedFilter: EntryFilter = .all
     @State private var showNewEnvelope = false
+    @State private var showNewEntry = false
     @State private var selectedEnvelopeId: String? = nil
 
     private var filteredEntries: [TransactionModel] {
@@ -160,6 +165,8 @@ private struct EntriesTabView: View {
                         .fontWeight(.bold)
                         .foregroundColor(Color("blackKeepi"))
 
+                    entryActions
+
                     envelopesSection
 
                     searchField
@@ -180,6 +187,7 @@ private struct EntriesTabView: View {
                                             date: entry.date,
                                             name: entry.name,
                                             value: entry.value,
+                                            type: entry.type,
                                             envelopeName: interactor.getEnvelopeNameById(id: entry.envelopeId),
                                             feeling: entry.feeling,
                                             journalEntry: entry.journalEntry,
@@ -224,6 +232,45 @@ private struct EntriesTabView: View {
                     .presentationDetents([.fraction(0.9)])
                     .interactiveDismissDisabled()
             }
+            .sheet(isPresented: $showNewEntry) {
+                NewTransactionView(showNewTrade: $showNewEntry, interactor: interactor)
+                    .presentationDetents([.fraction(0.9)])
+                    .interactiveDismissDisabled()
+            }
+        }
+    }
+
+    private var entryActions: some View {
+        HStack(spacing: 10) {
+            CSVImportLauncherButton {
+                HStack(spacing: 8) {
+                    Image(systemName: "arrow.down.doc.fill")
+                    Text("Import statement")
+                        .lineLimit(1)
+                }
+                .font(.subheadline.bold())
+                .foregroundColor(Color("darkGreenKeepi"))
+                .frame(maxWidth: .infinity, minHeight: 48)
+                .background(Color("lightGreenKeepi").opacity(0.24))
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                showNewEntry = true
+            } label: {
+                HStack(spacing: 7) {
+                    Image(systemName: "plus")
+                    Text("New entry")
+                        .lineLimit(1)
+                }
+                .font(.subheadline.bold())
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity, minHeight: 48)
+                .background(Color("darkGreenKeepi"))
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+            .buttonStyle(.plain)
         }
     }
 
@@ -244,7 +291,7 @@ private struct EntriesTabView: View {
                     }
                     .buttonStyle(.plain)
                 }
-                
+
                 Button {
                     showNewEnvelope = true
                 } label: {
@@ -255,12 +302,13 @@ private struct EntriesTabView: View {
                             .frame(width: 48, height: 48)
                             .background(Color("lightGreenKeepi").opacity(0.3))
                             .clipShape(Circle())
-                        
+
                         Text("New")
                             .font(.headline)
                             .foregroundColor(Color("blackKeepi"))
                     }
-                    .frame(width: 140, height: 160)
+                    .frame(width: 140)
+                    .frame(minHeight: 170)
                     .background(Color.white)
                     .cornerRadius(16)
                     .shadow(color: Color.black.opacity(0.05), radius: 8, y: 4)
@@ -282,7 +330,7 @@ private struct EntriesTabView: View {
                 .fontWeight(.bold)
                 .foregroundColor(Color("blackKeepi"))
 
-            Text("Use the Add tab to record your first purchase, transaction, or money moment.")
+            Text("Add one entry or import a statement to bring in several purchases at once.")
                 .font(.subheadline)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color(.systemGray))
@@ -420,77 +468,159 @@ struct SettingsView: View {
     @State private var isDeleting = false
     @State private var deletionError = ""
     @State private var showDeletionError = false
-    @State private var showFileImporter = false
-    @State private var selectedCSV: URL?
-    @State private var showPaywall = false
-    
+
     @EnvironmentObject private var premiumManager: StoreKitPremiumManager
 
-    private let privacyPolicyURL = URL(string: "https://github.com/DHenrickCandido/keepi/blob/main/PRIVACY.md")!
+    private let privacyPolicyURL = URL(string: "https://github.com/mashiruwu/keepi/blob/main/PRIVACY.md")!
     private let supportURL = URL(string: "mailto:candidohdiego@gmail.com?subject=Keepi%20Support")!
 
     var body: some View {
         NavigationView {
-            Form {
-                Section("Premium Features") {
-                    Button {
-                        if premiumManager.canUse(.csvImport) {
-                            showFileImporter = true
-                        } else {
-                            showPaywall = true
-                        }
-                    } label: {
+            ZStack {
+                Color("lightGrayKeepi").ignoresSafeArea()
+
+                VStack(spacing: 0) {
+                    HStack {
+                        Spacer()
+                        Text("Settings")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("blackKeepi"))
+                        Spacer()
+                    }
+                    .overlay(
                         HStack {
-                            Label("Import CSV", systemImage: "arrow.down.doc")
                             Spacer()
-                            if !premiumManager.canUse(.csvImport) {
-                                Image(systemName: "lock.fill")
-                                    .foregroundColor(.gray)
-                            }
+                            Button("Done") { dismiss() }
+                                .font(.headline)
+                                .foregroundColor(Color("darkGreenKeepi"))
                         }
-                    }
-                    .foregroundColor(.primary)
-                }
-                
-                Section("Privacy") {
-                    NavigationLink("How Keepi uses your data") {
-                        PrivacyDetailsView()
-                    }
+                    )
+                    .padding()
 
-                    Link(destination: privacyPolicyURL) {
-                        Label("Privacy policy", systemImage: "hand.raised")
-                    }
-                }
+                    ScrollView(showsIndicators: false) {
+                        VStack(spacing: 24) {
 
-                Section("Support") {
-                    Link(destination: supportURL) {
-                        Label("Contact support", systemImage: "envelope")
-                    }
-                }
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Premium Features")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color(.systemGray))
+                                    .padding(.horizontal, 8)
 
-                Section {
-                    Button(role: .destructive) {
-                        showDeleteConfirmation = true
-                    } label: {
-                        HStack {
-                            Label("Delete my data", systemImage: "trash")
-                            Spacer()
-                            if isDeleting {
-                                ProgressView()
+                                CSVImportLauncherButton {
+                                    HStack {
+                                        Label("Import statement", systemImage: "arrow.down.doc")
+                                        Spacer()
+                                        if !premiumManager.canUse(.csvImport) {
+                                            Image(systemName: "lock.fill")
+                                                .foregroundColor(.gray)
+                                        }
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(16)
+                                    .shadow(color: Color.black.opacity(0.05), radius: 8, y: 4)
+                                }
+                                .buttonStyle(.plain)
+                                .foregroundColor(Color("blackKeepi"))
                             }
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Privacy")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color(.systemGray))
+                                    .padding(.horizontal, 8)
+
+                                VStack(spacing: 0) {
+                                    NavigationLink {
+                                        PrivacyDetailsView()
+                                    } label: {
+                                        HStack {
+                                            Text("How Keepi uses your data")
+                                            Spacer()
+                                            Image(systemName: "chevron.right")
+                                                .foregroundColor(.gray)
+                                                .font(.footnote)
+                                        }
+                                        .padding()
+                                        .foregroundColor(Color("blackKeepi"))
+                                    }
+
+                                    Divider()
+                                        .padding(.horizontal)
+
+                                    Link(destination: privacyPolicyURL) {
+                                        HStack {
+                                            Label("Privacy policy", systemImage: "hand.raised.fill")
+                                            Spacer()
+                                            Image(systemName: "arrow.up.right")
+                                                .foregroundColor(.gray)
+                                                .font(.footnote)
+                                        }
+                                        .padding()
+                                        .foregroundColor(Color("blackKeepi"))
+                                    }
+                                }
+                                .background(Color.white)
+                                .cornerRadius(16)
+                                .shadow(color: Color.black.opacity(0.05), radius: 8, y: 4)
+                            }
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Support")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color(.systemGray))
+                                    .padding(.horizontal, 8)
+
+                                Link(destination: supportURL) {
+                                    HStack {
+                                        Label("Contact support", systemImage: "envelope.fill")
+                                        Spacer()
+                                        Image(systemName: "arrow.up.right")
+                                            .foregroundColor(.gray)
+                                            .font(.footnote)
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(16)
+                                    .shadow(color: Color.black.opacity(0.05), radius: 8, y: 4)
+                                    .foregroundColor(Color("blackKeepi"))
+                                }
+                            }
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Button(role: .destructive) {
+                                    showDeleteConfirmation = true
+                                } label: {
+                                    HStack {
+                                        Label("Delete my data", systemImage: "trash.fill")
+                                        Spacer()
+                                        if isDeleting {
+                                            ProgressView()
+                                        }
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(16)
+                                    .shadow(color: Color.black.opacity(0.05), radius: 8, y: 4)
+                                }
+                                .disabled(isDeleting)
+
+                                Text("Deletes your entries, envelopes, reflections, and anonymous Keepi account.")
+                                    .font(.footnote)
+                                    .foregroundColor(Color(.systemGray))
+                                    .padding(.horizontal, 8)
+                            }
+
                         }
+                        .padding(16)
                     }
-                    .disabled(isDeleting)
-                } footer: {
-                    Text("Deletes your entries, envelopes, reflections, and anonymous Keepi account.")
                 }
             }
-            .navigationTitle("Settings")
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
-                }
-            }
+            .navigationBarHidden(true)
             .confirmationDialog("Delete all Keepi data?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
                 Button("Delete permanently", role: .destructive) {
                     deleteAccountData()
@@ -503,26 +633,6 @@ struct SettingsView: View {
                 Button("OK", role: .cancel) { }
             } message: {
                 Text(deletionError)
-            }
-            .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.commaSeparatedText]) { result in
-                switch result {
-                case .success(let url):
-                    self.selectedCSV = url
-                case .failure(let error):
-                    print("Failed to select file: \(error)")
-                }
-            }
-            .sheet(isPresented: Binding<Bool>(
-                get: { self.selectedCSV != nil },
-                set: { if !$0 { self.selectedCSV = nil } }
-            )) {
-                if let url = selectedCSV {
-                    CSVImportFlow(fileURL: url)
-                        .environmentObject(interactor)
-                }
-            }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView()
             }
         }
     }
@@ -547,21 +657,68 @@ struct SettingsView: View {
 }
 
 private struct PrivacyDetailsView: View {
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
-        List {
-            Section("Data stored") {
-                Text("Keepi stores an anonymous account identifier, your entries, envelope budgets, reflections, feelings, tags, and journal text in Firebase.")
-            }
+        ZStack {
+            Color("lightGrayKeepi").ignoresSafeArea()
 
-            Section("Purpose") {
-                Text("This data is used only to provide syncing, budgeting, reflection, and reporting features. Keepi does not sell your data or use it for advertising or cross-app tracking.")
-            }
+            VStack(spacing: 0) {
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.title3)
+                            .foregroundColor(Color("darkGreenKeepi"))
+                    }
+                    Spacer()
+                    Text("Your data")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color("blackKeepi"))
+                    Spacer()
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
+                        .opacity(0)
+                }
+                .padding()
 
-            Section("Retention and deletion") {
-                Text("Data remains until you delete it from Settings. Deleting your data also removes the anonymous account used to sync it.")
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 24) {
+                        PrivacySection(title: "Data stored", text: "Keepi stores your anonymous account identifier, entries, envelope budgets, reflections, feelings, and journal text in Firebase. Pending CSV imports are stored locally on this device, and a limited daily snapshot is shared with the Keepi widget.")
+
+                        PrivacySection(title: "Purpose", text: "This data is used only to provide syncing, budgeting, reflection, and reporting features. Keepi does not sell your data or use it for advertising or cross-app tracking.")
+
+                        PrivacySection(title: "Retention and deletion", text: "Data remains until you delete it from Settings. Deleting your data removes the anonymous sync account, imported drafts, learned categorization rules, and widget snapshot.")
+                    }
+                    .padding(16)
+                }
             }
         }
-        .navigationTitle("Your data")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
+    }
+}
+
+private struct PrivacySection: View {
+    let title: String
+    let text: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(title)
+                .font(.headline)
+                .fontWeight(.bold)
+                .foregroundColor(Color("blackKeepi"))
+
+            Text(text)
+                .font(.body)
+                .foregroundColor(Color(.darkGray))
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.white)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.05), radius: 8, y: 4)
     }
 }

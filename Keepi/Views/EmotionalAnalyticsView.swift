@@ -2,11 +2,8 @@ import SwiftUI
 
 struct EmotionalAnalyticsView: View {
     let analytics: EmotionalAnalytics
-    @Environment(\.dismiss) var dismiss
-    
     var body: some View {
-        NavigationView {
-            ScrollView {
+        ScrollView {
                 VStack(spacing: 24) {
                     
                     if !analytics.hasEnoughData {
@@ -55,7 +52,7 @@ struct EmotionalAnalyticsView: View {
                         
                         // 2. Average Transaction by Feeling
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Average transaction by feeling")
+                            Text("Average entry by feeling")
                                 .font(.title3.bold())
                                 .foregroundColor(.primary)
                             
@@ -144,16 +141,9 @@ struct EmotionalAnalyticsView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Emotional Insights")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        dismiss()
-                    }
-                }
-            }
-        }
+        .background(Color("lightGrayKeepi").ignoresSafeArea())
+        .navigationTitle("Emotional Insights")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     private func feelingName(for index: Int) -> String {

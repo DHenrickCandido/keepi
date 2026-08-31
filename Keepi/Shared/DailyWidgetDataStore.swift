@@ -32,7 +32,7 @@ enum DailyWidgetDataStore {
         let todayTrades = trades
             .filter { calendar.isDateInToday($0.date) }
             .sorted { $0.date > $1.date }
-        let totalSpent = todayTrades.reduce(Decimal.zero) { $0 + $1.value }
+        let totalSpent = todayTrades.reduce(Decimal.zero) { $0 + $1.spendingAmount }
         let entries = todayTrades.map {
             DailyWidgetEntry(id: $0.id, title: $0.name, value: NSDecimalNumber(decimal: $0.value).doubleValue, date: $0.date)
         }
@@ -42,6 +42,12 @@ enum DailyWidgetDataStore {
         sharedDefaults.set(trades.filter { !$0.reflectionCompleted }.count, forKey: pendingReflectionCountKey)
         sharedDefaults.set(try? JSONEncoder().encode(entries), forKey: entriesKey)
         sharedDefaults.set(Date(), forKey: updatedAtKey)
+    }
+
+    static func clear() {
+        [totalSpentKey, entryCountKey, pendingReflectionCountKey, entriesKey, updatedAtKey].forEach {
+            sharedDefaults.removeObject(forKey: $0)
+        }
     }
 
     static func loadSnapshot() -> DailyWidgetSnapshot {

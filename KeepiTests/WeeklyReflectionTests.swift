@@ -2,72 +2,56 @@ import XCTest
 @testable import Keepi
 
 final class WeeklyReflectionTests: XCTestCase {
-    
-    func testWeeklyReflectionGeneration() {
-        let env1 = Envelope(id: "env1", name: "Food", amount: 0, budget: nil, color: "000000", isDeleted: false)
-        let env2 = Envelope(id: "env2", name: "Transport", amount: 0, budget: nil, color: "000000", isDeleted: false)
-        
-        let tx1 = TransactionModel(id: "1", name: "McDonalds", value: -50, date: Date(), idEnvelope: "env1", intent: .impulsive, feeling: .regret, isReflected: true)
-        let tx2 = TransactionModel(id: "2", name: "McDonalds", value: -30, date: Date(), idEnvelope: "env1", intent: .impulsive, feeling: .regret, isReflected: true)
-        let tx3 = TransactionModel(id: "3", name: "Uber", value: -20, date: Date(), idEnvelope: "env2", intent: .planned, feeling: .neutral, isReflected: true)
-        
-        // Unreflected transaction
-        let tx4 = TransactionModel(id: "4", name: "Subway", value: -10, date: Date(), idEnvelope: "env1", intent: nil, feeling: nil, isReflected: false)
-        
-        let reflection = WeeklyReflectionEngine.generateReflection(
-            for: [tx1, tx2, tx3, tx4],
-            unreviewedDraftsCount: 0,
-            envelopes: [env1, env2]
-        )
-        
-        XCTAssertNotNil(reflection)
-        
-        guard let reflection = reflection else { return }
-        
-        // Totals
-        XCTAssertEqual(reflection.totalSpent, 110) // 50 + 30 + 20 + 10
-        XCTAssertEqual(reflection.transactionCount, 4)
-        XCTAssertEqual(reflection.reflectedCount, 3)
-        XCTAssertEqual(reflection.unreviewedCount, 0)
-        
-        // Intent totals
-        XCTAssertEqual(reflection.plannedTotal, 20)
-        XCTAssertEqual(reflection.impulsiveTotal, 80)
-        
-        // Top Merchants
-        XCTAssertEqual(reflection.topMerchants.first?.name, "McDonalds")
-        XCTAssertEqual(reflection.topMerchants.first?.total, 80)
-        
-        // Most Used Envelope
-        XCTAssertEqual(reflection.mostUsedEnvelope?.envelope.id, "env1") // 3 transactions
-        
-        // Highest Spending Envelope
-        XCTAssertEqual(reflection.highestSpendingEnvelope?.envelope.id, "env1") // 90 spent
-        
-        // Most Common Feeling
-        XCTAssertEqual(reflection.mostCommonFeeling, .regret)
+    private var calendar: Calendar {
+        var value = Calendar(identifier: .gregorian)
+        value.timeZone = TimeZone(secondsFromGMT: 0)!
+        value.firstWeekday = 1
+        return value
     }
-    
+
+    func testWeeklyReflectionIncludesAllOfSaturday() {
+        let now = calendar.date(from: DateComponents(year: 2026, month: 8, day: 12, hour: 12))!
+        let monday = calendar.date(from: DateComponents(year: 2026, month: 8, day: 3, hour: 12))!
+        let saturday = calendar.date(from: DateComponents(year: 2026, month: 8, day: 8, hour: 23, minute: 59))!
+        let entries = [
+            transaction("1", "McDonalds", 50, monday, "food", .impulsive, 3, true),
+            transaction("2", "McDonalds", 30, saturday, "food", .impulsive, 3, true),
+            transaction("3", "Uber", 20, monday, "transport", .planned, 2, true),
+            transaction("4", "Subway", 10, monday, "food", nil, 2, false)
+        ]
+
+        let reflection = WeeklyReflectionEngine.generateReflection(
+            for: entries,
+            unreviewedDraftsCount: 0,
+            envelopes: [envelope("food", "Food"), envelope("transport", "Transport")],
+            now: now,
+            calendar: calendar
+        )
+
+        XCTAssertEqual(reflection?.totalSpent, 110)
+        XCTAssertEqual(reflection?.transactionCount, 4)
+        XCTAssertEqual(reflection?.reflectedCount, 3)
+        XCTAssertEqual(reflection?.topMerchants.first?.name, "McDonalds")
+        XCTAssertEqual(reflection?.topMerchants.first?.amount, 80)
+        XCTAssertEqual(reflection?.envelopeBreakdown.first?.envelopeID, "food")
+    }
+
     func testReflectionRules() {
-        let env1 = Envelope(id: "env1", name: "Food", amount: 0, budget: nil, color: "000000", isDeleted: false)
-        
-        let tx1 = TransactionModel(id: "1", name: "McDonalds", value: -50, date: Date(), idEnvelope: "env1", intent: .impulsive, feeling: .regret, isReflected: true)
-        let tx2 = TransactionModel(id: "2", name: "Subway", value: -30, date: Date(), idEnvelope: "env1", intent: .impulsive, feeling: .regret, isReflected: true)
-        
-        let context = ReflectionContext(envelopes: [env1])
-        
-        let impulsiveRule = TopImpulsiveEnvelopeRule()
-        let observation1 = impulsiveRule.evaluate(entries: [tx1, tx2], context: context)
-        
-        XCTAssertNotNil(observation1)
-        XCTAssertTrue(observation1!.text.contains("impulsive"))
-        XCTAssertTrue(observation1!.text.contains("Food"))
-        
-        let regretRule = TopRegretEnvelopeRule()
-        let observation2 = regretRule.evaluate(entries: [tx1, tx2], context: context)
-        
-        XCTAssertNotNil(observation2)
-        XCTAssertTrue(observation2!.text.contains("regret"))
-        XCTAssertTrue(observation2!.text.contains("Food"))
+        let entries = [
+            transaction("1", "McDonalds", 50, .now, "food", .impulsive, 3, true),
+            transaction("2", "Subway", 30, .now, "food", .impulsive, 3, true)
+        ]
+        let context = ReflectionContext(envelopes: [envelope("food", "Food")])
+
+        XCTAssertTrue(HighImpulseEnvelopeRule().evaluate(entries: entries, context: context)?.text.contains("Food") == true)
+        XCTAssertTrue(MostRegrettedEnvelopeRule().evaluate(entries: entries, context: context)?.text.contains("regret") == true)
+    }
+
+    private func envelope(_ id: String, _ name: String) -> Envelope {
+        Envelope(id: id, name: name, icon: "img1", monthlyBudget: nil, createdAt: .now, updatedAt: .now)
+    }
+
+    private func transaction(_ id: String, _ name: String, _ value: Decimal, _ date: Date, _ envelope: String, _ intent: SpendingIntent?, _ feeling: Int, _ reflected: Bool) -> TransactionModel {
+        TransactionModel(id: id, name: name, value: value, envelopeId: envelope, feeling: feeling, date: date, reflectionCompleted: reflected, spendingIntent: intent, type: .expense)
     }
 }

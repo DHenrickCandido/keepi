@@ -85,12 +85,13 @@ struct EditTransactionView: View {
             ZStack {
 
                 HStack {
-                    Image(systemName: "xmark")
-                        .fontWeight(.bold)
-                        .onTapGesture {
-                            
-                            showEditTransaction.toggle()
-                        }
+                    Button {
+                        showEditTransaction = false
+                    } label: {
+                        Image(systemName: "xmark")
+                            .fontWeight(.bold)
+                    }
+                    .accessibilityLabel("Close")
 
                     Spacer()
 
@@ -100,7 +101,7 @@ struct EditTransactionView: View {
 
                 }
 
-                Text("Edit transaction")
+                Text("Edit entry")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
@@ -138,7 +139,7 @@ struct EditTransactionView: View {
             //Fim qual envelope?
         
             TradeField(
-                question: "What's your new trade?",
+                question: "What's this entry?",
                 textPlacer: "Ex. Tea, new shoes...",
                 item: $tradeTitle,
                 keyboardType: .default
@@ -178,11 +179,13 @@ struct EditTransactionView: View {
             ZStack {
                 
                 HStack {
-                    Image(systemName: "xmark")
-                        .fontWeight(.bold)
-                        .onTapGesture {
-                            showEditTransaction.toggle()
-                        }
+                    Button {
+                        showEditTransaction = false
+                    } label: {
+                        Image(systemName: "xmark")
+                            .fontWeight(.bold)
+                    }
+                    .accessibilityLabel("Close")
                     
                     Spacer()
                     
@@ -192,7 +195,7 @@ struct EditTransactionView: View {
                     
                 }
                 
-                Text("New transaction")
+                Text("Edit entry")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color("blackKeepi"))
@@ -312,7 +315,8 @@ struct EditTransactionView: View {
             }
         }
         .padding(8)
-        .frame(width: 142, height: 130)
+        .frame(width: 142)
+        .frame(minHeight: 130)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .overlay(
@@ -357,7 +361,8 @@ struct EditTransactionView: View {
             }
         }
         .padding(8)
-        .frame(width: 142, height: 130)
+        .frame(width: 142)
+        .frame(minHeight: 130)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .overlay(
@@ -390,7 +395,8 @@ struct EditTransactionView: View {
             }
         }
         .padding(8)
-        .frame(width: 142, height: 130)
+        .frame(width: 142)
+        .frame(minHeight: 130)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
         .onTapGesture {
@@ -466,7 +472,8 @@ struct EditTransactionView: View {
             spendingIntent: spendingIntent,
             type: transactionType,
             note: transaction.note,
-            journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
+            journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines),
+            importMetadata: transaction.importMetadata
         )
         
         isSaving = true
@@ -495,7 +502,7 @@ struct EditTransactionView: View {
                         ProgressView()
                             .tint(.white)
                     }
-                    Text(isSaving ? "Saving..." : "Save transaction")
+                    Text(isSaving ? "Saving..." : "Save entry")
                         .font(.body)
                         .fontWeight(.bold)
                 }

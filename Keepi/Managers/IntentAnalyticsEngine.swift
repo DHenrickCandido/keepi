@@ -68,7 +68,7 @@ class IntentAnalyticsEngine {
         
         for tx in intentTransactions {
             if let intent = tx.spendingIntent {
-                intentMap[intent]?.amount += tx.value
+                intentMap[intent]?.amount += tx.spendingAmount
                 intentMap[intent]?.count += 1
             }
         }
@@ -83,7 +83,7 @@ class IntentAnalyticsEngine {
         var envelopeMap: [String: Decimal] = [:]
         
         for tx in impulsiveTx {
-            envelopeMap[tx.envelopeId, default: 0] += tx.value
+            envelopeMap[tx.envelopeId, default: 0] += tx.spendingAmount
         }
         
         var impulsiveEnvelopes = envelopeMap.map { kv in
@@ -122,8 +122,8 @@ class IntentAnalyticsEngine {
                 let currentTx = intentTransactions.filter { $0.spendingIntent == intent && $0.date >= startOfCurrentMonth }
                 let previousTx = intentTransactions.filter { $0.spendingIntent == intent && $0.date >= startOfPreviousMonth && $0.date <= endOfPreviousMonth }
                 
-                let currentTotal = currentTx.reduce(Decimal(0)) { $0 + $1.value }
-                let previousTotal = previousTx.reduce(Decimal(0)) { $0 + $1.value }
+                let currentTotal = currentTx.reduce(Decimal(0)) { $0 + $1.spendingAmount }
+                let previousTotal = previousTx.reduce(Decimal(0)) { $0 + $1.spendingAmount }
                 
                 if currentTx.count > 0 || previousTx.count > 0 {
                     monthlyTrends.append(IntentMonthlyTrend(

@@ -23,15 +23,21 @@ class CSVParser {
     }
     
     static func parse(content: String) -> [[String]] {
+        // Swift treats CRLF as a single extended grapheme cluster, so normalize
+        // line endings before iterating over Characters.
+        let normalizedContent = content
+            .replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
+
         var result: [[String]] = []
         var currentRow: [String] = []
         var currentField = ""
         var inQuotes = false
         
-        let chars = Array(content)
+        let chars = Array(normalizedContent)
         var i = 0
         
-        let delimiter = detectDelimiter(in: content)
+        let delimiter = detectDelimiter(in: normalizedContent)
         
         while i < chars.count {
             let c = chars[i]
@@ -52,14 +58,6 @@ class CSVParser {
                     inQuotes = true
                 } else if c == delimiter {
                     currentRow.append(currentField.trimmingCharacters(in: .whitespaces))
-                    currentField = ""
-                } else if c == "\r" {
-                    if i + 1 < chars.count && chars[i + 1] == "\n" {
-                        i += 1
-                    }
-                    currentRow.append(currentField.trimmingCharacters(in: .whitespaces))
-                    result.append(currentRow)
-                    currentRow = []
                     currentField = ""
                 } else if c == "\n" {
                     currentRow.append(currentField.trimmingCharacters(in: .whitespaces))

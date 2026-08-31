@@ -62,7 +62,8 @@ struct EnvelopeCardView: View {
             }
         }
         .padding(8)
-        .frame(width: 142, height: 170)
+        .frame(width: 142)
+        .frame(minHeight: 170)
         .background(Color("lightGrayKeepi"))
         .cornerRadius(16)
             

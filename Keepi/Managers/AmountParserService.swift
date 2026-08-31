@@ -1,7 +1,8 @@
 import Foundation
 
 class AmountParserService {
-    static func parseAmount(_ amountString: String) -> Double? {
+    static func parseAmount(_ amountString: String) -> Decimal? {
+        let usesAccountingNegative = amountString.contains("(") && amountString.contains(")")
         let allowedCharacterSet = CharacterSet(charactersIn: "0123456789.,-")
         let cleanString = String(amountString.unicodeScalars.filter { allowedCharacterSet.contains($0) })
         
@@ -39,7 +40,7 @@ class AmountParserService {
             }
         }
         
-        guard let finalAmount = Double(normalizedString) else { return nil }
-        return hasMinus ? -finalAmount : finalAmount
+        guard let finalAmount = Decimal(string: normalizedString, locale: Locale(identifier: "en_US_POSIX")) else { return nil }
+        return hasMinus || usesAccountingNegative ? -finalAmount : finalAmount
     }
 }

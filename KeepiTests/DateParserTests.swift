@@ -7,23 +7,30 @@ final class DateParserTests: XCTestCase {
         // Test standard ISO
         let dates1 = ["2026-08-01", "2026-12-31"]
         let format1 = DateParserService.detectFormat(from: dates1)
-        XCTAssertEqual(format1, "yyyy-MM-dd")
+        XCTAssertEqual(format1, .unambiguous("yyyy-MM-dd"))
         
         // Test DD/MM/YYYY
         let dates2 = ["15/08/2026", "31/12/2026"]
         let format2 = DateParserService.detectFormat(from: dates2)
-        XCTAssertEqual(format2, "dd/MM/yyyy")
+        XCTAssertEqual(format2, .unambiguous("dd/MM/yyyy"))
         
         // Test MM/DD/YYYY
         let dates3 = ["08/15/2026", "12/31/2026"]
         let format3 = DateParserService.detectFormat(from: dates3)
-        XCTAssertEqual(format3, "MM/dd/yyyy")
+        XCTAssertEqual(format3, .unambiguous("MM/dd/yyyy"))
         
         // Test ambiguous dates - usually defaults to the first matching format when ambiguous,
         // but if mixed, it should refine it.
         let ambiguousDates = ["01/02/2026", "15/02/2026"]
         let formatAmbiguous = DateParserService.detectFormat(from: ambiguousDates)
-        XCTAssertEqual(formatAmbiguous, "dd/MM/yyyy")
+        XCTAssertEqual(formatAmbiguous, .unambiguous("dd/MM/yyyy"))
+
+        let ambiguous = DateParserService.detectFormat(from: ["01/02/2026", "03/04/2026"])
+        guard case .ambiguous(let options, _) = ambiguous else {
+            return XCTFail("Expected an ambiguous date result")
+        }
+        XCTAssertTrue(options.contains("dd/MM/yyyy"))
+        XCTAssertTrue(options.contains("MM/dd/yyyy"))
     }
     
     func testDateParsing() {

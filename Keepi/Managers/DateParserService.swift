@@ -9,7 +9,8 @@ enum DateFormatAmbiguity: Equatable {
 class DateParserService {
     static let possibleFormats = [
         "dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd",
-        "dd-MM-yyyy", "yyyy/MM/dd", "dd/MM/yy", "MM/dd/yy"
+        "dd-MM-yyyy", "yyyy/MM/dd", "dd/MM/yy", "MM/dd/yy",
+        "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ssZ"
     ]
     
     static func detectFormat(from dateStrings: [String]) -> DateFormatAmbiguity {
@@ -20,6 +21,7 @@ class DateParserService {
         
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.isLenient = false
         
         for dateString in validDates {
             var formatsThatWorkForThisDate = [String]()
@@ -32,8 +34,9 @@ class DateParserService {
             validFormats = formatsThatWorkForThisDate
             
             if validFormats.isEmpty { return .invalid }
-            if validFormats.count == 1 { return .unambiguous(validFormats[0]) }
         }
+
+        if validFormats.count == 1 { return .unambiguous(validFormats[0]) }
         
         let firstAmbiguousDateString = validDates[0]
         

@@ -61,6 +61,7 @@ class HomeInteractor: ObservableObject {
     }
 
     func loadData() {
+        rulesListManager.refreshUserIdIfNeeded()
         transactionListManager.fetchTransactions { error in
             if let error {
                 self.errorMessage = error.localizedDescription
@@ -179,34 +180,64 @@ class HomeInteractor: ObservableObject {
 
         let db = Firestore.firestore()
         let userRef = db.collection("Users").document(user.uid)
+        let legacyUserRef = db.collection("users").document(user.uid)
+        let collections = [
+            userRef.collection("Trades"),
+            userRef.collection("Envelopes"),
+            userRef.collection("merchantRules"),
+            userRef.collection("categoryMappings"),
+            legacyUserRef.collection("merchantRules"),
+            legacyUserRef.collection("categoryMappings")
+        ]
 
-        deleteDocuments(in: userRef.collection("Trades")) { error in
-            if let error {
+        deleteCollections(collections, index: 0) { error in
+            guard error == nil else {
                 completion(error)
                 return
             }
-
-            self.deleteDocuments(in: userRef.collection("Envelopes")) { error in
-                if let error {
+            userRef.delete { error in
+                guard error == nil else {
                     completion(error)
                     return
                 }
-
-                userRef.delete { error in
-                    if let error {
-                        completion(error)
+                legacyUserRef.delete { legacyError in
+                    guard legacyError == nil else {
+                        completion(legacyError)
                         return
                     }
-
                     user.delete { error in
                         if error == nil {
+                            do {
+                                try DraftManager.shared.deleteAllData()
+                            } catch {
+                                completion(error)
+                                return
+                            }
                             self.listTransactions = []
                             self.listEnvelopes = []
+                            self.merchantRules = []
+                            self.categoryMappings = []
+                            self.rulesListManager.clearLocalState()
+                            DailyWidgetDataStore.clear()
                         }
                         completion(error)
                     }
                 }
             }
+        }
+    }
+
+    private func deleteCollections(_ collections: [CollectionReference], index: Int, completion: @escaping (Error?) -> Void) {
+        guard collections.indices.contains(index) else {
+            completion(nil)
+            return
+        }
+        deleteDocuments(in: collections[index]) { error in
+            guard error == nil else {
+                completion(error)
+                return
+            }
+            self.deleteCollections(collections, index: index + 1, completion: completion)
         }
     }
 

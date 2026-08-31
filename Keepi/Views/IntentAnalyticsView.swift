@@ -2,11 +2,8 @@ import SwiftUI
 
 struct IntentAnalyticsView: View {
     let analytics: IntentAnalytics
-    @Environment(\.dismiss) var dismiss
-    
     var body: some View {
-        NavigationView {
-            ScrollView {
+        ScrollView {
                 VStack(spacing: 24) {
                     
                     if !analytics.hasEnoughData {
@@ -55,7 +52,7 @@ struct IntentAnalyticsView: View {
                         
                         // 2. Average Transaction Size
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Average transaction size")
+                            Text("Average entry size")
                                 .font(.title3.bold())
                                 .foregroundColor(.primary)
                             
@@ -160,15 +157,8 @@ struct IntentAnalyticsView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Intent Insights")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        dismiss()
-                    }
-                }
-            }
-        }
+        .background(Color("lightGrayKeepi").ignoresSafeArea())
+        .navigationTitle("Intent Insights")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

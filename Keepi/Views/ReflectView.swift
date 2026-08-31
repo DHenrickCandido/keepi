@@ -25,6 +25,7 @@ enum ReflectionItem: Identifiable, Equatable {
 
 struct ReflectView: View {
     @EnvironmentObject var interactor: HomeInteractor
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ObservedObject var draftManager = DraftManager.shared
     @EnvironmentObject var premiumManager: StoreKitPremiumManager
 
@@ -45,9 +46,12 @@ struct ReflectView: View {
     @State private var isSaving = false
     @State private var showSaveError = false
     @State private var saveErrorMessage = ""
+    @State private var showPaywall = false
 
     private var pendingItems: [ReflectionItem] {
-        let drafts = draftManager.drafts.map { ReflectionItem.draft($0) }
+        let drafts = premiumManager.canUse(.reviewInbox)
+            ? draftManager.drafts.map { ReflectionItem.draft($0) }
+            : []
         let transactions = interactor.listTransactions
             .filter { !$0.reflectionCompleted }
             .sorted { $0.date > $1.date }
@@ -95,6 +99,9 @@ struct ReflectView: View {
               .ignoresSafeArea()
 
                 VStack(spacing: 24) {
+                    if !premiumManager.canUse(.reviewInbox), !draftManager.drafts.isEmpty {
+                        lockedImportsBanner
+                    }
                     if let item = currentItem {
                         reflectionForm(for: item)
                             .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
@@ -123,7 +130,37 @@ struct ReflectView: View {
             } message: {
                 Text(saveErrorMessage)
             }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+            }
         }
+    }
+
+    private var lockedImportsBanner: some View {
+        Button {
+            showPaywall = true
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "lock.fill")
+                    .foregroundColor(Color("darkGreenKeepi"))
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("\(draftManager.drafts.count) imported entries waiting")
+                        .font(.headline)
+                        .foregroundColor(Color("blackKeepi"))
+                    Text("Restore Premium to continue reviewing them.")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.gray)
+            }
+            .padding(16)
+            .background(.white)
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.08), radius: 8, y: 4)
+        }
+        .buttonStyle(.plain)
     }
 
     private func reflectionForm(for item: ReflectionItem) -> some View {
@@ -177,10 +214,10 @@ struct ReflectView: View {
                     
                     Spacer()
                     
-                    Text(KeepiFormat.currency(draft.amount))
+                    Text(KeepiFormat.currency(draft.amount < 0 ? -draft.amount : draft.amount))
                         .font(.headline)
                         .fontWeight(.bold)
-                        .foregroundColor(draft.amount < 0 ? .red : .green)
+                        .foregroundColor(Color("darkGreenKeepi"))
                 }
                 
                 Text(TransactionListManager.date2string(date: draft.date, dateFormat: "dd MMM"))
@@ -282,7 +319,7 @@ struct ReflectView: View {
                 .font(.headline)
                 .fontWeight(.bold)
 
-            HStack {
+            adaptiveChoiceLayout {
                 feelingButton(title: "🙂 Good", value: 0)
                 feelingButton(title: "😐 Neutral", value: 2)
                 feelingButton(title: "😕 Regret", value: 3)
@@ -315,7 +352,7 @@ struct ReflectView: View {
                 .font(.headline)
                 .fontWeight(.bold)
 
-            HStack(spacing: 12) {
+            adaptiveChoiceLayout {
                 choiceButton(title: "Planned", isSelected: spendingIntent == .planned) {
                     spendingIntent = .planned
                 }
@@ -337,7 +374,7 @@ struct ReflectView: View {
                 .font(.headline)
                 .fontWeight(.bold)
 
-            HStack(spacing: 12) {
+            adaptiveChoiceLayout {
                 choiceButton(title: "Yes", isSelected: worthIt) {
                     worthIt = true
                 }
@@ -401,6 +438,13 @@ struct ReflectView: View {
                 .cornerRadius(12)
                 .shadow(color: Color.black.opacity(0.04), radius: 4, y: 2)
         }
+    }
+
+    private func adaptiveChoiceLayout<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: 12))
+            : AnyLayout(HStackLayout(spacing: 12))
+        return layout { content() }
     }
 
     private func primaryButton(title: String, action: @escaping () -> Void) -> some View {
@@ -490,6 +534,12 @@ struct ReflectView: View {
         
         switch item {
         case .draft(let draft):
+            guard !draftTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                isSaving = false
+                saveErrorMessage = "Enter a title before saving."
+                showSaveError = true
+                return
+            }
             let isExpense = draft.amount < 0
             let transaction = TransactionModel(
                 id: TradeIdentity.make(),
@@ -502,7 +552,7 @@ struct ReflectView: View {
                 worthIt: selectedFeeling == 0 ? true : (selectedFeeling == 3 ? false : true),
                 spendingIntent: spendingIntent,
                 type: isExpense ? .expense : .income,
-                note: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines),
+                journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines),
                 importMetadata: ImportMetadata(
                     sourceType: "csv",
                     sourceFingerprint: draft.sourceFingerprint,
@@ -511,40 +561,27 @@ struct ReflectView: View {
                 )
             )
             
-            // Create/Update Merchant Rule
-            let normalizedTitle = MerchantNormalizer.normalize(draft.originalTitle)
-            if let existingRule = interactor.merchantRules.first(where: { $0.pattern == normalizedTitle && $0.matchType == .normalizedExact }) {
-                var updatedRule = existingRule
-                updatedRule.envelopeID = selectedEnvelopeId
-                updatedRule.useCount += 1
-                updatedRule.lastUsedAt = Date()
-                interactor.rulesListManager.saveRule(updatedRule)
-            } else {
-                let newRule = MerchantEnvelopeRule(
-                    id: UUID().uuidString,
-                    pattern: normalizedTitle,
-                    matchType: .normalizedExact,
-                    envelopeID: selectedEnvelopeId,
-                    useCount: 1,
-                    lastUsedAt: Date()
-                )
-                interactor.rulesListManager.saveRule(newRule)
-            }
-            
-            // Create Category Mapping if there was an original category
-            if let category = draft.originalCategory, !category.isEmpty {
-                if !interactor.categoryMappings.contains(where: { $0.sourceCategory == category }) {
-                    let mapping = ExternalCategoryMapping(sourceCategory: category, envelopeID: selectedEnvelopeId)
-                    interactor.rulesListManager.saveMapping(mapping)
+            interactor.addTransaction(transaction: transaction) { error in
+                DispatchQueue.main.async {
+                    if let error {
+                        isSaving = false
+                        saveErrorMessage = error.localizedDescription
+                        showSaveError = true
+                        return
+                    }
+
+                    saveLearnedCategorization(for: draft)
+                    do {
+                        try withAnimation {
+                            try draftManager.removeDraft(id: draft.id)
+                        }
+                        isSaving = false
+                    } catch {
+                        isSaving = false
+                        saveErrorMessage = "The entry was saved, but Keepi couldn't remove its local import draft. It will be ignored as a duplicate next time."
+                        showSaveError = true
+                    }
                 }
-            }
-            
-            interactor.addTransaction(transaction: transaction)
-            withAnimation {
-                draftManager.removeDraft(id: draft.id)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                isSaving = false
             }
             
         case .transaction(let entry):
@@ -558,8 +595,10 @@ struct ReflectView: View {
                 reflectionCompleted: true,
                 worthIt: worthIt,
                 spendingIntent: spendingIntent,
+                type: entry.type,
                 note: entry.note,
-                journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines)
+                journalEntry: journalEntry.trimmingCharacters(in: .whitespacesAndNewlines),
+                importMetadata: entry.importMetadata
             )
 
             interactor.updateTransaction(transaction: updatedEntry) { error in
@@ -576,13 +615,34 @@ struct ReflectView: View {
     }
 
     private func skipItem() {
-        if case .draft(let draft) = currentItem {
-            withAnimation {
-                draftManager.removeDraft(id: draft.id)
-            }
+        guard pendingItems.count > 1 else { return }
+        selectedPendingIndex = (selectedPendingIndex + 1) % pendingItems.count
+    }
+
+    private func saveLearnedCategorization(for draft: ImportedEntryDraft) {
+        guard !selectedEnvelopeId.isEmpty else { return }
+        let normalizedTitle = MerchantNormalizer.normalize(draft.originalTitle)
+        if let existingRule = interactor.merchantRules.first(where: { $0.pattern == normalizedTitle && $0.matchType == .normalizedExact }) {
+            var updatedRule = existingRule
+            updatedRule.envelopeID = selectedEnvelopeId
+            updatedRule.useCount += 1
+            updatedRule.lastUsedAt = Date()
+            interactor.rulesListManager.saveRule(updatedRule)
         } else {
-            guard !pendingItems.isEmpty else { return }
-            selectedPendingIndex = min(selectedPendingIndex + 1, max(pendingItems.count - 1, 0))
+            interactor.rulesListManager.saveRule(MerchantEnvelopeRule(
+                id: UUID().uuidString,
+                pattern: normalizedTitle,
+                matchType: .normalizedExact,
+                envelopeID: selectedEnvelopeId,
+                useCount: 1,
+                lastUsedAt: Date()
+            ))
+        }
+
+        if let category = draft.originalCategory?.trimmingCharacters(in: .whitespacesAndNewlines), !category.isEmpty {
+            interactor.rulesListManager.saveMapping(
+                ExternalCategoryMapping(sourceCategory: category, envelopeID: selectedEnvelopeId)
+            )
         }
     }
 }

@@ -59,7 +59,7 @@ struct Onboarding2View: View {
                     .offset(y: -50)
                 
                 
-                Text("Here at Keepi, your purchases are referred to as transactions.")
+                Text("In Keepi, every purchase becomes an entry you can understand.")
                     .font(.system(size: 24))
                     .bold()
                     .foregroundColor(.white)

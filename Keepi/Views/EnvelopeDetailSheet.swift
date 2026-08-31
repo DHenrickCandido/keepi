@@ -114,6 +114,7 @@ struct EnvelopeDetailSheet: View {
                                             date: entry.date,
                                             name: entry.name,
                                             value: entry.value,
+                                            type: entry.type,
                                             envelopeName: envelope.name,
                                             feeling: entry.feeling,
                                             journalEntry: entry.journalEntry

@@ -59,7 +59,7 @@ class EmotionalAnalyticsEngine {
         // 1. Spending by feeling
         var feelingMap: [Int: (amount: Decimal, count: Int)] = [:]
         for tx in reflectedTransactions {
-            feelingMap[tx.feeling, default: (0, 0)].amount += tx.value
+            feelingMap[tx.feeling, default: (0, 0)].amount += tx.spendingAmount
             feelingMap[tx.feeling, default: (0, 0)].count += 1
         }
         
